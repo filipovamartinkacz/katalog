@@ -41,6 +41,7 @@ type Props = {
   medailonek: MedailonekData
   kategorie: Kategorie[]
   metody: Metoda[]
+  linkedMetody: Metoda[]
   priceLevels: PriceLevel[]
 }
 
@@ -61,7 +62,7 @@ function getSocialUrl(links: { platform: string; url: string }[], platform: stri
   return links.find(l => l.platform === platform)?.url ?? ''
 }
 
-export function EditForm({ medailonek, kategorie, metody, priceLevels }: Props) {
+export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLevels }: Props) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -90,7 +91,7 @@ export function EditForm({ medailonek, kategorie, metody, priceLevels }: Props) 
   // Metody
   const [selectedMetody, setSelectedMetody] = useState<SelectedMetoda[]>(
     medailonek.medailonek_metoda.map(m => {
-      const found = metody.find(mt => mt.id === m.metoda_id)
+      const found = linkedMetody.find(mt => mt.id === m.metoda_id)
       return found
         ? { type: 'existing' as const, id: found.id, nazev: found.nazev, ma_ochrannou_znamku: found.ma_ochrannou_znamku ?? false }
         : { type: 'existing' as const, id: m.metoda_id, nazev: String(m.metoda_id) }

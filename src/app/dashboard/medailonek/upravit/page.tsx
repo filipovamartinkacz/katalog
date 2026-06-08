@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { redirect } from 'next/navigation'
 import { EditForm } from './edit-form'
 
@@ -35,6 +36,12 @@ export default async function UpravitPage() {
 
   if (!medailonek) redirect('/dashboard')
 
+  // Fetch linked metody via admin client to include 'navrzena' methods
+  const linkedMetodaIds = medailonek.medailonek_metoda.map((m: { metoda_id: number }) => m.metoda_id)
+  const { data: linkedMetody } = linkedMetodaIds.length > 0
+    ? await createAdminClient().from('metoda').select('id, nazev, ma_ochrannou_znamku').in('id', linkedMetodaIds)
+    : { data: [] }
+
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
       <h1 className="mb-8 text-2xl font-bold">Upravit profil</h1>
@@ -42,6 +49,7 @@ export default async function UpravitPage() {
         medailonek={medailonek}
         kategorie={kategorie ?? []}
         metody={metody ?? []}
+        linkedMetody={linkedMetody ?? []}
         priceLevels={priceLevels ?? []}
       />
     </div>
