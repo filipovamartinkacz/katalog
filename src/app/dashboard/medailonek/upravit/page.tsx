@@ -29,7 +29,7 @@ export default async function UpravitPage() {
       .eq('user_id', user.id)
       .maybeSingle(),
     supabase.from('kategorie').select('id, nazev').order('nazev'),
-    supabase.from('metoda').select('id, nazev').order('nazev'),
+    supabase.from('metoda').select('id, nazev, ma_ochrannou_znamku').order('nazev'),
     supabase.from('price_level').select('id, label').order('id'),
   ])
 

@@ -22,13 +22,13 @@ export default async function KatalogPage({ searchParams }: Props) {
       .select(`
         id, jmeno, prijmeni, display_name, bio,
         medailonek_location ( mesto ( nazev, okres ( nazev, kraj ( nazev ) ) ) ),
-        medailonek_metoda ( metoda ( id, nazev ) ),
+        medailonek_metoda ( metoda ( id, nazev, ma_ochrannou_znamku ) ),
         service ( nazev, popis, delivery_form, service_kategorie ( kategorie ( id, nazev ) ), service_klicove_slovo ( klicove_slovo ( slovo ) ) )
       `)
       .eq('is_published', true)
       .order('created_at', { ascending: false }),
     supabase.from('kategorie').select('id, nazev').order('nazev'),
-    supabase.from('metoda').select('id, nazev').order('nazev'),
+    supabase.from('metoda').select('id, nazev, ma_ochrannou_znamku').order('nazev'),
   ])
 
   // "Ostatní" vždy poslední

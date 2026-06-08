@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
 type Kategorie = { id: number; nazev: string }
-type Metoda = { id: number; nazev: string }
+type Metoda = { id: number; nazev: string; ma_ochrannou_znamku: boolean }
 
 type Props = {
   kategorie: Kategorie[]
@@ -143,7 +143,7 @@ export function Filters({ kategorie, metody, activeKat, activeMet, activeForma, 
                     : 'border-border hover:border-accent/40'
                 }`}
               >
-                {m.nazev}
+                {m.nazev}{m.ma_ochrannou_znamku && <sup className="ml-0.5 text-xs">®</sup>}
               </button>
             ))}
           </div>

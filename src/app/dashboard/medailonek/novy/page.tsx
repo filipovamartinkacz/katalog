@@ -18,7 +18,7 @@ export default async function NovyMedailonekPage() {
 
   const [{ data: kategorie }, { data: metody }, { data: priceLevels }] = await Promise.all([
     supabase.from('kategorie').select('id, nazev').order('poradi'),
-    supabase.from('metoda').select('id, nazev').eq('status', 'aktivni').order('nazev'),
+    supabase.from('metoda').select('id, nazev, ma_ochrannou_znamku').eq('status', 'aktivni').order('nazev'),
     supabase.from('price_level').select('id, label').order('id'),
   ])
 

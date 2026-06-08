@@ -11,7 +11,7 @@ import { TagInput } from '@/components/ui/tag-input'
 import { MetodaPicker, type SelectedMetoda } from '@/components/ui/metoda-picker'
 
 type Kategorie = { id: number; nazev: string }
-type Metoda = { id: number; nazev: string }
+type Metoda = { id: number; nazev: string; ma_ochrannou_znamku?: boolean }
 type PriceLevel = { id: number; label: string }
 
 type MedailonekData = {
@@ -92,7 +92,7 @@ export function EditForm({ medailonek, kategorie, metody, priceLevels }: Props) 
     medailonek.medailonek_metoda.map(m => {
       const found = metody.find(mt => mt.id === m.metoda_id)
       return found
-        ? { type: 'existing' as const, id: found.id, nazev: found.nazev }
+        ? { type: 'existing' as const, id: found.id, nazev: found.nazev, ma_ochrannou_znamku: found.ma_ochrannou_znamku ?? false }
         : { type: 'existing' as const, id: m.metoda_id, nazev: String(m.metoda_id) }
     })
   )

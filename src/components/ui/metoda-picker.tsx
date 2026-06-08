@@ -2,10 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react'
 
-type Metoda = { id: number; nazev: string }
+type Metoda = { id: number; nazev: string; ma_ochrannou_znamku?: boolean }
 
 export type SelectedMetoda =
-  | { type: 'existing'; id: number; nazev: string }
+  | { type: 'existing'; id: number; nazev: string; ma_ochrannou_znamku?: boolean }
   | { type: 'new'; nazev: string }
 
 type Props = {
@@ -34,7 +34,7 @@ export function MetodaPicker({ metody, value, onChange }: Props) {
   const showNewOption = trimmed.length > 1 && !exactMatch && !alreadyAdded
 
   function addExisting(m: Metoda) {
-    onChange([...value, { type: 'existing', id: m.id, nazev: m.nazev }])
+    onChange([...value, { type: 'existing', id: m.id, nazev: m.nazev, ma_ochrannou_znamku: m.ma_ochrannou_znamku }])
     setQuery('')
     setOpen(false)
   }
@@ -75,7 +75,7 @@ export function MetodaPicker({ metody, value, onChange }: Props) {
               }`}
             >
               {m.type === 'new' && <span className="text-xs opacity-70">nový·</span>}
-              {m.nazev}
+              {m.nazev}{m.type === 'existing' && m.ma_ochrannou_znamku && <sup className="ml-0.5 text-xs">®</sup>}
               <button
                 type="button"
                 onClick={() => remove(idx)}
@@ -117,7 +117,7 @@ export function MetodaPicker({ metody, value, onChange }: Props) {
                   onMouseDown={e => { e.preventDefault(); addExisting(m) }}
                   className="w-full px-3 py-2 text-left text-sm hover:bg-muted transition-colors"
                 >
-                  {m.nazev}
+                  {m.nazev}{m.ma_ochrannou_znamku && <sup className="ml-0.5 text-xs">®</sup>}
                 </button>
               </li>
             ))}
