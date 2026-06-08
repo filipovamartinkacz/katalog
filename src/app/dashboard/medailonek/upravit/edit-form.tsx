@@ -8,7 +8,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { CityPicker, type SelectedMesto } from '../novy/city-picker'
 import { updateMedailonek, type ServiceInput, type SocialLinkInput } from '@/app/actions/medailonek'
 import { TagInput } from '@/components/ui/tag-input'
-import { MetodaPicker } from '@/components/ui/metoda-picker'
+import { MetodaPicker, type SelectedMetoda } from '@/components/ui/metoda-picker'
 
 type Kategorie = { id: number; nazev: string }
 type Metoda = { id: number; nazev: string }
@@ -88,8 +88,13 @@ export function EditForm({ medailonek, kategorie, metody, priceLevels }: Props) 
   )
 
   // Metody
-  const [metodaIds, setMetodaIds] = useState<number[]>(
-    medailonek.medailonek_metoda.map(m => m.metoda_id)
+  const [selectedMetody, setSelectedMetody] = useState<SelectedMetoda[]>(
+    medailonek.medailonek_metoda.map(m => {
+      const found = metody.find(mt => mt.id === m.metoda_id)
+      return found
+        ? { type: 'existing' as const, id: found.id, nazev: found.nazev }
+        : { type: 'existing' as const, id: m.metoda_id, nazev: String(m.metoda_id) }
+    })
   )
 
   // Služby
@@ -121,9 +126,6 @@ export function EditForm({ medailonek, kategorie, metody, priceLevels }: Props) 
     })
   }
 
-  function toggleMetoda(id: number) {
-    setMetodaIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id])
-  }
 
   async function handleSubmit() {
     if (!jmeno.trim() || !prijmeni.trim()) { setError('Jméno a příjmení jsou povinné.'); return }
@@ -144,7 +146,8 @@ export function EditForm({ medailonek, kategorie, metody, priceLevels }: Props) 
       jmeno, prijmeni, display_name: displayName,
       bio, kontakt_email: email, telefon, ico,
       mesto_ids: mesta.map(m => m.id),
-      metoda_ids: metodaIds,
+      metoda_ids: selectedMetody.filter(m => m.type === 'existing').map(m => (m as { type: 'existing'; id: number; nazev: string }).id),
+      nove_metody: selectedMetody.filter(m => m.type === 'new').map(m => m.nazev),
       services,
       social_links: socialLinks,
     })
@@ -323,7 +326,7 @@ export function EditForm({ medailonek, kategorie, metody, priceLevels }: Props) 
 
         <div className="flex flex-col gap-3">
           <h3 className="font-medium">Metody <span className="text-sm text-muted-foreground font-normal">(nepovinné)</span></h3>
-          <MetodaPicker metody={metody} value={metodaIds} onChange={setMetodaIds} />
+          <MetodaPicker metody={metody} value={selectedMetody} onChange={setSelectedMetody} />
         </div>
       </section>
 

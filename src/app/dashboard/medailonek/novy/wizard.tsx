@@ -8,7 +8,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { CityPicker, type SelectedMesto } from './city-picker'
 import { createMedailonek, type ServiceInput, type SocialLinkInput } from '@/app/actions/medailonek'
 import { TagInput } from '@/components/ui/tag-input'
-import { MetodaPicker } from '@/components/ui/metoda-picker'
+import { MetodaPicker, type SelectedMetoda } from '@/components/ui/metoda-picker'
 
 type Kategorie = { id: number; nazev: string }
 type Metoda = { id: number; nazev: string }
@@ -53,7 +53,7 @@ export function MedailonekWizard({ kategorie, metody, priceLevels }: Props) {
 
   // Step 3
   const [services, setServices] = useState<ServiceInput[]>([{ ...EMPTY_SERVICE }])
-  const [metodaIds, setMetodaIds] = useState<number[]>([])
+  const [selectedMetody, setSelectedMetody] = useState<SelectedMetoda[]>([])
 
   function updateService(idx: number, patch: Partial<ServiceInput>) {
     setServices(prev => prev.map((s, i) => i === idx ? { ...s, ...patch } : s))
@@ -66,9 +66,6 @@ export function MedailonekWizard({ kategorie, metody, priceLevels }: Props) {
     })
   }
 
-  function toggleMetoda(id: number) {
-    setMetodaIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id])
-  }
 
   function canAdvanceStep1() {
     return jmeno.trim() && prijmeni.trim() && bio.trim().length >= 30
@@ -94,7 +91,8 @@ export function MedailonekWizard({ kategorie, metody, priceLevels }: Props) {
       jmeno, prijmeni, display_name: displayName,
       bio, kontakt_email: email, telefon, ico,
       mesto_ids: mesta.map(m => m.id),
-      metoda_ids: metodaIds,
+      metoda_ids: selectedMetody.filter(m => m.type === 'existing').map(m => (m as { type: 'existing'; id: number; nazev: string }).id),
+      nove_metody: selectedMetody.filter(m => m.type === 'new').map(m => m.nazev),
       services,
       social_links: socialLinks,
     })
@@ -327,7 +325,7 @@ export function MedailonekWizard({ kategorie, metody, priceLevels }: Props) {
           <div className="flex flex-col gap-3">
             <h3 className="font-medium">Metody <span className="text-sm text-muted-foreground">(nepovinné)</span></h3>
             <p className="text-sm text-muted-foreground">Vyhledejte metody, které ve své práci využíváte.</p>
-            <MetodaPicker metody={metody} value={metodaIds} onChange={setMetodaIds} />
+            <MetodaPicker metody={metody} value={selectedMetody} onChange={setSelectedMetody} />
           </div>
 
           {error && (

@@ -29,11 +29,26 @@ export type MedailonekInput = {
   ico: string
   mesto_ids: number[]
   metoda_ids: number[]
+  nove_metody: string[]
   services: ServiceInput[]
   social_links: SocialLinkInput[]
 }
 
 type SupabaseClient = Awaited<ReturnType<typeof createClient>>
+
+async function saveNoveMetody(supabase: SupabaseClient, medailonekId: string, nazvy: string[]): Promise<void> {
+  const unique = [...new Set(nazvy.map(n => n.trim()).filter(Boolean))]
+  for (const nazev of unique) {
+    const { data: created } = await supabase
+      .from('metoda')
+      .insert({ nazev, status: 'navrzena' })
+      .select('id')
+      .single()
+    if (created) {
+      await supabase.from('medailonek_metoda').insert({ medailonek_id: medailonekId, metoda_id: created.id })
+    }
+  }
+}
 
 async function saveKeywords(supabase: SupabaseClient, serviceId: number, slova: string[]) {
   const normalized = slova.map(s => s.trim().toLowerCase()).filter(Boolean)
@@ -88,6 +103,7 @@ export async function createMedailonek(data: MedailonekInput) {
       data.metoda_ids.map(metoda_id => ({ medailonek_id: mid, metoda_id }))
     )
   }
+  if (data.nove_metody.length > 0) await saveNoveMetody(supabase, mid, data.nove_metody)
 
   // Služby
   for (const svc of data.services) {
@@ -167,6 +183,7 @@ export async function updateMedailonek(data: MedailonekInput) {
       data.metoda_ids.map(metoda_id => ({ medailonek_id: mid, metoda_id }))
     )
   }
+  if (data.nove_metody.length > 0) await saveNoveMetody(supabase, mid, data.nove_metody)
 
   // Sociální sítě
   await supabase.from('social_link').delete().eq('medailonek_id', mid)

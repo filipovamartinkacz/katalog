@@ -4,10 +4,14 @@ import { useState, useRef, useEffect } from 'react'
 
 type Metoda = { id: number; nazev: string }
 
+export type SelectedMetoda =
+  | { type: 'existing'; id: number; nazev: string }
+  | { type: 'new'; nazev: string }
+
 type Props = {
   metody: Metoda[]
-  value: number[]
-  onChange: (ids: number[]) => void
+  value: SelectedMetoda[]
+  onChange: (items: SelectedMetoda[]) => void
 }
 
 export function MetodaPicker({ metody, value, onChange }: Props) {
@@ -15,21 +19,35 @@ export function MetodaPicker({ metody, value, onChange }: Props) {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const selected = metody.filter(m => value.includes(m.id))
-  const suggestions = query.trim().length === 0
+  const selectedIds = new Set(value.flatMap(m => m.type === 'existing' ? [m.id] : []))
+  const selectedNames = new Set(value.map(m => m.nazev.toLowerCase()))
+
+  const existingSuggestions = query.trim().length === 0
     ? []
     : metody
-        .filter(m => !value.includes(m.id) && m.nazev.toLowerCase().includes(query.toLowerCase()))
+        .filter(m => !selectedIds.has(m.id) && m.nazev.toLowerCase().includes(query.toLowerCase()))
         .slice(0, 8)
 
-  function add(id: number) {
-    onChange([...value, id])
+  const trimmed = query.trim()
+  const exactMatch = metody.some(m => m.nazev.toLowerCase() === trimmed.toLowerCase())
+  const alreadyAdded = selectedNames.has(trimmed.toLowerCase())
+  const showNewOption = trimmed.length > 1 && !exactMatch && !alreadyAdded
+
+  function addExisting(m: Metoda) {
+    onChange([...value, { type: 'existing', id: m.id, nazev: m.nazev }])
     setQuery('')
     setOpen(false)
   }
 
-  function remove(id: number) {
-    onChange(value.filter(i => i !== id))
+  function addNew() {
+    if (!trimmed) return
+    onChange([...value, { type: 'new', nazev: trimmed }])
+    setQuery('')
+    setOpen(false)
+  }
+
+  function remove(idx: number) {
+    onChange(value.filter((_, i) => i !== idx))
   }
 
   useEffect(() => {
@@ -45,17 +63,22 @@ export function MetodaPicker({ metody, value, onChange }: Props) {
   return (
     <div ref={containerRef} className="flex flex-col gap-2">
       {/* Vybrané metody */}
-      {selected.length > 0 && (
+      {value.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
-          {selected.map(m => (
+          {value.map((m, idx) => (
             <span
-              key={m.id}
-              className="inline-flex items-center gap-1 rounded-full border border-accent/40 bg-accent/10 px-3 py-0.5 text-sm font-medium text-accent-foreground"
+              key={idx}
+              className={`inline-flex items-center gap-1 rounded-full border px-3 py-0.5 text-sm font-medium ${
+                m.type === 'new'
+                  ? 'border-amber-300 bg-amber-50 text-amber-800'
+                  : 'border-accent/40 bg-accent/10 text-accent-foreground'
+              }`}
             >
+              {m.type === 'new' && <span className="text-xs opacity-70">nový·</span>}
               {m.nazev}
               <button
                 type="button"
-                onClick={() => remove(m.id)}
+                onClick={() => remove(idx)}
                 className="ml-0.5 text-muted-foreground hover:text-foreground leading-none"
                 aria-label={`Odebrat ${m.nazev}`}
               >
@@ -72,40 +95,49 @@ export function MetodaPicker({ metody, value, onChange }: Props) {
           type="text"
           value={query}
           onChange={e => { setQuery(e.target.value); setOpen(true) }}
-          onFocus={() => query.trim() && setOpen(true)}
+          onFocus={() => setOpen(true)}
           onKeyDown={e => {
-            if (e.key === 'Escape') setOpen(false)
-            if (e.key === 'Enter' && suggestions.length > 0) {
+            if (e.key === 'Escape') { setOpen(false); return }
+            if (e.key === 'Enter') {
               e.preventDefault()
-              add(suggestions[0].id)
+              if (existingSuggestions.length > 0) addExisting(existingSuggestions[0])
+              else if (showNewOption) addNew()
             }
           }}
           placeholder="Začněte psát název metody…"
           className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         />
 
-        {open && suggestions.length > 0 && (
-          <ul className="absolute z-10 mt-1 w-full rounded-lg border border-border bg-background shadow-md">
-            {suggestions.map(m => (
+        {open && (existingSuggestions.length > 0 || showNewOption) && (
+          <ul className="absolute z-10 mt-1 w-full rounded-lg border border-border bg-background shadow-md overflow-hidden">
+            {existingSuggestions.map(m => (
               <li key={m.id}>
                 <button
                   type="button"
-                  onMouseDown={e => { e.preventDefault(); add(m.id) }}
+                  onMouseDown={e => { e.preventDefault(); addExisting(m) }}
                   className="w-full px-3 py-2 text-left text-sm hover:bg-muted transition-colors"
                 >
                   {m.nazev}
                 </button>
               </li>
             ))}
+            {showNewOption && (
+              <li>
+                <button
+                  type="button"
+                  onMouseDown={e => { e.preventDefault(); addNew() }}
+                  className="w-full px-3 py-2 text-left text-sm text-amber-700 hover:bg-amber-50 transition-colors border-t border-border"
+                >
+                  Přidat „{trimmed}" jako nový návrh ke schválení
+                </button>
+              </li>
+            )}
           </ul>
         )}
-
-        {open && query.trim().length > 0 && suggestions.length === 0 && (
-          <div className="absolute z-10 mt-1 w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted-foreground shadow-md">
-            Žádná metoda nenalezena
-          </div>
-        )}
       </div>
+      {value.some(m => m.type === 'new') && (
+        <p className="text-xs text-amber-700">Amber položky jsou nové návrhy — admin je schválí před zveřejněním.</p>
+      )}
     </div>
   )
 }
