@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
@@ -37,16 +38,17 @@ export type MedailonekInput = {
 type SupabaseClient = Awaited<ReturnType<typeof createClient>>
 
 async function saveNoveMetody(supabase: SupabaseClient, medailonekId: string, nazvy: string[]): Promise<void> {
+  const admin = createAdminClient()
   const unique = [...new Set(nazvy.map(n => n.trim()).filter(Boolean))]
   for (const nazev of unique) {
-    const { data: created } = await supabase
-      .from('metoda')
-      .insert({ nazev, status: 'navrzena' })
-      .select('id')
-      .single()
-    if (created) {
-      await supabase.from('medailonek_metoda').insert({ medailonek_id: medailonekId, metoda_id: created.id })
-    }
+    // Upsert — pokud metoda se stejným názvem už existuje (i jako 'navrzena'), použijeme ji
+    await admin.from('metoda')
+      .upsert({ nazev, status: 'navrzena' }, { onConflict: 'nazev', ignoreDuplicates: true })
+    const { data: metoda } = await admin.from('metoda').select('id').eq('nazev', nazev).single()
+    if (!metoda) continue
+    // Propojení — ignorujeme pokud už existuje (medailonek mohl mít tuto metodu dřív)
+    await supabase.from('medailonek_metoda')
+      .upsert({ medailonek_id: medailonekId, metoda_id: metoda.id }, { onConflict: 'medailonek_id,metoda_id', ignoreDuplicates: true })
   }
 }
 
