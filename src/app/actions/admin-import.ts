@@ -35,6 +35,7 @@ export type ImportResult = {
   ok: boolean
   message: string
   warnings: string[]
+  medailonekId?: string
 }
 
 export async function importMedailonekFromJson(raw: string): Promise<ImportResult> {
@@ -278,5 +279,6 @@ export async function importMedailonekFromJson(raw: string): Promise<ImportResul
     ok: true,
     message: `Medailonek pro ${data.jmeno} ${data.prijmeni} vytvořen. Účet: ${action}.`,
     warnings,
+    medailonekId: mid,
   }
 }

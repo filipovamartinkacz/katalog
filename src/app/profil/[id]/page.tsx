@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { ApproveButton } from '@/app/admin/medailonky/approve-button'
 
 const PLATFORM_LABELS: Record<string, string> = {
   web: 'Web',
@@ -72,10 +73,15 @@ export default async function ProfilPage({ params }: Props) {
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       {isAdmin && !isPublished && (
         <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          Náhled — profil ještě není zveřejněn.{' '}
-          <Link href="/admin/medailonky" className="font-semibold underline hover:no-underline">
-            Zpět na admin
-          </Link>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span>
+              Náhled — profil ještě není zveřejněn.{' '}
+              <Link href="/admin/medailonky" className="font-semibold underline hover:no-underline">
+                Zpět na admin
+              </Link>
+            </span>
+            <ApproveButton id={id} isPublished={false} />
+          </div>
         </div>
       )}
       <Link href={isAdmin && !isPublished ? '/admin/medailonky' : '/katalog'} className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">

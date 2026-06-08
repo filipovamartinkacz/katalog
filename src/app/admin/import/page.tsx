@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Textarea } from '@/components/ui/textarea'
 import { buttonVariants } from '@/components/ui/button'
 import { importMedailonekFromJson, type ImportJson } from '@/app/actions/admin-import'
@@ -58,7 +59,7 @@ function parsePreview(raw: string): Preview | null {
 export default function ImportPage() {
   const [json, setJson] = useState('')
   const [loading, setLoading] = useState(false)
-  const [result, setResult] = useState<{ ok: boolean; message: string; warnings: string[] } | null>(null)
+  const [result, setResult] = useState<{ ok: boolean; message: string; warnings: string[]; medailonekId?: string } | null>(null)
 
   const preview = parsePreview(json)
 
@@ -169,6 +170,14 @@ Na konci sestav JSON přesně v tomto formátu:
             <ul className="mt-2 list-disc pl-4 space-y-0.5 text-xs opacity-80">
               {result.warnings.map((w, i) => <li key={i}>{w}</li>)}
             </ul>
+          )}
+          {result.ok && result.medailonekId && (
+            <Link
+              href={`/profil/${result.medailonekId}`}
+              className={buttonVariants({ size: 'sm' }) + ' mt-3 inline-flex'}
+            >
+              Zobrazit profil →
+            </Link>
           )}
         </div>
       )}
