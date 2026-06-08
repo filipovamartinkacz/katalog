@@ -131,8 +131,22 @@ export async function importMedailonekFromJson(raw: string): Promise<ImportResul
 
   // Kategorie
   const { data: allKat } = await supabase.from('kategorie').select('id, nazev')
-  const katMap = Object.fromEntries((allKat ?? []).map(k => [k.nazev.toLowerCase(), k.id]))
+  const allKatList = allKat ?? []
+  const katMap = Object.fromEntries(allKatList.map(k => [k.nazev.toLowerCase(), k.id]))
   const ostatniId: number | undefined = katMap['ostatní']
+
+  function resolveKategorie(nazev: string): { id: number; matched: string } | null {
+    const key = nazev.toLowerCase()
+    // 1. přesná shoda
+    if (katMap[key]) return { id: katMap[key], matched: nazev }
+    // 2. DB kategorie obsahuje hledaný text
+    const partial = allKatList.find(k => k.nazev.toLowerCase().includes(key))
+    if (partial) return { id: partial.id, matched: partial.nazev }
+    // 3. hledaný text obsahuje část názvu DB kategorie (bez "Ostatní")
+    const reverse = allKatList.find(k => k.nazev !== 'Ostatní' && key.includes(k.nazev.toLowerCase()))
+    if (reverse) return { id: reverse.id, matched: reverse.nazev }
+    return null
+  }
 
   // Vytvoř medailonek ────────────────────────────────────────
   const adminSupabase = createAdminClient()
@@ -197,12 +211,17 @@ export async function importMedailonekFromJson(raw: string): Promise<ImportResul
       continue
     }
 
-    const katIds = svc.kategorie
-      .map(n => katMap[n.toLowerCase()])
-      .filter((id): id is number => !!id)
-
+    const katIds: number[] = []
     for (const k of svc.kategorie) {
-      if (!katMap[k.toLowerCase()]) warnings.push(`Kategorie "${k}" nenalezena — přeskočena.`)
+      const resolved = resolveKategorie(k)
+      if (resolved) {
+        katIds.push(resolved.id)
+        if (resolved.matched.toLowerCase() !== k.toLowerCase()) {
+          warnings.push(`ℹ️ Kategorie "${k}" přiřazena jako "${resolved.matched}".`)
+        }
+      } else {
+        warnings.push(`Kategorie "${k}" nenalezena — přeskočena.`)
+      }
     }
 
     // Fallback na "Ostatní" — upozornění pro admina ke zvážení nové kategorie
