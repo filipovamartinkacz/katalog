@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ApproveButton } from '@/app/admin/medailonky/approve-button'
+import { MetodaApproveButton } from './metoda-approve-button'
 
 const PLATFORM_LABELS: Record<string, string> = {
   web: 'Web',
@@ -38,7 +39,7 @@ export default async function ProfilPage({ params }: Props) {
       is_published,
       social_link ( platform, url ),
       medailonek_location ( mesto ( nazev, okres ( nazev, kraj ( nazev ) ) ) ),
-      medailonek_metoda ( metoda ( nazev ) ),
+      medailonek_metoda ( metoda ( id, nazev, status ) ),
       service (
         id, nazev, popis, delivery_form, booking_url,
         price_level ( label ),
@@ -64,7 +65,7 @@ export default async function ProfilPage({ params }: Props) {
 
   const metody = (m.medailonek_metoda as any[]).flatMap((mm: any) => {
     const met = Array.isArray(mm.metoda) ? mm.metoda[0] : mm.metoda
-    return met ? [met.nazev as string] : []
+    return met ? [{ id: met.id as number, nazev: met.nazev as string, status: met.status as string }] : []
   })
 
   const isPublished = (m as any).is_published as boolean
@@ -216,11 +217,24 @@ export default async function ProfilPage({ params }: Props) {
           <h2 className="mb-3 text-lg font-semibold">Metody a přístupy</h2>
           <div className="flex flex-wrap gap-2">
             {metody.map(met => (
-              <span key={met} className="rounded-full border border-border px-3 py-1 text-sm">
-                {met}
+              <span
+                key={met.id}
+                className={`inline-flex items-center rounded-full border px-3 py-1 text-sm ${
+                  met.status === 'navrzena'
+                    ? 'border-amber-300 bg-amber-50 text-amber-800'
+                    : 'border-border'
+                }`}
+              >
+                {met.nazev}
+                {isAdmin && met.status === 'navrzena' && (
+                  <MetodaApproveButton id={met.id} />
+                )}
               </span>
             ))}
           </div>
+          {isAdmin && metody.some(m => m.status === 'navrzena') && (
+            <p className="mt-2 text-xs text-amber-700">Amber = čeká na schválení</p>
+          )}
         </div>
       )}
     </div>

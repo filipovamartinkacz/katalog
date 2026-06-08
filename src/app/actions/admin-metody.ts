@@ -21,6 +21,7 @@ export async function schvalitMetodu(id: number) {
 
   if (error) return { error: error.message }
   revalidatePath('/admin/metody')
+  revalidatePath('/profil', 'layout')
   return { ok: true }
 }
 
