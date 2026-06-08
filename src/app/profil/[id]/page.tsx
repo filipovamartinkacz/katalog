@@ -39,7 +39,7 @@ export default async function ProfilPage({ params }: Props) {
       is_published,
       social_link ( platform, url ),
       medailonek_location ( mesto ( nazev, okres ( nazev, kraj ( nazev ) ) ) ),
-      medailonek_metoda ( metoda ( id, nazev, status ) ),
+      medailonek_metoda ( metoda ( id, nazev, status, ma_ochrannou_znamku ) ),
       service (
         id, nazev, popis, delivery_form, booking_url,
         price_level ( label ),
@@ -65,7 +65,7 @@ export default async function ProfilPage({ params }: Props) {
 
   const metody = (m.medailonek_metoda as any[]).flatMap((mm: any) => {
     const met = Array.isArray(mm.metoda) ? mm.metoda[0] : mm.metoda
-    return met ? [{ id: met.id as number, nazev: met.nazev as string, status: met.status as string }] : []
+    return met ? [{ id: met.id as number, nazev: met.nazev as string, status: met.status as string, ochrannaZnamka: met.ma_ochrannou_znamku as boolean }] : []
   })
 
   const isPublished = (m as any).is_published as boolean
@@ -225,7 +225,7 @@ export default async function ProfilPage({ params }: Props) {
                     : 'border-border'
                 }`}
               >
-                {met.nazev}
+                {met.nazev}{met.ochrannaZnamka && <sup className="ml-0.5 text-xs">®</sup>}
                 {isAdmin && met.status === 'navrzena' && (
                   <MetodaApproveButton id={met.id} />
                 )}

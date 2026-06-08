@@ -7,7 +7,7 @@ export default async function AdminMetodyPage() {
   // Načteme všechny metody (admin client obchází RLS status = 'aktivni')
   const { data: metody } = await admin
     .from('metoda')
-    .select('id, nazev, popis, status, medailonek_metoda(count)')
+    .select('id, nazev, popis, status, ma_ochrannou_znamku, medailonek_metoda(count)')
     .order('status', { ascending: false }) // 'navrzena' před 'aktivni'
     .order('nazev')
 
@@ -35,6 +35,7 @@ export default async function AdminMetodyPage() {
                 nazev={m.nazev}
                 popis={m.popis}
                 status={m.status}
+                maOchrannaZnamka={m.ma_ochrannou_znamku}
                 pouzitaV={(m.medailonek_metoda as any)?.[0]?.count ?? 0}
               />
             ))}
@@ -54,6 +55,7 @@ export default async function AdminMetodyPage() {
               nazev={m.nazev}
               popis={m.popis}
               status={m.status}
+              maOchrannaZnamka={m.ma_ochrannou_znamku}
               pouzitaV={(m.medailonek_metoda as any)?.[0]?.count ?? 0}
             />
           ))}

@@ -40,17 +40,18 @@ export async function zamitnoutMetodu(id: number) {
   return { ok: true }
 }
 
-export async function upravitMetodu(id: number, nazev: string, popis: string | null) {
+export async function upravitMetodu(id: number, nazev: string, popis: string | null, maOchrannaZnamka: boolean) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user || !isAdmin(user.email)) return { error: 'Nemáš oprávnění.' }
 
   const { error } = await createAdminClient()
     .from('metoda')
-    .update({ nazev: nazev.trim(), popis: popis?.trim() || null, status: 'aktivni' })
+    .update({ nazev: nazev.trim(), popis: popis?.trim() || null, status: 'aktivni', ma_ochrannou_znamku: maOchrannaZnamka })
     .eq('id', id)
 
   if (error) return { error: error.message }
   revalidatePath('/admin/metody')
+  revalidatePath('/profil', 'layout')
   return { ok: true }
 }

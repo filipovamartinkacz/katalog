@@ -9,16 +9,18 @@ type Props = {
   nazev: string
   popis: string | null
   status: string
-  pouzitaV: number // počet medailonků
+  maOchrannaZnamka: boolean
+  pouzitaV: number
 }
 
-export function MetodaRow({ id, nazev, popis, status, pouzitaV }: Props) {
+export function MetodaRow({ id, nazev, popis, status, maOchrannaZnamka, pouzitaV }: Props) {
   const [editing, setEditing] = useState(false)
   const [editNazev, setEditNazev] = useState(nazev)
   const [editPopis, setEditPopis] = useState(popis ?? '')
+  const [editOchrannaZnamka, setEditOchrannaZnamka] = useState(maOchrannaZnamka)
   const [loading, setLoading] = useState(false)
 
-  async function handle(fn: () => Promise<{ ok?: boolean; error?: string } | undefined>) {
+  async function handle(fn: () => Promise<unknown>) {
     setLoading(true)
     await fn()
     setLoading(false)
@@ -39,11 +41,20 @@ export function MetodaRow({ id, nazev, popis, status, pouzitaV }: Props) {
           placeholder="Popis (nepovinný)"
           className="rounded-lg border border-border bg-background px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-primary/40 resize-none"
         />
+        <label className="flex items-center gap-2 cursor-pointer text-sm">
+          <input
+            type="checkbox"
+            checked={editOchrannaZnamka}
+            onChange={e => setEditOchrannaZnamka(e.target.checked)}
+            className="h-4 w-4 rounded border-border accent-primary"
+          />
+          Ochranná známka <span className="text-muted-foreground">(za názvem se zobrazí ®)</span>
+        </label>
         <div className="flex gap-2">
           <button
             type="button"
             disabled={loading || !editNazev.trim()}
-            onClick={() => handle(() => upravitMetodu(id, editNazev, editPopis || null)).then(() => setEditing(false))}
+            onClick={() => handle(() => upravitMetodu(id, editNazev, editPopis || null, editOchrannaZnamka)).then(() => setEditing(false))}
             className={buttonVariants({ size: 'sm' }) + ' disabled:opacity-50'}
           >
             {loading ? '…' : 'Schválit a uložit'}
@@ -60,14 +71,16 @@ export function MetodaRow({ id, nazev, popis, status, pouzitaV }: Props) {
     <div className="flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-4">
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <p className="font-semibold">{nazev}</p>
+          <p className="font-semibold">
+            {nazev}{maOchrannaZnamka && <sup className="ml-0.5 text-xs">®</sup>}
+          </p>
           {status === 'navrzena' && (
             <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">Návrh</span>
           )}
         </div>
         {popis && <p className="mt-0.5 text-sm text-muted-foreground">{popis}</p>}
         <p className="mt-1 text-xs text-muted-foreground">
-          Použita v {pouzitaV} {pouzitaV === 1 ? 'profilu' : pouzitaV < 5 ? 'profilech' : 'profilech'}
+          Použita v {pouzitaV} {pouzitaV === 1 ? 'profilu' : 'profilech'}
         </p>
       </div>
       <div className="flex shrink-0 items-center gap-2">
