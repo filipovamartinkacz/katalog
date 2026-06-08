@@ -23,7 +23,7 @@ export type ImportJson = {
   sluzby: {
     nazev: string
     popis?: string
-    forma: 'osobne' | 'online' | 'oboji'
+    forma: string
     cena?: string                  // "€", "€€", "€€€", "€€€€"
     kategorie: string[]            // názvy kategorií
     klicova_slova?: string[]       // klíčová slova pro vyhledávání
@@ -183,7 +183,20 @@ export async function importMedailonekFromJson(raw: string): Promise<ImportResul
   }
 
   // Služby
+  // Normalizace hodnot forma — AI občas vygeneruje varianty mimo constraint
+  const FORMA_MAP: Record<string, 'osobne' | 'online' | 'oboji'> = {
+    osobne: 'osobne', online: 'online', oboji: 'oboji',
+    osobne_i_online: 'oboji', 'osobně': 'osobne', 'osobně i online': 'oboji',
+    both: 'oboji', hybrid: 'oboji',
+  }
+
   for (const svc of data.sluzby) {
+    const normalizedForma = FORMA_MAP[svc.forma.toLowerCase()] ?? null
+    if (!normalizedForma) {
+      warnings.push(`⚠️ Služba "${svc.nazev}" má neznámou hodnotu forma "${svc.forma}" — přeskočena.`)
+      continue
+    }
+
     const katIds = svc.kategorie
       .map(n => katMap[n.toLowerCase()])
       .filter((id): id is number => !!id)
@@ -209,7 +222,7 @@ export async function importMedailonekFromJson(raw: string): Promise<ImportResul
         medailonek_id: mid,
         nazev: svc.nazev.trim(),
         popis: svc.popis?.trim() || null,
-        delivery_form: svc.forma,
+        delivery_form: normalizedForma,
         booking_url: svc.booking_url?.trim() || null,
         price_level_id: svc.cena ? (priceMap[svc.cena] ?? null) : null,
       })
