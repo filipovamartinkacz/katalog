@@ -1,65 +1,97 @@
-import Image from "next/image";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { TypewriterText } from "@/components/ui/typewriter-text";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
+    <div className="flex flex-col">
+      {/* Hero */}
+      <section className="relative bg-secondary/40 px-4 py-24 sm:px-6 sm:py-36">
+        <div className="mx-auto max-w-3xl text-center">
+          <h1 className="text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            Najdi svou
+            <br />
+            <span className="sr-only">terapeutku, koučku nebo průvodkyni</span>
+            <span aria-hidden="true"><TypewriterText /></span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <div className="mx-auto mt-5 flex items-center justify-center gap-3">
+            <span className="h-px w-12 bg-accent" />
+            <span className="text-sm font-medium tracking-widest text-accent uppercase">
+              Prověřené podnikatelky
+            </span>
+            <span className="h-px w-12 bg-accent" />
+          </div>
+          <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">
+            Katalog podnikatelek nabízejících masáže, terapie,
+            koučink, péči v těhotenství a mnoho dalšího.
           </p>
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Link href="/katalog" className={buttonVariants({ size: "lg" })}>
+              Procházet katalog
+            </Link>
+            <Link
+              href="/pro-podnikatelky"
+              className="inline-flex h-9 items-center justify-center rounded-lg border border-accent bg-accent/10 px-2.5 text-sm font-medium text-accent-foreground transition-colors hover:bg-accent/20"
+            >
+              Jsem podnikatelka
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Kategorie */}
+      <section className="px-4 py-16 sm:px-6">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-center text-2xl font-bold text-foreground sm:text-3xl">
+            Čím vám mohou pomoci
+          </h2>
+          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {CATEGORIES.map((cat) => (
+              <Link
+                key={cat.slug}
+                href={`/katalog?kategorie=${cat.slug}`}
+                className="group flex flex-col items-center rounded-2xl border border-border bg-card p-5 text-center transition-colors hover:border-accent/60 hover:bg-accent/5"
+              >
+                <span className="text-3xl">{cat.emoji}</span>
+                <span className="mt-3 text-sm font-medium text-foreground group-hover:text-accent-foreground">
+                  {cat.label}
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* CTA pro podnikatelky */}
+      <section className="bg-primary px-4 py-16 sm:px-6">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="font-heading text-2xl font-bold text-primary-foreground sm:text-3xl">
+            Jsi podnikatelka ve službách?
+          </h2>
+          <p className="mt-4 text-primary-foreground/80">
+            Vytvoř si bezplatný profil a oslovuj zákaznice, které hledají právě to, co nabízíš.
+          </p>
+          <Link
+            href="/registrace"
+            className={buttonVariants({ variant: "secondary", size: "lg" }) + " mt-8 bg-primary-foreground text-primary hover:bg-primary-foreground/90"}
+          >
+            Zaregistrovat se zdarma
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }
+
+const CATEGORIES = [
+  { slug: "kosmetika",           label: "Kosmetika",              emoji: "✨" },
+  { slug: "masaze",              label: "Masáže",                 emoji: "🤲" },
+  { slug: "terapie",             label: "Terapie",                emoji: "🌿" },
+  { slug: "koucink",             label: "Koučink",                emoji: "🎯" },
+  { slug: "tehotenstvi-poporod", label: "Těhotenství & poporod",  emoji: "🌸" },
+  { slug: "vyziva",              label: "Výživa",                 emoji: "🥗" },
+  { slug: "pohyb-fyzioterapie",  label: "Pohyb",                  emoji: "🧘" },
+  { slug: "energie-spiritualita",label: "Energie",                emoji: "🔮" },
+  { slug: "poradenstvi",         label: "Poradenství",            emoji: "💬" },
+  { slug: "vzdelavani",          label: "Vzdělávání",             emoji: "📚" },
+];
