@@ -8,6 +8,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { CityPicker, type SelectedMesto } from './city-picker'
 import { createMedailonek, type ServiceInput, type SocialLinkInput } from '@/app/actions/medailonek'
 import { TagInput } from '@/components/ui/tag-input'
+import { MetodaPicker } from '@/components/ui/metoda-picker'
 
 type Kategorie = { id: number; nazev: string }
 type Metoda = { id: number; nazev: string }
@@ -325,19 +326,8 @@ export function MedailonekWizard({ kategorie, metody, priceLevels }: Props) {
           {/* Metody */}
           <div className="flex flex-col gap-3">
             <h3 className="font-medium">Metody <span className="text-sm text-muted-foreground">(nepovinné)</span></h3>
-            <p className="text-sm text-muted-foreground">Označte metody, které ve své práci využíváte.</p>
-            <div className="flex flex-wrap gap-2">
-              {metody.map(m => (
-                <button key={m.id} type="button" onClick={() => toggleMetoda(m.id)}
-                  className={`rounded-full border px-3 py-1 text-sm transition-colors ${
-                    metodaIds.includes(m.id)
-                      ? 'border-accent bg-accent/15 text-accent-foreground font-medium'
-                      : 'border-border hover:border-accent/40'
-                  }`}>
-                  {m.nazev}
-                </button>
-              ))}
-            </div>
+            <p className="text-sm text-muted-foreground">Vyhledejte metody, které ve své práci využíváte.</p>
+            <MetodaPicker metody={metody} value={metodaIds} onChange={setMetodaIds} />
           </div>
 
           {error && (
