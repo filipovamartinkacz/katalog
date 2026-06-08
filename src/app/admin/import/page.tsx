@@ -176,7 +176,7 @@ Na konci sestav JSON přesně v tomto formátu:
               href={`/profil/${result.medailonekId}`}
               className={buttonVariants({ size: 'sm' }) + ' mt-3 inline-flex'}
             >
-              Zobrazit profil →
+              Zobrazit náhled medailonku
             </Link>
           )}
         </div>
