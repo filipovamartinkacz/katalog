@@ -34,7 +34,7 @@ function RegistrationForm() {
       password,
       options: {
         data: { role: 'provider' },
-        emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=/dashboard/medailonek/novy`,
       },
     })
 

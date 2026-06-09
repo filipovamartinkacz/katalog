@@ -140,7 +140,7 @@ export async function createMedailonek(data: MedailonekInput) {
     )
   }
 
-  redirect('/dashboard?created=1')
+  redirect('/dashboard/medailonek/odeslano')
 }
 
 export async function updateMedailonek(data: MedailonekInput) {

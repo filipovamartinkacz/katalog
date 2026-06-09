@@ -6,7 +6,7 @@ import { buttonVariants } from '@/components/ui/button'
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ created?: string; updated?: string }>
+  searchParams: Promise<{ updated?: string }>
 }) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -21,26 +21,21 @@ export default async function DashboardPage({
     .eq('user_id', user.id)
     .maybeSingle()
 
-  const { created, updated } = await searchParams
+  if (!medailonek) redirect('/dashboard/medailonek/novy')
 
-  if (!medailonek) {
-    return (
-      <div className="mx-auto max-w-2xl px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold">Vítej na <span className="font-heading">žena Blažen<span className="text-accent">á</span></span>!</h1>
-        <p className="mt-3 text-muted-foreground">
-          Ještě nemáš vytvořený profil. Začni tím, že ho teď vytvoříš — zabere to asi 5 minut.
-        </p>
-        <Link href="/dashboard/medailonek/novy" className={buttonVariants({ size: 'lg' }) + ' mt-8'}>
-          Vytvořit profil
-        </Link>
-      </div>
-    )
-  }
+  const { updated } = await searchParams
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6">
+    <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
       <h1 className="text-2xl font-bold">Dashboard</h1>
 
+      {updated && (
+        <p className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+          Profil byl úspěšně uložen.
+        </p>
+      )}
+
+      {/* Profil card */}
       <div className="mt-6 rounded-2xl border border-border bg-card p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -53,23 +48,65 @@ export default async function DashboardPage({
               {medailonek.is_published ? 'Zveřejněný' : 'Čeká na schválení'}
             </span>
           </div>
-          <Link href="/dashboard/medailonek/upravit" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
-            Upravit profil
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href={`/profil/${medailonek.id}`} className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+              Náhled
+            </Link>
+            <Link href="/dashboard/medailonek/upravit" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+              Upravit
+            </Link>
+          </div>
         </div>
+
+        {/* Timeline — pouze pro neschválené */}
+        {!medailonek.is_published && (
+          <div className="mt-6 border-t border-border pt-5">
+            <p className="text-sm font-medium text-foreground">Kde je tvůj profil?</p>
+
+            <div className="mt-4 flex items-start gap-0">
+              {TIMELINE.map((step, i) => (
+                <div key={i} className="flex items-start">
+                  <div className="flex flex-col items-center">
+                    <div className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold ${
+                      i === 0
+                        ? 'bg-primary text-primary-foreground'
+                        : i === 1
+                        ? 'bg-accent/20 text-accent-foreground ring-2 ring-accent/30'
+                        : 'bg-muted text-muted-foreground'
+                    }`}>
+                      {i === 0 ? '✓' : i + 1}
+                    </div>
+                    <p className={`mt-1.5 max-w-[72px] text-center text-[11px] leading-tight ${
+                      i === 1 ? 'font-medium text-foreground' : 'text-muted-foreground'
+                    }`}>
+                      {step}
+                    </p>
+                  </div>
+                  {i < TIMELINE.length - 1 && (
+                    <div className="mx-2 mt-3 h-px w-10 shrink-0 bg-border" />
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-4 text-xs text-muted-foreground">
+              Obvykle schvalujeme do 2 pracovních dní. Jakmile bude profil schválený, dostaneš e-mail.
+            </p>
+          </div>
+        )}
+
+        {/* Profil je live */}
+        {medailonek.is_published && (
+          <div className="mt-4 rounded-xl bg-green-50 px-4 py-3 text-sm text-green-800">
+            Tvůj profil je živý v katalogu.{' '}
+            <Link href={`/profil/${medailonek.id}`} className="font-medium underline hover:no-underline">
+              Zobrazit profil →
+            </Link>
+          </div>
+        )}
       </div>
-
-      {updated && (
-        <p className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
-          Profil byl úspěšně uložen.
-        </p>
-      )}
-
-      {!medailonek.is_published && !updated && (
-        <p className="mt-4 text-sm text-muted-foreground">
-          Tvůj profil je připraven a čeká na schválení administrátorem. Jakmile bude schválený, zobrazí se v katalogu.
-        </p>
-      )}
     </div>
   )
 }
+
+const TIMELINE = ['Profil vytvořen', 'Čeká na schválení', 'Živý v katalogu']
