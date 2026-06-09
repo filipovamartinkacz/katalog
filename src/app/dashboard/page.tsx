@@ -26,7 +26,7 @@ export default async function DashboardPage({
   if (!medailonek) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-16 text-center">
-        <h1 className="text-2xl font-bold">Vítej v Katalogu!</h1>
+        <h1 className="text-2xl font-bold">Vítej na <span className="font-heading">žena Blažen<span className="text-accent">á</span></span>!</h1>
         <p className="mt-3 text-muted-foreground">
           Ještě nemáš vytvořený profil. Začni tím, že ho teď vytvoříš — zabere to asi 5 minut.
         </p>

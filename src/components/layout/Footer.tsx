@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "@/components/ui/logo";
 
 export function Footer() {
   return (
@@ -6,7 +7,7 @@ export function Footer() {
       <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
           <div>
-            <p className="font-heading text-lg font-semibold text-primary">Katalog<span className="text-accent">.</span></p>
+            <Logo className="h-[18px] w-auto" />
             <p className="mt-1 text-sm text-muted-foreground">
               Síť prověřených podnikatelek ve službách.
             </p>
@@ -26,7 +27,7 @@ export function Footer() {
         </div>
 
         <p className="mt-8 text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Katalog. Všechna práva vyhrazena.
+          © {new Date().getFullYear()} žena BlaŽená. Všechna práva vyhrazena.
         </p>
       </div>
     </footer>

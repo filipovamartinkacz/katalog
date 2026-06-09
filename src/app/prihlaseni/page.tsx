@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label'
 import { buttonVariants } from '@/components/ui/button'
 import { OAuthButtons } from '@/components/auth/oauth-buttons'
 import { Suspense } from 'react'
+import { Logo } from '@/components/ui/logo'
 
 function LoginForm() {
   const router = useRouter()
@@ -42,8 +43,8 @@ function LoginForm() {
   return (
     <div className="mx-auto w-full max-w-sm">
       <div className="mb-8 text-center">
-        <Link href="/" className="font-heading text-2xl font-semibold text-primary">
-          Katalog<span className="text-accent">.</span>
+        <Link href="/">
+          <Logo className="h-7 w-auto" />
         </Link>
         <h1 className="mt-6 text-xl font-semibold text-foreground">Přihlásit se</h1>
       </div>

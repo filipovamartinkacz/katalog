@@ -6,8 +6,69 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="relative bg-secondary/40 px-4 py-24 sm:px-6 sm:py-36">
-        <div className="mx-auto max-w-3xl text-center">
+      <section
+        className="relative overflow-hidden -mt-16 pt-40 pb-24 px-4 sm:pt-52 sm:pb-36 sm:px-6"
+        style={{ background: 'radial-gradient(circle at 95% 0%, oklch(0.91 0.038 14) 0%, oklch(0.988 0.006 75) 48%)' }}
+      >
+        {/* Teal blob — dole vlevo, částečně mimo obrazovku */}
+        <div
+          className="pointer-events-none absolute -bottom-16 -left-16 h-56 w-56 rounded-full"
+          style={{ background: 'oklch(0.68 0.07 188)', opacity: 0.10 }}
+        />
+
+        {/* Botanické listy — dole vlevo, malé rohové */}
+        <svg
+          className="pointer-events-none absolute bottom-0 left-0 h-36 w-28"
+          viewBox="0 0 180 210"
+          fill="none"
+          aria-hidden="true"
+          stroke="oklch(0.50 0.08 188)"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{ opacity: 0.30 }}
+        >
+          <path strokeWidth="1.8" d="M 38,208 C 42,175 47,145 54,114 C 61,83 66,53 74,16" />
+          {/* lístek pár 1 */}
+          <path strokeWidth="1.6" d="M 52,117 C 26,104 9,83 16,61 C 33,70 50,92 52,117 Z" />
+          <path strokeWidth="1" d="M 52,117 L 16,61" />
+          <path strokeWidth="1.6" d="M 56,111 C 80,98 93,77 86,55 C 69,64 55,86 56,111 Z" />
+          <path strokeWidth="1" d="M 56,111 L 86,55" />
+          {/* lístek pár 2 */}
+          <path strokeWidth="1.6" d="M 59,77 C 36,64 23,44 30,23 C 47,32 60,54 59,77 Z" />
+          <path strokeWidth="1" d="M 59,77 L 30,23" />
+          <path strokeWidth="1.6" d="M 64,71 C 87,58 99,38 92,17 C 75,26 62,49 64,71 Z" />
+          <path strokeWidth="1" d="M 64,71 L 92,17" />
+          {/* lístek pár 3 — vrchol stonku */}
+          <path strokeWidth="1.6" d="M 68,40 C 48,30 38,14 44,2 C 58,8 69,26 68,40 Z" />
+          <path strokeWidth="1" d="M 68,40 L 44,2" />
+          <path strokeWidth="1.6" d="M 72,35 C 91,25 99,10 93,0 C 78,6 71,22 72,35 Z" />
+          <path strokeWidth="1" d="M 72,35 L 93,0" />
+        </svg>
+
+        {/* Oválné podbarvení za flourishem — vlevo nahoře */}
+        <div
+          className="pointer-events-none absolute -left-16 top-[20%] h-56 w-44 rounded-full"
+          style={{ background: 'oklch(0.72 0.06 188)', opacity: 0.16 }}
+        />
+
+        {/* Zlatý kaligrafický flourish — vlevo */}
+        <svg
+          className="pointer-events-none absolute left-6 sm:left-10 top-[28%]"
+          width="56" height="84"
+          viewBox="0 0 72 108"
+          fill="none"
+          aria-hidden="true"
+          stroke="oklch(0.70 0.13 78)"
+          strokeLinecap="round"
+          style={{ opacity: 0.55 }}
+        >
+          <path strokeWidth="1.8" d="M 6,94 C 18,50 42,28 58,38 C 74,48 70,74 52,72 C 34,70 22,48 30,26 C 38,4 64,2 70,22" />
+        </svg>
+
+        {/* Měkký přechod do další sekce */}
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-b from-transparent to-background" />
+
+        <div className="relative z-10 mx-auto max-w-3xl text-center">
           <h1 className="text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
             Najdi svou
             <br />
@@ -22,7 +83,7 @@ export default function Home() {
             <span className="h-px w-12 bg-accent" />
           </div>
           <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">
-            Katalog podnikatelek nabízejících masáže, terapie,
+            Síť prověřených podnikatelek nabízejících masáže, terapie,
             koučink, péči v těhotenství a mnoho dalšího.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">

@@ -15,8 +15,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Katalog podnikatelek",
-  description: "Katalog prověřených podnikatelek ve službách — masáže, terapie, koučink, péče v těhotenství a další.",
+  title: "žena BlaŽená",
+  description: "Síť prověřených podnikatelek ve službách — masáže, terapie, koučink, péče v těhotenství a další.",
 };
 
 export default function RootLayout({

@@ -139,7 +139,7 @@ export default async function KatalogPage({ searchParams }: Props) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Katalog podnikatelek</h1>
+        <h1 className="text-3xl font-bold">Podnikatelky pro tebe</h1>
         <p className="mt-2 text-muted-foreground">Najdi odbornici přesně pro tebe</p>
       </div>
 
