@@ -91,6 +91,14 @@ export default function Home() {
               Procházet katalog
             </Link>
             <Link
+              href="/pruvodce"
+              className={buttonVariants({ variant: "outline", size: "lg" })}
+            >
+              Nevím, koho hledám — zeptej se Blaženy
+            </Link>
+          </div>
+          <div className="mt-4">
+            <Link
               href="/pro-podnikatelky"
               className="inline-flex h-9 items-center justify-center rounded-lg border border-accent bg-accent/10 px-2.5 text-sm font-medium text-accent-foreground transition-colors hover:bg-accent/20"
             >
@@ -110,7 +118,7 @@ export default function Home() {
             {CATEGORIES.map((cat) => (
               <Link
                 key={cat.slug}
-                href={`/katalog?kategorie=${cat.slug}`}
+                href={`/katalog?kat=${cat.slug}`}
                 className="group flex flex-col items-center rounded-2xl border border-border bg-card p-5 text-center transition-colors hover:border-accent/60 hover:bg-accent/5"
               >
                 <span className="text-3xl">{cat.emoji}</span>

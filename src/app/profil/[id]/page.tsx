@@ -29,7 +29,7 @@ export default async function ProfilPage({ params }: Props) {
 
   const { data: { user } } = await supabase.auth.getUser()
   const adminEmails = (process.env.ADMIN_EMAILS ?? '').split(',').map(e => e.trim().toLowerCase())
-  const isAdmin = adminEmails.includes(user?.email?.toLowerCase() ?? '')
+  const isAdmin = !!user && adminEmails.includes(user.email?.toLowerCase() ?? '')
 
   const query = isAdmin ? createAdminClient() : supabase
   const builder = query

@@ -29,7 +29,7 @@ export async function proxy(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
 
   // Chráněné trasy — vyžadují přihlášení
-  const protectedPaths = ['/dashboard', '/profil']
+  const protectedPaths = ['/dashboard']
   const isProtected = protectedPaths.some(path =>
     request.nextUrl.pathname.startsWith(path)
   )

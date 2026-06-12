@@ -3,13 +3,13 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
-type Kategorie = { id: number; nazev: string }
+type Kategorie = { id: number; nazev: string; slug: string }
 type Metoda = { id: number; nazev: string; ma_ochrannou_znamku: boolean }
 
 type Props = {
   kategorie: Kategorie[]
   metody: Metoda[]
-  activeKat: number | null
+  activeKats: string[]
   activeMet: number | null
   activeForma: string | null
   activeQ: string
@@ -17,7 +17,7 @@ type Props = {
   total: number
 }
 
-export function Filters({ kategorie, metody, activeKat, activeMet, activeForma, activeQ, activeLok, total }: Props) {
+export function Filters({ kategorie, metody, activeKats, activeMet, activeForma, activeQ, activeLok, total }: Props) {
   const router = useRouter()
   const params = useSearchParams()
   const [q, setQ] = useState(activeQ)
@@ -33,6 +33,14 @@ export function Filters({ kategorie, metody, activeKat, activeMet, activeForma, 
     return `/katalog?${p.toString()}`
   }
 
+  function toggleKat(slug: string) {
+    const current = params.get('kat')?.split(',').filter(Boolean) ?? []
+    const next = current.includes(slug)
+      ? current.filter(s => s !== slug)
+      : [...current, slug]
+    router.push(buildUrl({ kat: next.length > 0 ? next.join(',') : null }))
+  }
+
   function toggle(key: string, value: string) {
     const current = params.get(key)
     router.push(buildUrl({ [key]: current === value ? null : value }))
@@ -42,7 +50,7 @@ export function Filters({ kategorie, metody, activeKat, activeMet, activeForma, 
     router.push(buildUrl({ q: q.trim() || null, lok: lok.trim() || null }))
   }
 
-  const hasFilters = activeKat !== null || activeMet !== null || activeForma !== null || activeQ || activeLok
+  const hasFilters = activeKats.length > 0 || activeMet !== null || activeForma !== null || activeQ || activeLok
 
   return (
     <div className="flex flex-col gap-4">
@@ -101,15 +109,15 @@ export function Filters({ kategorie, metody, activeKat, activeMet, activeForma, 
         ))}
       </div>
 
-      {/* Kategorie */}
+      {/* Kategorie — multi-select */}
       <div className="flex flex-wrap gap-2">
         {kategorie.map(k => (
           <button
             key={k.id}
             type="button"
-            onClick={() => toggle('kat', String(k.id))}
+            onClick={() => toggleKat(k.slug)}
             className={`rounded-full border px-3 py-1 text-sm transition-colors ${
-              activeKat === k.id
+              activeKats.includes(k.slug)
                 ? 'border-primary bg-primary text-primary-foreground'
                 : 'border-border hover:border-primary/40'
             }`}
@@ -156,7 +164,11 @@ export function Filters({ kategorie, metody, activeKat, activeMet, activeForma, 
           {total === 0 ? 'Žádné výsledky' : `${total} ${total === 1 ? 'profil' : total < 5 ? 'profily' : 'profilů'}`}
         </span>
         {hasFilters && (
-          <button type="button" onClick={() => { setQ(''); setLok(''); router.push('/katalog') }} className="text-primary hover:underline">
+          <button
+            type="button"
+            onClick={() => { setQ(''); setLok(''); router.push('/katalog') }}
+            className="text-primary hover:underline"
+          >
             Zrušit filtry
           </button>
         )}

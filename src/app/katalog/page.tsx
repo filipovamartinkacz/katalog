@@ -8,7 +8,7 @@ type Props = {
 
 export default async function KatalogPage({ searchParams }: Props) {
   const { kat, met, forma, q, lok } = await searchParams
-  const activeKat = kat ? parseInt(kat, 10) : null
+  const activeKats = kat ? kat.split(',').map(s => s.trim()).filter(Boolean) : []
   const activeMet = met ? parseInt(met, 10) : null
   const activeForma = forma ?? null
   const activeQ = q?.trim() ?? ''
@@ -23,11 +23,11 @@ export default async function KatalogPage({ searchParams }: Props) {
         id, jmeno, prijmeni, display_name, bio,
         medailonek_location ( mesto ( nazev, okres ( nazev, kraj ( nazev ) ) ) ),
         medailonek_metoda ( metoda ( id, nazev, ma_ochrannou_znamku ) ),
-        service ( nazev, popis, delivery_form, service_kategorie ( kategorie ( id, nazev ) ), service_klicove_slovo ( klicove_slovo ( slovo ) ) )
+        service ( nazev, popis, delivery_form, service_kategorie ( kategorie ( id, nazev, slug ) ), service_klicove_slovo ( klicove_slovo ( slovo ) ) )
       `)
       .eq('is_published', true)
       .order('created_at', { ascending: false }),
-    supabase.from('kategorie').select('id, nazev').order('nazev'),
+    supabase.from('kategorie').select('id, nazev, slug').order('nazev'),
     supabase.from('metoda').select('id, nazev, ma_ochrannou_znamku').order('nazev'),
   ])
 
@@ -40,13 +40,13 @@ export default async function KatalogPage({ searchParams }: Props) {
 
   let results = raw ?? []
 
-  // Filtr — kategorie
-  if (activeKat) {
+  // Filtr — kategorie (multi-slug, OR logika)
+  if (activeKats.length > 0) {
     results = results.filter(m =>
       (m.service as any[]).some(s =>
         (s.service_kategorie as any[]).some(sk => {
           const k = Array.isArray(sk.kategorie) ? sk.kategorie[0] : sk.kategorie
-          return k?.id === activeKat
+          return k?.slug && activeKats.includes(k.slug)
         })
       )
     )
@@ -147,7 +147,7 @@ export default async function KatalogPage({ searchParams }: Props) {
         <Filters
           kategorie={kategorie}
           metody={metody ?? []}
-          activeKat={activeKat}
+          activeKats={activeKats}
           activeMet={activeMet}
           activeForma={activeForma}
           activeQ={activeQ}
