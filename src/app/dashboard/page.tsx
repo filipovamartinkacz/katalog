@@ -12,9 +12,6 @@ export default async function DashboardPage({
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/prihlaseni')
 
-  const adminEmails = (process.env.ADMIN_EMAILS ?? '').split(',').map(e => e.trim().toLowerCase())
-  if (adminEmails.includes(user.email?.toLowerCase() ?? '')) redirect('/admin')
-
   const { data: medailonek } = await supabase
     .from('medailonek')
     .select('id, jmeno, prijmeni, is_published')

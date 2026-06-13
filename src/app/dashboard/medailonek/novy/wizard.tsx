@@ -73,8 +73,13 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
   }
 
 
-  function canAdvanceStep1() {
-    return jmeno.trim() && prijmeni.trim() && bio.trim().length >= 30
+  const [step1Error, setStep1Error] = useState<string | null>(null)
+
+  function tryAdvanceStep1() {
+    if (!jmeno.trim() || !prijmeni.trim()) { setStep1Error('Vyplňte jméno a příjmení.'); return }
+    if (bio.trim().length < 30) { setStep1Error('Bio musí mít alespoň 30 znaků.'); return }
+    setStep1Error(null)
+    setStep(1)
   }
 
   function canAdvanceStep3() {
@@ -149,14 +154,23 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="display_name">Jak vás zákaznice oslovují <span className="text-muted-foreground">(nepovinné)</span></Label>
-            <Input id="display_name" placeholder="např. Mgr. Jana Nováková nebo Jana" value={displayName} onChange={e => setDisplayName(e.target.value)} />
+            <Label htmlFor="display_name">Značka / název firmy <span className="text-muted-foreground">(nepovinné)</span></Label>
+            <Input id="display_name" placeholder="např. Mgr. Jana Nováková nebo Wellness Jana" value={displayName} onChange={e => setDisplayName(e.target.value)} />
           </div>
 
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="bio">O sobě *</Label>
-            <Textarea id="bio" rows={5} placeholder="Napište něco o sobě, své cestě a přístupu ke klientkám… (alespoň 30 znaků)" value={bio} onChange={e => setBio(e.target.value)} />
-            <p className="text-xs text-muted-foreground">{bio.trim().length} / min. 30 znaků</p>
+            <Textarea
+              id="bio"
+              rows={5}
+              placeholder="Napište něco o sobě, své cestě a přístupu ke klientkám… (alespoň 30 znaků)"
+              value={bio}
+              onChange={e => { setBio(e.target.value); if (step1Error) setStep1Error(null) }}
+              className={step1Error && bio.trim().length < 30 ? 'border-destructive focus-visible:ring-destructive' : ''}
+            />
+            <p className={`text-xs ${bio.trim().length < 30 && step1Error ? 'text-destructive' : 'text-muted-foreground'}`}>
+              {bio.trim().length} / min. 30 znaků
+            </p>
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -213,12 +227,15 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
             />
           </div>
 
+          {step1Error && (
+            <p className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">{step1Error}</p>
+          )}
+
           <div className="mt-2 flex justify-end">
             <button
               type="button"
-              disabled={!canAdvanceStep1()}
-              onClick={() => setStep(1)}
-              className={buttonVariants() + ' disabled:opacity-50'}
+              onClick={tryAdvanceStep1}
+              className={buttonVariants()}
             >
               Pokračovat →
             </button>

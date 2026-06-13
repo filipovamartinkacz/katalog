@@ -206,8 +206,8 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="display_name">Jak vás zákaznice oslovují <span className="text-muted-foreground">(nepovinné)</span></Label>
-          <Input id="display_name" placeholder="např. Mgr. Jana Nováková nebo Jana" value={displayName} onChange={e => setDisplayName(e.target.value)} />
+          <Label htmlFor="display_name">Značka / název firmy <span className="text-muted-foreground">(nepovinné)</span></Label>
+          <Input id="display_name" placeholder="např. Mgr. Jana Nováková nebo Wellness Jana" value={displayName} onChange={e => setDisplayName(e.target.value)} />
         </div>
 
         <div className="flex flex-col gap-1.5">

@@ -32,11 +32,11 @@ export default async function ProfilPage({ params }: Props) {
   const adminEmails = (process.env.ADMIN_EMAILS ?? '').split(',').map(e => e.trim().toLowerCase())
   const isAdmin = !!user && adminEmails.includes(user.email?.toLowerCase() ?? '')
 
-  const query = isAdmin ? createAdminClient() : supabase
-  const builder = query
+  // Vždy načteme přes admin klienta, pak zkontrolujeme přístup
+  const { data: m } = await createAdminClient()
     .from('medailonek')
     .select(`
-      id, jmeno, prijmeni, display_name, bio, kontakt_email, telefon, ico,
+      id, user_id, jmeno, prijmeni, display_name, bio, kontakt_email, telefon, ico,
       foto_url, banner_url, is_published,
       social_link ( platform, url ),
       medailonek_location ( mesto ( nazev, okres ( nazev, kraj ( nazev ) ) ) ),
@@ -49,12 +49,15 @@ export default async function ProfilPage({ params }: Props) {
       )
     `)
     .eq('id', id)
-
-  const { data: m } = isAdmin
-    ? await builder.maybeSingle()
-    : await builder.eq('is_published', true).maybeSingle()
+    .maybeSingle()
 
   if (!m) notFound()
+
+  const isPublished = (m as any).is_published as boolean
+  const isOwner = !!user && (m as any).user_id === user.id
+
+  // Nepublikovaný profil vidí jen admin nebo vlastník
+  if (!isPublished && !isAdmin && !isOwner) notFound()
 
   const name = m.display_name || `${m.jmeno} ${m.prijmeni}`
   const initials = `${m.jmeno[0] ?? ''}${m.prijmeni[0] ?? ''}`.toUpperCase()
@@ -69,32 +72,40 @@ export default async function ProfilPage({ params }: Props) {
     return met ? [{ id: met.id as number, nazev: met.nazev as string, status: met.status as string, ochrannaZnamka: met.ma_ochrannou_znamku as boolean }] : []
   })
 
-  const isPublished = (m as any).is_published as boolean
-
   const fotoUrl = (m as any).foto_url as string | null
   const bannerUrl = (m as any).banner_url as string | null
 
   return (
     <div className="mx-auto max-w-3xl">
-      {isAdmin && !isPublished && (
+      {!isPublished && (
         <div className="px-4 pt-4 sm:px-6">
           <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span>
                 Náhled — profil ještě není zveřejněn.{' '}
-                <Link href="/admin/medailonky" className="font-semibold underline hover:no-underline">
-                  Zpět na admin
-                </Link>
+                {isAdmin && (
+                  <Link href="/admin/medailonky" className="font-semibold underline hover:no-underline">
+                    Zpět na admin
+                  </Link>
+                )}
+                {isOwner && !isAdmin && (
+                  <Link href="/dashboard" className="font-semibold underline hover:no-underline">
+                    Zpět na dashboard
+                  </Link>
+                )}
               </span>
-              <ApproveButton id={id} isPublished={false} />
+              {isAdmin && <ApproveButton id={id} isPublished={false} />}
             </div>
           </div>
         </div>
       )}
 
       <div className="px-4 pt-4 sm:px-6">
-        <Link href={isAdmin && !isPublished ? '/admin/medailonky' : '/katalog'} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-          ← {isAdmin && !isPublished ? 'Zpět na admin' : 'Zpět do katalogu'}
+        <Link
+          href={isAdmin && !isPublished ? '/admin/medailonky' : isOwner && !isPublished ? '/dashboard' : '/katalog'}
+          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+        >
+          ← {isAdmin && !isPublished ? 'Zpět na admin' : isOwner && !isPublished ? 'Zpět na dashboard' : 'Zpět do katalogu'}
         </Link>
       </div>
 

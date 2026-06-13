@@ -26,12 +26,13 @@ export function ImageUpload({ value, onChange, userId, fileKey, aspect, label }:
     if (!file.type.startsWith('image/')) { setError('Vyberte obrázek (JPG, PNG, WebP…)'); return }
     if (file.size > MAX_MB * 1024 * 1024) { setError(`Maximální velikost je ${MAX_MB} MB.`); return }
 
-    const ext = file.name.split('.').pop() ?? 'jpg'
-    const path = `${userId}/${fileKey}-${Date.now()}.${ext}`
+    const path = `${userId}/${fileKey}`
 
     setUploading(true)
     const supabase = createClient()
-    const { error: uploadError } = await supabase.storage.from(BUCKET).upload(path, file)
+    const { error: uploadError } = await supabase.storage
+      .from(BUCKET)
+      .upload(path, file, { upsert: true, contentType: file.type })
     if (uploadError) {
       setError('Upload se nezdařil. Zkuste to znovu.')
       setUploading(false)
@@ -39,7 +40,7 @@ export function ImageUpload({ value, onChange, userId, fileKey, aspect, label }:
     }
 
     const { data: { publicUrl } } = supabase.storage.from(BUCKET).getPublicUrl(path)
-    onChange(publicUrl)
+    onChange(`${publicUrl}?t=${Date.now()}`)
     setUploading(false)
   }
 
