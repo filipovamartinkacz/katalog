@@ -9,6 +9,7 @@ import { CityPicker, type SelectedMesto } from './city-picker'
 import { createMedailonek, type ServiceInput, type SocialLinkInput } from '@/app/actions/medailonek'
 import { TagInput } from '@/components/ui/tag-input'
 import { MetodaPicker, type SelectedMetoda } from '@/components/ui/metoda-picker'
+import { ImageUpload } from '@/components/ui/image-upload'
 
 type Kategorie = { id: number; nazev: string }
 type Metoda = { id: number; nazev: string }
@@ -18,6 +19,7 @@ type Props = {
   kategorie: Kategorie[]
   metody: Metoda[]
   priceLevels: PriceLevel[]
+  userId: string
 }
 
 const EMPTY_SERVICE: ServiceInput = {
@@ -27,10 +29,14 @@ const EMPTY_SERVICE: ServiceInput = {
 
 const STEPS = ['O mně', 'Kde působím', 'Co nabízím']
 
-export function MedailonekWizard({ kategorie, metody, priceLevels }: Props) {
+export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Props) {
   const [step, setStep] = useState(0)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Fotky
+  const [fotoUrl, setFotoUrl] = useState<string | null>(null)
+  const [bannerUrl, setBannerUrl] = useState<string | null>(null)
 
   // Step 1
   const [jmeno, setJmeno] = useState('')
@@ -95,6 +101,8 @@ export function MedailonekWizard({ kategorie, metody, priceLevels }: Props) {
       nove_metody: selectedMetody.filter(m => m.type === 'new').map(m => m.nazev),
       services,
       social_links: socialLinks,
+      foto_url: fotoUrl,
+      banner_url: bannerUrl,
     })
     if (result?.error) { setError(result.error); setSaving(false) }
   }
@@ -183,6 +191,26 @@ export function MedailonekWizard({ kategorie, metody, priceLevels }: Props) {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="flex flex-col gap-4 border-t border-border pt-5">
+            <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wide">Fotky <span className="font-normal normal-case">(nepovinné, přidat lze i later)</span></h3>
+            <ImageUpload
+              value={bannerUrl}
+              onChange={setBannerUrl}
+              userId={userId}
+              fileKey="banner"
+              aspect="banner"
+              label="Banner (záhlaví profilu)"
+            />
+            <ImageUpload
+              value={fotoUrl}
+              onChange={setFotoUrl}
+              userId={userId}
+              fileKey="foto"
+              aspect="avatar"
+              label="Profilová fotka"
+            />
           </div>
 
           <div className="mt-2 flex justify-end">

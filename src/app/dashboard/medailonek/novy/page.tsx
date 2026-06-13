@@ -27,6 +27,7 @@ export default async function NovyMedailonekPage() {
       kategorie={kategorie ?? []}
       metody={metody ?? []}
       priceLevels={priceLevels ?? []}
+      userId={user.id}
     />
   )
 }

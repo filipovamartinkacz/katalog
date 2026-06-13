@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { ApproveButton } from '@/app/admin/medailonky/approve-button'
 import { MetodaApproveButton } from './metoda-approve-button'
 
@@ -36,7 +37,7 @@ export default async function ProfilPage({ params }: Props) {
     .from('medailonek')
     .select(`
       id, jmeno, prijmeni, display_name, bio, kontakt_email, telefon, ico,
-      is_published,
+      foto_url, banner_url, is_published,
       social_link ( platform, url ),
       medailonek_location ( mesto ( nazev, okres ( nazev, kraj ( nazev ) ) ) ),
       medailonek_metoda ( metoda ( id, nazev, status, ma_ochrannou_znamku ) ),
@@ -70,31 +71,56 @@ export default async function ProfilPage({ params }: Props) {
 
   const isPublished = (m as any).is_published as boolean
 
+  const fotoUrl = (m as any).foto_url as string | null
+  const bannerUrl = (m as any).banner_url as string | null
+
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
+    <div className="mx-auto max-w-3xl">
       {isAdmin && !isPublished && (
-        <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <span>
-              Náhled — profil ještě není zveřejněn.{' '}
-              <Link href="/admin/medailonky" className="font-semibold underline hover:no-underline">
-                Zpět na admin
-              </Link>
-            </span>
-            <ApproveButton id={id} isPublished={false} />
+        <div className="px-4 pt-4 sm:px-6">
+          <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <span>
+                Náhled — profil ještě není zveřejněn.{' '}
+                <Link href="/admin/medailonky" className="font-semibold underline hover:no-underline">
+                  Zpět na admin
+                </Link>
+              </span>
+              <ApproveButton id={id} isPublished={false} />
+            </div>
           </div>
         </div>
       )}
-      <Link href={isAdmin && !isPublished ? '/admin/medailonky' : '/katalog'} className="mb-6 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        ← {isAdmin && !isPublished ? 'Zpět na admin' : 'Zpět do katalogu'}
-      </Link>
 
-      {/* Hlavička */}
-      <div className="flex items-start gap-5">
-        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xl font-semibold text-primary">
-          {initials}
+      <div className="px-4 pt-4 sm:px-6">
+        <Link href={isAdmin && !isPublished ? '/admin/medailonky' : '/katalog'} className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+          ← {isAdmin && !isPublished ? 'Zpět na admin' : 'Zpět do katalogu'}
+        </Link>
+      </div>
+
+      {/* Banner + avatar */}
+      <div className="relative mt-3 px-4 sm:px-6">
+        <div className="relative h-40 overflow-hidden rounded-2xl bg-gradient-to-br from-primary/15 via-background to-accent/20 sm:h-48">
+          {bannerUrl && (
+            <Image src={bannerUrl} alt="" fill className="object-cover" sizes="(max-width: 768px) 100vw, 768px" />
+          )}
         </div>
-        <div>
+        <div className="absolute bottom-0 left-9 translate-y-1/2 sm:left-11">
+          <div className="relative h-20 w-20 overflow-hidden rounded-full border-4 border-background bg-primary/10">
+            {fotoUrl ? (
+              <Image src={fotoUrl} alt={name} fill className="object-cover" sizes="80px" />
+            ) : (
+              <span className="flex h-full w-full items-center justify-center text-xl font-semibold text-primary">
+                {initials}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="px-4 pb-10 sm:px-6">
+        {/* Jméno a lokace — s odsazením kvůli přesahujícímu avataru */}
+        <div className="mt-14">
           <h1 className="text-2xl font-bold">{name}</h1>
           {mesta.length > 0 ? (
             <p className="mt-1 text-sm text-muted-foreground">
@@ -104,7 +130,6 @@ export default async function ProfilPage({ params }: Props) {
             <p className="mt-1 text-sm text-muted-foreground">Celá ČR / online</p>
           )}
         </div>
-      </div>
 
       {/* Bio */}
       <p className="mt-6 leading-relaxed text-foreground/80">{m.bio}</p>
@@ -237,6 +262,7 @@ export default async function ProfilPage({ params }: Props) {
           )}
         </div>
       )}
+      </div>
     </div>
   )
 }

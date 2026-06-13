@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Filters } from './filters'
 
 type Props = {
@@ -20,7 +21,7 @@ export default async function KatalogPage({ searchParams }: Props) {
     supabase
       .from('medailonek')
       .select(`
-        id, jmeno, prijmeni, display_name, bio,
+        id, jmeno, prijmeni, display_name, bio, foto_url,
         medailonek_location ( mesto ( nazev, okres ( nazev, kraj ( nazev ) ) ) ),
         medailonek_metoda ( metoda ( id, nazev, ma_ochrannou_znamku ) ),
         service ( nazev, popis, delivery_form, service_kategorie ( kategorie ( id, nazev, slug ) ), service_klicove_slovo ( klicove_slovo ( slovo ) ) )
@@ -198,8 +199,14 @@ function MedailonekCard({ m }: { m: any }) {
       className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-md"
     >
       <div className="flex items-start gap-4">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-          {initials}
+        <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full bg-primary/10">
+          {m.foto_url ? (
+            <Image src={m.foto_url} alt={name} fill className="object-cover" sizes="48px" />
+          ) : (
+            <span className="flex h-full w-full items-center justify-center text-sm font-semibold text-primary">
+              {initials}
+            </span>
+          )}
         </div>
         <div className="min-w-0">
           <p className="font-semibold leading-tight">{name}</p>

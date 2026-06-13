@@ -33,6 +33,8 @@ export type MedailonekInput = {
   nove_metody: string[]
   services: ServiceInput[]
   social_links: SocialLinkInput[]
+  foto_url: string | null
+  banner_url: string | null
 }
 
 type SupabaseClient = Awaited<ReturnType<typeof createClient>>
@@ -84,6 +86,8 @@ export async function createMedailonek(data: MedailonekInput) {
       kontakt_email: data.kontakt_email.trim() || null,
       telefon: data.telefon.trim() || null,
       ico: data.ico.trim() || null,
+      foto_url: data.foto_url || null,
+      banner_url: data.banner_url || null,
     })
     .select('id')
     .single()
@@ -165,6 +169,8 @@ export async function updateMedailonek(data: MedailonekInput) {
       kontakt_email: data.kontakt_email.trim() || null,
       telefon: data.telefon.trim() || null,
       ico: data.ico.trim() || null,
+      foto_url: data.foto_url || null,
+      banner_url: data.banner_url || null,
     })
     .eq('id', mid)
 

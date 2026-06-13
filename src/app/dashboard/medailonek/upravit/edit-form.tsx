@@ -9,6 +9,7 @@ import { CityPicker, type SelectedMesto } from '../novy/city-picker'
 import { updateMedailonek, type ServiceInput, type SocialLinkInput } from '@/app/actions/medailonek'
 import { TagInput } from '@/components/ui/tag-input'
 import { MetodaPicker, type SelectedMetoda } from '@/components/ui/metoda-picker'
+import { ImageUpload } from '@/components/ui/image-upload'
 
 type Kategorie = { id: number; nazev: string }
 type Metoda = { id: number; nazev: string; ma_ochrannou_znamku?: boolean }
@@ -22,6 +23,8 @@ type MedailonekData = {
   kontakt_email: string | null
   telefon: string | null
   ico: string | null
+  foto_url: string | null
+  banner_url: string | null
   social_link: { platform: string; url: string }[]
   medailonek_location: { mesto_id: number; mesto: { id: number; nazev: string; okres: { nazev: string } }[] | { id: number; nazev: string; okres: { nazev: string } } | null }[]
   medailonek_metoda: { metoda_id: number }[]
@@ -43,6 +46,7 @@ type Props = {
   metody: Metoda[]
   linkedMetody: Metoda[]
   priceLevels: PriceLevel[]
+  userId: string
 }
 
 const SOCIAL_PLATFORMS = [
@@ -62,9 +66,13 @@ function getSocialUrl(links: { platform: string; url: string }[], platform: stri
   return links.find(l => l.platform === platform)?.url ?? ''
 }
 
-export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLevels }: Props) {
+export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLevels, userId }: Props) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Fotky
+  const [fotoUrl, setFotoUrl] = useState<string | null>(medailonek.foto_url ?? null)
+  const [bannerUrl, setBannerUrl] = useState<string | null>(medailonek.banner_url ?? null)
 
   // O mně
   const [jmeno, setJmeno] = useState(medailonek.jmeno)
@@ -151,6 +159,8 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
       nove_metody: selectedMetody.filter(m => m.type === 'new').map(m => m.nazev),
       services,
       social_links: socialLinks,
+      foto_url: fotoUrl,
+      banner_url: bannerUrl,
     })
 
     if (result?.error) { setError(result.error); setSaving(false) }
@@ -158,6 +168,27 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
 
   return (
     <div className="flex flex-col gap-10">
+
+      {/* Fotky */}
+      <section className="flex flex-col gap-5">
+        <h2 className="text-lg font-semibold border-b border-border pb-2">Fotky <span className="text-sm font-normal text-muted-foreground">(nepovinné)</span></h2>
+        <ImageUpload
+          value={bannerUrl}
+          onChange={setBannerUrl}
+          userId={userId}
+          fileKey="banner"
+          aspect="banner"
+          label="Banner (záhlaví profilu)"
+        />
+        <ImageUpload
+          value={fotoUrl}
+          onChange={setFotoUrl}
+          userId={userId}
+          fileKey="foto"
+          aspect="avatar"
+          label="Profilová fotka"
+        />
+      </section>
 
       {/* O mně */}
       <section className="flex flex-col gap-5">
