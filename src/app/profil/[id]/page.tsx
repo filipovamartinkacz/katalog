@@ -1,10 +1,12 @@
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ApproveButton } from '@/app/admin/medailonky/approve-button'
 import { MetodaApproveButton } from './metoda-approve-button'
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 const PLATFORM_LABELS: Record<string, string> = {
   web: 'Web',
@@ -25,15 +27,22 @@ const DELIVERY_LABELS: Record<string, string> = {
 type Props = { params: Promise<{ id: string }> }
 
 export default async function ProfilPage({ params }: Props) {
-  const { id } = await params
+  const { id: param } = await params
   const supabase = await createClient()
+  const admin = createAdminClient()
 
   const { data: { user } } = await supabase.auth.getUser()
   const adminEmails = (process.env.ADMIN_EMAILS ?? '').split(',').map(e => e.trim().toLowerCase())
   const isAdmin = !!user && adminEmails.includes(user.email?.toLowerCase() ?? '')
 
-  // Vždy načteme přes admin klienta, pak zkontrolujeme přístup
-  const { data: m } = await createAdminClient()
+  // Starý UUID odkaz → přesměruj na slug URL
+  const isUuid = UUID_RE.test(param)
+  if (isUuid) {
+    const { data: row } = await admin.from('medailonek').select('slug').eq('id', param).maybeSingle()
+    if (row?.slug) redirect(`/profil/${row.slug}`)
+  }
+
+  const { data: m } = await admin
     .from('medailonek')
     .select(`
       id, user_id, jmeno, prijmeni, display_name, bio, kontakt_email, telefon, ico,
@@ -48,7 +57,7 @@ export default async function ProfilPage({ params }: Props) {
         service_klicove_slovo ( klicove_slovo ( slovo ) )
       )
     `)
-    .eq('id', id)
+    .eq(isUuid ? 'id' : 'slug', param)
     .maybeSingle()
 
   if (!m) notFound()
@@ -94,7 +103,7 @@ export default async function ProfilPage({ params }: Props) {
                   </Link>
                 )}
               </span>
-              {isAdmin && <ApproveButton id={id} isPublished={false} />}
+              {isAdmin && <ApproveButton id={m.id} isPublished={false} />}
             </div>
           </div>
         </div>

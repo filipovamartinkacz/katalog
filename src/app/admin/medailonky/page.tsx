@@ -5,7 +5,7 @@ import { ApproveButton } from './approve-button'
 export default async function AdminMedailonkyPage() {
   const { data: medailonky } = await createAdminClient()
     .from('medailonek')
-    .select('id, jmeno, prijmeni, bio, kontakt_email, is_published, created_at')
+    .select('id, slug, jmeno, prijmeni, bio, kontakt_email, is_published, created_at')
     .order('created_at', { ascending: false })
 
   const pending = medailonky?.filter(m => !m.is_published) ?? []
@@ -50,6 +50,7 @@ export default async function AdminMedailonkyPage() {
 
 type Row = {
   id: string
+  slug: string | null
   jmeno: string
   prijmeni: string
   bio: string
@@ -78,7 +79,7 @@ function MedailonekRow({ m }: { m: Row }) {
           {m.is_published ? 'Zveřejněný' : 'Čeká'}
         </span>
         <Link
-          href={`/profil/${m.id}`}
+          href={`/profil/${m.slug ?? m.id}`}
           className="rounded-md border border-border px-2.5 py-1 text-xs font-medium hover:border-primary hover:text-primary transition-colors"
         >
           Náhled

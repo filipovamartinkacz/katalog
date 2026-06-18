@@ -21,7 +21,7 @@ export default async function KatalogPage({ searchParams }: Props) {
     supabase
       .from('medailonek')
       .select(`
-        id, jmeno, prijmeni, display_name, bio, foto_url,
+        id, slug, jmeno, prijmeni, display_name, bio, foto_url,
         medailonek_location ( mesto ( nazev, okres ( nazev, kraj ( nazev ) ) ) ),
         medailonek_metoda ( metoda ( id, nazev, ma_ochrannou_znamku ) ),
         service ( nazev, popis, delivery_form, service_kategorie ( kategorie ( id, nazev, slug ) ), service_klicove_slovo ( klicove_slovo ( slovo ) ) )
@@ -195,7 +195,7 @@ function MedailonekCard({ m }: { m: any }) {
 
   return (
     <Link
-      href={`/profil/${m.id}`}
+      href={`/profil/${m.slug ?? m.id}`}
       className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition-shadow hover:shadow-md"
     >
       <div className="flex items-start gap-4">

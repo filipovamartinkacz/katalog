@@ -4,6 +4,22 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import { toSlug } from '@/lib/slug'
+
+async function generateUniqueSlug(jmeno: string, prijmeni: string, excludeId?: string): Promise<string> {
+  const admin = createAdminClient()
+  const base = toSlug(`${jmeno}-${prijmeni}`)
+  let candidate = base
+  let i = 2
+  for (;;) {
+    let q = admin.from('medailonek').select('id', { count: 'exact', head: true }).eq('slug', candidate)
+    if (excludeId) q = q.neq('id', excludeId)
+    const { count } = await q
+    if (!count) return candidate
+    candidate = `${base}-${i}`
+    i++
+  }
+}
 
 export type ServiceInput = {
   nazev: string
@@ -74,6 +90,8 @@ export async function createMedailonek(data: MedailonekInput) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Nejsi přihlášena.' }
 
+  const slug = await generateUniqueSlug(data.jmeno.trim(), data.prijmeni.trim())
+
   // Vytvoř medailonek
   const { data: medailonek, error: medErr } = await supabase
     .from('medailonek')
@@ -88,6 +106,7 @@ export async function createMedailonek(data: MedailonekInput) {
       ico: data.ico.trim() || null,
       foto_url: data.foto_url || null,
       banner_url: data.banner_url || null,
+      slug,
     })
     .select('id')
     .single()

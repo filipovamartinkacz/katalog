@@ -14,7 +14,7 @@ export default async function DashboardPage({
 
   const { data: medailonek } = await supabase
     .from('medailonek')
-    .select('id, jmeno, prijmeni, is_published')
+    .select('id, slug, jmeno, prijmeni, is_published')
     .eq('user_id', user.id)
     .maybeSingle()
 
@@ -46,7 +46,7 @@ export default async function DashboardPage({
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <Link href={`/profil/${medailonek.id}`} className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+              <Link href={`/profil/${medailonek.slug ?? medailonek.id}`} className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
                 Náhled
               </Link>
               <Link href="/dashboard/medailonek/upravit" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
@@ -92,7 +92,7 @@ export default async function DashboardPage({
           {medailonek.is_published && (
             <div className="mt-4 rounded-xl bg-green-50 px-4 py-3 text-sm text-green-800">
               Tvůj profil je živý v katalogu.{' '}
-              <Link href={`/profil/${medailonek.id}`} className="font-medium underline hover:no-underline">
+              <Link href={`/profil/${medailonek.slug ?? medailonek.id}`} className="font-medium underline hover:no-underline">
                 Zobrazit profil →
               </Link>
             </div>
