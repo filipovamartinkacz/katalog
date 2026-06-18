@@ -16,6 +16,7 @@ function LoginForm() {
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') ?? '/dashboard'
   const errorParam = searchParams.get('error')
+  const confirmed = searchParams.get('confirmed') === '1'
   const initialError = errorParam === 'oauth'
     ? 'Přihlášení přes externí účet se nezdařilo.'
     : errorParam === 'confirm'
@@ -53,6 +54,12 @@ function LoginForm() {
         </Link>
         <h1 className="mt-6 text-xl font-semibold text-foreground">Přihlásit se</h1>
       </div>
+
+      {confirmed && (
+        <p className="mb-6 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+          E-mail byl ověřen. Přihlaš se svým heslem.
+        </p>
+      )}
 
       <OAuthButtons />
 
