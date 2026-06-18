@@ -19,8 +19,6 @@ function LoginForm() {
   const confirmed = searchParams.get('confirmed') === '1'
   const initialError = errorParam === 'oauth'
     ? 'Přihlášení přes externí účet se nezdařilo.'
-    : errorParam === 'confirm'
-    ? 'Potvrzení e-mailu se nezdařilo. Zkus se přihlásit přímo.'
     : null
 
   const [email, setEmail] = useState('')

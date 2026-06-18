@@ -24,23 +24,25 @@ export async function GET(request: NextRequest) {
     }
   )
 
+  // Signup: e-mail je potvrzen Supabase serverem před tímto redirectem.
+  // Nepotřebujeme session — pošleme rovnou na přihlášení.
+  if (type === 'signup') {
+    return NextResponse.redirect(`${origin}/prihlaseni?confirmed=1`)
+  }
+
+  // Ostatní flow (reset hesla atd.) — potřebujeme session
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) {
-      if (type === 'signup') {
-        // Po potvrzení e-mailu odhlásíme — uživatelka se musí přihlásit heslem
-        await supabase.auth.signOut()
-        return NextResponse.redirect(`${origin}/prihlaseni?confirmed=1`)
-      }
       return NextResponse.redirect(`${origin}${next}`)
     }
   }
 
-  // Záložní kontrola — Supabase mohl session nastavit přímo přes cookie
+  // Záložní kontrola — session mohla být nastavena přímo
   const { data: { user } } = await supabase.auth.getUser()
   if (user) {
     return NextResponse.redirect(`${origin}${next}`)
   }
 
-  return NextResponse.redirect(`${origin}/prihlaseni?error=confirm`)
+  return NextResponse.redirect(`${origin}/prihlaseni`)
 }
