@@ -100,6 +100,12 @@ function LoginForm() {
         >
           {loading ? 'Přihlašuji…' : 'Přihlásit se'}
         </button>
+
+        <div className="text-right">
+          <Link href="/zapomenute-heslo" className="text-xs text-muted-foreground hover:text-foreground">
+            Zapomenuté heslo?
+          </Link>
+        </div>
       </form>
 
       <p className="mt-6 text-center text-sm text-muted-foreground">
