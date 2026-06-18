@@ -15,11 +15,16 @@ function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') ?? '/dashboard'
-  const oauthError = searchParams.get('error') === 'oauth'
+  const errorParam = searchParams.get('error')
+  const initialError = errorParam === 'oauth'
+    ? 'Přihlášení přes externí účet se nezdařilo.'
+    : errorParam === 'confirm'
+    ? 'Potvrzení e-mailu se nezdařilo. Zkus se přihlásit přímo.'
+    : null
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(oauthError ? 'Přihlášení přes externí účet se nezdařilo.' : null)
+  const [error, setError] = useState<string | null>(initialError)
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
