@@ -2,13 +2,17 @@ import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Filters } from './filters'
+import { Pagination } from './pagination'
+
+const PAGE_SIZE = 12
 
 type Props = {
-  searchParams: Promise<{ kat?: string; met?: string; forma?: string; q?: string; lok?: string }>
+  searchParams: Promise<{ kat?: string; met?: string; forma?: string; q?: string; lok?: string; page?: string }>
 }
 
 export default async function KatalogPage({ searchParams }: Props) {
-  const { kat, met, forma, q, lok } = await searchParams
+  const { kat, met, forma, q, lok, page: pageParam } = await searchParams
+  const page = Math.max(1, parseInt(pageParam ?? '1', 10))
   const activeKats = kat ? kat.split(',').map(s => s.trim()).filter(Boolean) : []
   const activeMet = met ? parseInt(met, 10) : null
   const activeForma = forma ?? null
@@ -137,6 +141,18 @@ export default async function KatalogPage({ searchParams }: Props) {
     })
   }
 
+  const totalCount = results.length
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
+  const currentPage = Math.min(page, totalPages)
+  const pageResults = results.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+
+  const sp: Record<string, string> = {}
+  if (kat) sp.kat = kat
+  if (met) sp.met = met
+  if (forma) sp.forma = forma
+  if (q) sp.q = q
+  if (lok) sp.lok = lok
+
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <div className="mb-8">
@@ -153,11 +169,11 @@ export default async function KatalogPage({ searchParams }: Props) {
           activeForma={activeForma}
           activeQ={activeQ}
           activeLok={activeLok}
-          total={results.length}
+          total={totalCount}
         />
       </div>
 
-      {results.length === 0 ? (
+      {totalCount === 0 ? (
         <div className="py-20 text-center text-muted-foreground">
           <p className="text-lg">Žádné profily neodpovídají zvoleným filtrům.</p>
           <Link href="/katalog" className="mt-4 inline-block text-primary hover:underline">
@@ -165,11 +181,18 @@ export default async function KatalogPage({ searchParams }: Props) {
           </Link>
         </div>
       ) : (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {results.map(m => (
-            <MedailonekCard key={m.id} m={m} />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {pageResults.map(m => (
+              <MedailonekCard key={m.id} m={m} />
+            ))}
+          </div>
+          {totalPages > 1 && (
+            <div className="mt-12">
+              <Pagination page={currentPage} totalPages={totalPages} searchParams={sp} />
+            </div>
+          )}
+        </>
       )}
     </div>
   )

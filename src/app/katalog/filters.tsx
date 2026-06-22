@@ -26,6 +26,7 @@ export function Filters({ kategorie, metody, activeKats, activeMet, activeForma,
 
   function buildUrl(overrides: Record<string, string | null>) {
     const p = new URLSearchParams(params.toString())
+    p.delete('page')
     for (const [key, val] of Object.entries(overrides)) {
       if (val) p.set(key, val)
       else p.delete(key)
