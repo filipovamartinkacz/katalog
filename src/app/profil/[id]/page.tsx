@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { ApproveButton } from '@/app/admin/medailonky/approve-button'
 import { MetodaApproveButton } from './metoda-approve-button'
+import { ClanekCard, type ClanekCardData } from '@/app/blog/clanek-card'
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -50,6 +51,7 @@ export default async function ProfilPage({ params }: Props) {
       social_link ( platform, url ),
       medailonek_location ( mesto ( nazev, okres ( nazev, kraj ( nazev ) ) ) ),
       medailonek_metoda ( metoda ( id, nazev, status, ma_ochrannou_znamku ) ),
+      clanek ( id, slug, nadpis, cover_url, typ, published_at, status, kategorie:kategorie_id ( nazev ) ),
       service (
         id, nazev, popis, delivery_form, booking_url,
         price_level ( label ),
@@ -83,6 +85,26 @@ export default async function ProfilPage({ params }: Props) {
 
   const fotoUrl = (m as any).foto_url as string | null
   const bannerUrl = (m as any).banner_url as string | null
+
+  type ClanekRelace = {
+    id: string
+    slug: string
+    nadpis: string
+    cover_url: string
+    typ: 'blog' | 'podcast' | 'video'
+    published_at: string | null
+    status: string
+    kategorie: { nazev: string } | { nazev: string }[] | null
+  }
+
+  const clanky: ClanekCardData[] = (m.clanek as ClanekRelace[])
+    .filter(c => c.status === 'publikovano')
+    .sort((a, b) => (b.published_at ?? '').localeCompare(a.published_at ?? ''))
+    .map(c => ({
+      ...c,
+      kategorie: Array.isArray(c.kategorie) ? c.kategorie[0] : c.kategorie,
+      autorka: { jmeno: m.jmeno, prijmeni: m.prijmeni },
+    }))
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -280,6 +302,18 @@ export default async function ProfilPage({ params }: Props) {
           {isAdmin && metody.some(m => m.status === 'navrzena') && (
             <p className="mt-2 text-xs text-amber-700">Amber = čeká na schválení</p>
           )}
+        </div>
+      )}
+
+      {/* Její články */}
+      {clanky.length > 0 && (
+        <div className="mt-8">
+          <h2 className="mb-4 text-lg font-semibold">Články</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {clanky.map(c => (
+              <ClanekCard key={c.id} clanek={c} />
+            ))}
+          </div>
         </div>
       )}
       </div>

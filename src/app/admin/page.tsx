@@ -22,6 +22,10 @@ export default function AdminPage() {
           <span className="font-semibold">Průvodkyně Blažena</span>
           <span className="text-sm text-muted-foreground font-normal">Editovat mapování pocitů a oblastí na kategorie</span>
         </Link>
+        <Link href="/admin/clanky" className={buttonVariants({ variant: 'outline' }) + ' h-auto flex-col items-start gap-1 p-5 text-left'}>
+          <span className="font-semibold">Blog</span>
+          <span className="text-sm text-muted-foreground font-normal">Schvalovat, upravovat a zakládat články</span>
+        </Link>
       </div>
     </div>
   )

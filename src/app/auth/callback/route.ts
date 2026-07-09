@@ -36,6 +36,8 @@ export async function GET(request: NextRequest) {
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`)
     }
+    console.error('auth/callback exchangeCodeForSession error:', error.message)
+    return NextResponse.redirect(`${origin}/prihlaseni?error=oauth&detail=${encodeURIComponent(error.message)}`)
   }
 
   // Záložní kontrola — session mohla být nastavena přímo
@@ -44,5 +46,9 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}${next}`)
   }
 
-  return NextResponse.redirect(`${origin}/prihlaseni`)
+  const errorParam = searchParams.get('error_description') ?? searchParams.get('error')
+  console.error('auth/callback: no code, no session. Query params:', Object.fromEntries(searchParams))
+  return NextResponse.redirect(
+    `${origin}/prihlaseni?error=oauth${errorParam ? `&detail=${encodeURIComponent(errorParam)}` : ''}`
+  )
 }

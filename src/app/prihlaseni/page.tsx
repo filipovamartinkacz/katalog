@@ -16,9 +16,10 @@ function LoginForm() {
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') ?? '/dashboard'
   const errorParam = searchParams.get('error')
+  const detailParam = searchParams.get('detail')
   const confirmed = searchParams.get('confirmed') === '1'
   const initialError = errorParam === 'oauth'
-    ? 'Přihlášení přes externí účet se nezdařilo.'
+    ? `Přihlášení přes externí účet se nezdařilo.${detailParam ? ` (${detailParam})` : ''}`
     : null
 
   const [email, setEmail] = useState('')

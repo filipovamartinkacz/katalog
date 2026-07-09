@@ -33,6 +33,9 @@ export async function Header() {
           <Link href="/katalog" className="text-foreground/70 transition-colors hover:text-foreground">
             Hledat
           </Link>
+          <Link href="/blog" className="text-foreground/70 transition-colors hover:text-foreground">
+            Blog
+          </Link>
           <Link href="/pro-podnikatelky" className="text-foreground/70 transition-colors hover:text-foreground">
             Pro podnikatelky
           </Link>

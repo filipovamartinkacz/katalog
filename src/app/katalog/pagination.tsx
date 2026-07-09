@@ -4,14 +4,15 @@ type Props = {
   page: number
   totalPages: number
   searchParams: Record<string, string>
+  basePath?: string
 }
 
-function buildUrl(searchParams: Record<string, string>, page: number): string {
+function buildUrl(searchParams: Record<string, string>, page: number, basePath: string): string {
   const p = new URLSearchParams(searchParams)
   if (page > 1) p.set('page', String(page))
   else p.delete('page')
   const qs = p.toString()
-  return `/katalog${qs ? `?${qs}` : ''}`
+  return `${basePath}${qs ? `?${qs}` : ''}`
 }
 
 function pageNumbers(current: number, total: number): (number | '…')[] {
@@ -31,10 +32,10 @@ function pageNumbers(current: number, total: number): (number | '…')[] {
   return pages
 }
 
-export function Pagination({ page, totalPages, searchParams }: Props) {
+export function Pagination({ page, totalPages, searchParams, basePath = '/katalog' }: Props) {
   const pages = pageNumbers(page, totalPages)
-  const prevUrl = page > 1 ? buildUrl(searchParams, page - 1) : null
-  const nextUrl = page < totalPages ? buildUrl(searchParams, page + 1) : null
+  const prevUrl = page > 1 ? buildUrl(searchParams, page - 1, basePath) : null
+  const nextUrl = page < totalPages ? buildUrl(searchParams, page + 1, basePath) : null
 
   return (
     <nav className="flex items-center justify-center gap-1" aria-label="Stránkování">
@@ -50,7 +51,7 @@ export function Pagination({ page, totalPages, searchParams }: Props) {
         ) : (
           <PaginationLink
             key={p}
-            href={buildUrl(searchParams, p)}
+            href={buildUrl(searchParams, p, basePath)}
             active={p === page}
           >
             {p}

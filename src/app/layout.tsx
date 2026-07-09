@@ -31,6 +31,7 @@ const thasadith = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://katalog-woad.vercel.app"),
   title: "žena BlaŽená",
   description: "Síť prověřených podnikatelek ve službách — masáže, terapie, koučink, péče v těhotenství a další.",
 };

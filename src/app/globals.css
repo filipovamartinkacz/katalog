@@ -156,3 +156,61 @@
     @apply font-heading;
   }
 }
+
+/* ── Blog: obsah článku (Tiptap editor i veřejný render) ────── */
+.clanek-body {
+  line-height: 1.7;
+}
+.clanek-body p {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+.clanek-body h2 {
+  margin-top: 1.6em;
+  margin-bottom: 0.5em;
+  font-size: 1.4em;
+  font-weight: 600;
+}
+.clanek-body h3 {
+  margin-top: 1.4em;
+  margin-bottom: 0.5em;
+  font-size: 1.15em;
+  font-weight: 600;
+}
+.clanek-body ul, .clanek-body ol {
+  margin-top: 1em;
+  margin-bottom: 1em;
+  padding-left: 1.5em;
+}
+.clanek-body ul { list-style: disc; }
+.clanek-body ol { list-style: decimal; }
+.clanek-body blockquote {
+  margin: 1.4em 0;
+  padding: 0.2em 1.2em;
+  border-left: 3px solid var(--primary);
+  color: var(--muted-foreground);
+  font-style: italic;
+}
+.clanek-body img {
+  display: block;
+  margin: 1.4em 0;
+  border-radius: var(--radius-lg);
+  max-width: 100%;
+  height: auto;
+}
+.clanek-body a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.clanek-body a.clanek-link-btn {
+  display: inline-flex;
+  align-items: center;
+  margin: 0.3em 0;
+  padding: 0.5em 1.1em;
+  border-radius: var(--radius-lg);
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 600;
+  text-decoration: none;
+}

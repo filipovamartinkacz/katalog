@@ -46,3 +46,117 @@ export async function sendProfilSchvalen({
     `,
   })
 }
+
+export async function sendClanekKSchvaleni({
+  to,
+  autorkaJmeno,
+  nadpis,
+}: {
+  to: string[]
+  autorkaJmeno: string
+  nadpis: string
+}) {
+  if (!resend || to.length === 0) return
+
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: 'Nový článek čeká na schválení — žena Blažená',
+    html: `
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a;">
+        <h2 style="color: #8B1D3F;">Nový článek čeká na schválení</h2>
+        <p>
+          <strong>${autorkaJmeno}</strong> odeslala článek <strong>„${nadpis}“</strong>
+          ke schválení.
+        </p>
+        <p style="margin-top: 24px;">
+          <a href="${APP_URL}/admin/clanky"
+             style="background:#8B1D3F;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">
+            Zobrazit v adminu
+          </a>
+        </p>
+        <hr style="margin-top:32px;border:none;border-top:1px solid #eee;" />
+        <p style="font-size:12px;color:#999;">žena Blažená — síť prověřených podnikatelek</p>
+      </div>
+    `,
+  })
+}
+
+export async function sendClanekSchvalen({
+  to,
+  jmeno,
+  nadpis,
+  slug,
+}: {
+  to: string
+  jmeno: string
+  nadpis: string
+  slug: string
+}) {
+  if (!resend) return
+
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: 'Tvůj článek byl schválen — žena Blažená',
+    html: `
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a;">
+        <h2 style="color: #8B1D3F;">Tvůj článek byl schválen! 🎉</h2>
+        <p>Ahoj ${jmeno},</p>
+        <p>
+          Tvůj článek <strong>„${nadpis}“</strong> byl schválen a je teď vidět na blogu
+          <strong>žena Blažená</strong>.
+        </p>
+        <p style="margin-top: 24px;">
+          <a href="${APP_URL}/blog/${slug}"
+             style="background:#8B1D3F;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">
+            Zobrazit článek
+          </a>
+        </p>
+        <hr style="margin-top:32px;border:none;border-top:1px solid #eee;" />
+        <p style="font-size:12px;color:#999;">žena Blažená — síť prověřených podnikatelek</p>
+      </div>
+    `,
+  })
+}
+
+export async function sendClanekZamitnut({
+  to,
+  jmeno,
+  nadpis,
+  duvod,
+}: {
+  to: string
+  jmeno: string
+  nadpis: string
+  duvod: string
+}) {
+  if (!resend) return
+
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: 'Tvůj článek potřebuje úpravu — žena Blažená',
+    html: `
+      <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a;">
+        <h2 style="color: #8B1D3F;">Tvůj článek potřebuje ještě úpravu</h2>
+        <p>Ahoj ${jmeno},</p>
+        <p>
+          Tvůj článek <strong>„${nadpis}“</strong> jsme zatím nezveřejnili. Poznámka od
+          administrátorky:
+        </p>
+        <p style="margin:16px 0;padding:12px 16px;background:#f7f2f0;border-left:3px solid #8B1D3F;border-radius:4px;">
+          ${duvod}
+        </p>
+        <p style="margin-top: 24px;">
+          <a href="${APP_URL}/dashboard/clanky"
+             style="background:#8B1D3F;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;">
+            Upravit článek
+          </a>
+        </p>
+        <hr style="margin-top:32px;border:none;border-top:1px solid #eee;" />
+        <p style="font-size:12px;color:#999;">žena Blažená — síť prověřených podnikatelek</p>
+      </div>
+    `,
+  })
+}
