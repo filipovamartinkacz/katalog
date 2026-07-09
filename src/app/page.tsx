@@ -1,8 +1,24 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { TypewriterText } from "@/components/ui/typewriter-text";
+import { createClient } from "@/lib/supabase/server";
+import { ClanekCard, type ClanekCardData } from "@/app/blog/clanek-card";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: raw } = await supabase
+    .from("clanek")
+    .select("id, slug, nadpis, cover_url, typ, published_at, kategorie:kategorie_id ( nazev ), medailonek:medailonek_id ( jmeno, prijmeni )")
+    .eq("status", "publikovano")
+    .order("published_at", { ascending: false })
+    .limit(3);
+
+  const posledniClanky: ClanekCardData[] = (raw ?? []).map((c) => ({
+    ...c,
+    kategorie: Array.isArray(c.kategorie) ? c.kategorie[0] : c.kategorie,
+    autorka: Array.isArray(c.medailonek) ? c.medailonek[0] : c.medailonek,
+  }));
+
   return (
     <div className="flex flex-col">
       {/* Hero */}
@@ -92,7 +108,7 @@ export default function Home() {
             </Link>
             <Link
               href="/pruvodce"
-              className={buttonVariants({ variant: "outline", size: "lg" })}
+              className={buttonVariants({ variant: "outline-primary", size: "lg" })}
             >
               Nevím, koho hledám — zeptej se Blaženy
             </Link>
@@ -130,6 +146,25 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Poslední z blogu */}
+      {posledniClanky.length > 0 && (
+        <section className="px-4 py-16 sm:px-6">
+          <div className="mx-auto max-w-6xl">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-2xl font-bold text-foreground sm:text-3xl">Z blogu</h2>
+              <Link href="/blog" className="text-sm font-medium text-primary hover:underline">
+                Všechny články →
+              </Link>
+            </div>
+            <div className="mt-8 grid gap-5 sm:grid-cols-3">
+              {posledniClanky.map((c) => (
+                <ClanekCard key={c.id} clanek={c} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA pro podnikatelky */}
       <section className="bg-primary px-4 py-16 sm:px-6">

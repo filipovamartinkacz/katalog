@@ -1,0 +1,71 @@
+import { createAdminClient } from '@/lib/supabase/admin'
+import { createClient } from '@/lib/supabase/server'
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import { ClanekEditor, type ClanekEditorInitial } from '@/components/clanek/editor/clanek-editor'
+
+export default async function AdminUpravitClanekPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const admin = createAdminClient()
+  const { data: clanek } = await admin
+    .from('clanek')
+    .select(`
+      id, medailonek_id, typ, kategorie_id, nadpis, slug, obsah, cover_url, cover_alt,
+      zdroj_url, je_gated, seo_title, seo_description, status, zamitnuti_duvod, published_at,
+      clanek_metoda ( metoda_id ),
+      clanek_klicove_slovo ( klicove_slovo ( slovo ) )
+    `)
+    .eq('id', id)
+    .maybeSingle()
+
+  if (!clanek) notFound()
+
+  const [{ data: kategorie }, { data: metody }] = await Promise.all([
+    admin.from('kategorie').select('id, nazev').order('nazev'),
+    admin.from('metoda').select('id, nazev, ma_ochrannou_znamku').eq('status', 'aktivni').order('nazev'),
+  ])
+
+  const klicovaSlova = (clanek.clanek_klicove_slovo as unknown as { klicove_slovo: { slovo: string } | { slovo: string }[] }[])
+    .map(k => (Array.isArray(k.klicove_slovo) ? k.klicove_slovo[0] : k.klicove_slovo)?.slovo)
+    .filter((s): s is string => Boolean(s))
+
+  const initial: ClanekEditorInitial = {
+    id: clanek.id,
+    typ: clanek.typ,
+    kategorie_id: clanek.kategorie_id,
+    nadpis: clanek.nadpis,
+    obsah: clanek.obsah,
+    cover_url: clanek.cover_url,
+    cover_alt: clanek.cover_alt,
+    zdroj_url: clanek.zdroj_url ?? '',
+    je_gated: clanek.je_gated,
+    seo_title: clanek.seo_title ?? '',
+    seo_description: clanek.seo_description ?? '',
+    metoda_ids: (clanek.clanek_metoda as unknown as { metoda_id: number }[]).map(m => m.metoda_id),
+    klicova_slova: klicovaSlova,
+    status: clanek.status,
+    slug: clanek.slug,
+    published_at: clanek.published_at,
+    zamitnuti_duvod: clanek.zamitnuti_duvod,
+  }
+
+  return (
+    <div className="flex flex-col gap-6">
+      <Link href="/admin/clanky" className="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+        ← Zpět na Blog
+      </Link>
+      <h1 className="text-2xl font-bold">Upravit článek</h1>
+      <ClanekEditor
+        mode="edit"
+        userId={user?.id ?? ''}
+        kategorie={kategorie ?? []}
+        metody={metody ?? []}
+        initial={initial}
+        isAdminMode
+      />
+    </div>
+  )
+}

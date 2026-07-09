@@ -31,6 +31,10 @@ export default async function DashboardPage({
         </p>
       )}
 
+      <Link href="/moje-oblibene" className={buttonVariants({ variant: 'outline-primary', size: 'sm' }) + ' mt-6'}>
+        Moje oblíbené články
+      </Link>
+
       {medailonek ? (
         /* ── Má medailonek ── */
         <div className="mt-6 rounded-2xl border border-border bg-card p-6">
@@ -94,6 +98,18 @@ export default async function DashboardPage({
               Tvůj profil je živý v katalogu.{' '}
               <Link href={`/profil/${medailonek.slug ?? medailonek.id}`} className="font-medium underline hover:no-underline">
                 Zobrazit profil →
+              </Link>
+            </div>
+          )}
+
+          {medailonek.is_published && (
+            <div className="mt-4 flex items-center justify-between rounded-xl border border-border p-4">
+              <div>
+                <p className="text-sm font-medium">Blog</p>
+                <p className="text-xs text-muted-foreground">Piš odborné články pod svým jménem.</p>
+              </div>
+              <Link href="/dashboard/clanky" className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+                Moje články
               </Link>
             </div>
           )}

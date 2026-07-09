@@ -3,20 +3,21 @@
 import { useRef, useState } from 'react'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
+import { convertImageToWebp } from '@/lib/image-convert'
 
 type Props = {
   value: string | null
   onChange: (url: string | null) => void
   userId: string
-  fileKey: 'foto' | 'banner'
+  fileKey: string
   aspect: 'avatar' | 'banner'
   label: string
+  bucket?: string
 }
 
-const BUCKET = 'profil-fotky'
 const MAX_MB = 8
 
-export function ImageUpload({ value, onChange, userId, fileKey, aspect, label }: Props) {
+export function ImageUpload({ value, onChange, userId, fileKey, aspect, label, bucket = 'profil-fotky' }: Props) {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -26,20 +27,30 @@ export function ImageUpload({ value, onChange, userId, fileKey, aspect, label }:
     if (!file.type.startsWith('image/')) { setError('Vyberte obrázek (JPG, PNG, WebP…)'); return }
     if (file.size > MAX_MB * 1024 * 1024) { setError(`Maximální velikost je ${MAX_MB} MB.`); return }
 
+    setUploading(true)
+
+    let webpFile: File
+    try {
+      webpFile = await convertImageToWebp(file)
+    } catch {
+      setError('Obrázek se nepodařilo zpracovat. Zkuste jiný soubor.')
+      setUploading(false)
+      return
+    }
+
     const path = `${userId}/${fileKey}`
 
-    setUploading(true)
     const supabase = createClient()
     const { error: uploadError } = await supabase.storage
-      .from(BUCKET)
-      .upload(path, file, { upsert: true, contentType: file.type })
+      .from(bucket)
+      .upload(path, webpFile, { upsert: true, contentType: webpFile.type })
     if (uploadError) {
       setError('Upload se nezdařil. Zkuste to znovu.')
       setUploading(false)
       return
     }
 
-    const { data: { publicUrl } } = supabase.storage.from(BUCKET).getPublicUrl(path)
+    const { data: { publicUrl } } = supabase.storage.from(bucket).getPublicUrl(path)
     onChange(`${publicUrl}?t=${Date.now()}`)
     setUploading(false)
   }
