@@ -51,7 +51,7 @@ export default async function ProfilPage({ params }: Props) {
     .from('medailonek')
     .select(`
       id, user_id, jmeno, prijmeni, display_name, bio, kontakt_email, telefon, ico,
-      foto_url, banner_url, is_published, rezervace_url,
+      foto_url, banner_url, is_published, user_confirmed, rezervace_url,
       social_link ( platform, url ),
       medailonek_location ( mesto ( nazev, okres ( nazev, kraj ( nazev ) ) ) ),
       medailonek_metoda ( metoda ( id, nazev, status, ma_ochrannou_znamku ) ),
@@ -69,10 +69,12 @@ export default async function ProfilPage({ params }: Props) {
   if (!m) notFound()
 
   const isPublished = (m as any).is_published as boolean
+  const userConfirmed = (m as any).user_confirmed as boolean
+  const isVisible = isPublished && userConfirmed
   const isOwner = !!user && (m as any).user_id === user.id
 
-  // Nepublikovaný profil vidí jen admin nebo vlastník
-  if (!isPublished && !isAdmin && !isOwner) notFound()
+  // Neviditelný profil (nezveřejněný nebo s nepotvrzeným účtem) vidí jen admin nebo vlastník
+  if (!isVisible && !isAdmin && !isOwner) notFound()
 
   const name = m.display_name || `${m.jmeno} ${m.prijmeni}`
   const initials = `${m.jmeno[0] ?? ''}${m.prijmeni[0] ?? ''}`.toUpperCase()
@@ -112,12 +114,14 @@ export default async function ProfilPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-3xl">
-      {!isPublished && (
+      {!isVisible && (
         <div className="px-4 pt-4 sm:px-6">
           <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span>
-                Náhled — profil ještě není zveřejněn.{' '}
+                {isPublished && !userConfirmed
+                  ? 'Náhled — profil je schválený, ale zveřejní se, až si podnikatelka potvrdí účet.'
+                  : 'Náhled — profil ještě není zveřejněn.'}{' '}
                 {isAdmin && (
                   <Link href="/admin/medailonky" className="font-semibold underline hover:no-underline">
                     Zpět na admin
@@ -129,7 +133,7 @@ export default async function ProfilPage({ params }: Props) {
                   </Link>
                 )}
               </span>
-              {isAdmin && <ApproveButton id={m.id} isPublished={false} />}
+              {isAdmin && <ApproveButton id={m.id} isPublished={isPublished} />}
             </div>
           </div>
         </div>
@@ -137,10 +141,10 @@ export default async function ProfilPage({ params }: Props) {
 
       <div className="px-4 pt-4 sm:px-6">
         <Link
-          href={isAdmin && !isPublished ? '/admin/medailonky' : isOwner && !isPublished ? '/dashboard' : '/katalog'}
+          href={isAdmin && !isVisible ? '/admin/medailonky' : isOwner && !isVisible ? '/dashboard' : '/katalog'}
           className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
-          ← {isAdmin && !isPublished ? 'Zpět na admin' : isOwner && !isPublished ? 'Zpět na dashboard' : 'Zpět do katalogu'}
+          ← {isAdmin && !isVisible ? 'Zpět na admin' : isOwner && !isVisible ? 'Zpět na dashboard' : 'Zpět do katalogu'}
         </Link>
       </div>
 
@@ -181,7 +185,7 @@ export default async function ProfilPage({ params }: Props) {
       <p className="mt-6 leading-relaxed text-foreground/80">{m.bio}</p>
 
       {/* Rychlý kontakt */}
-      {isPublished && (
+      {isVisible && (
         <div className="mt-6">
           <CtaRezervace
             medailonekId={m.id}
