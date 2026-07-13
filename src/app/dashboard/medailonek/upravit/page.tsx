@@ -17,7 +17,7 @@ export default async function UpravitPage() {
     supabase
       .from('medailonek')
       .select(`
-        id, jmeno, prijmeni, display_name, bio, kontakt_email, telefon, ico, foto_url, banner_url,
+        id, jmeno, prijmeni, display_name, bio, kontakt_email, telefon, ico, rezervace_url, foto_url, banner_url,
         social_link ( platform, url ),
         medailonek_location ( mesto_id, mesto ( id, nazev, okres ( nazev ) ) ),
         medailonek_metoda ( metoda_id ),

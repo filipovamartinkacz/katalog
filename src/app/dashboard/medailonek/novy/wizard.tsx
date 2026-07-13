@@ -10,6 +10,7 @@ import { createMedailonek, type ServiceInput, type SocialLinkInput } from '@/app
 import { TagInput } from '@/components/ui/tag-input'
 import { MetodaPicker, type SelectedMetoda } from '@/components/ui/metoda-picker'
 import { ImageUpload } from '@/components/ui/image-upload'
+import { cn } from '@/lib/utils'
 
 type Kategorie = { id: number; nazev: string }
 type Metoda = { id: number; nazev: string }
@@ -33,6 +34,7 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
   const [step, setStep] = useState(0)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [serviceInvalid, setServiceInvalid] = useState<{ idx: number; sub: 'nazev' | 'kategorie' } | null>(null)
 
   // Fotky
   const [fotoUrl, setFotoUrl] = useState<string | null>(null)
@@ -46,6 +48,7 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
   const [email, setEmail] = useState('')
   const [telefon, setTelefon] = useState('')
   const [ico, setIco] = useState('')
+  const [rezervaceUrl, setRezervaceUrl] = useState('')
 
   // Sociální sítě (Step 1)
   const [socWeb, setSocWeb] = useState('')
@@ -74,11 +77,14 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
 
 
   const [step1Error, setStep1Error] = useState<string | null>(null)
+  const [step1Invalid, setStep1Invalid] = useState<'jmeno' | 'prijmeni' | 'bio' | null>(null)
 
   function tryAdvanceStep1() {
-    if (!jmeno.trim() || !prijmeni.trim()) { setStep1Error('Vyplňte jméno a příjmení.'); return }
-    if (bio.trim().length < 30) { setStep1Error('Bio musí mít alespoň 30 znaků.'); return }
+    if (!jmeno.trim()) { setStep1Error('Vyplňte jméno a příjmení.'); setStep1Invalid('jmeno'); return }
+    if (!prijmeni.trim()) { setStep1Error('Vyplňte jméno a příjmení.'); setStep1Invalid('prijmeni'); return }
+    if (bio.trim().length < 30) { setStep1Error('Bio musí mít alespoň 30 znaků.'); setStep1Invalid('bio'); return }
     setStep1Error(null)
+    setStep1Invalid(null)
     setStep(1)
   }
 
@@ -87,9 +93,22 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
   }
 
   async function handleSubmit() {
-    if (!canAdvanceStep3()) { setError('Každá služba musí mít název a alespoň jednu kategorii.'); return }
-    setSaving(true)
     setError(null)
+    setServiceInvalid(null)
+    for (let i = 0; i < services.length; i++) {
+      const s = services[i]
+      if (!s.nazev.trim()) {
+        setError('Každá služba musí mít název a alespoň jednu kategorii.')
+        setServiceInvalid({ idx: i, sub: 'nazev' })
+        return
+      }
+      if (s.kategorie_ids.length === 0) {
+        setError('Každá služba musí mít název a alespoň jednu kategorii.')
+        setServiceInvalid({ idx: i, sub: 'kategorie' })
+        return
+      }
+    }
+    setSaving(true)
     const socialLinks: SocialLinkInput[] = [
       { platform: 'web', url: socWeb },
       { platform: 'instagram', url: socInstagram },
@@ -100,7 +119,7 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
 
     const result = await createMedailonek({
       jmeno, prijmeni, display_name: displayName,
-      bio, kontakt_email: email, telefon, ico,
+      bio, kontakt_email: email, telefon, ico, rezervace_url: rezervaceUrl,
       mesto_ids: mesta.map(m => m.id),
       metoda_ids: selectedMetody.filter(m => m.type === 'existing').map(m => (m as { type: 'existing'; id: number; nazev: string }).id),
       nove_metody: selectedMetody.filter(m => m.type === 'new').map(m => m.nazev),
@@ -145,11 +164,11 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="jmeno">Jméno *</Label>
-              <Input id="jmeno" value={jmeno} onChange={e => setJmeno(e.target.value)} required />
+              <Input id="jmeno" value={jmeno} onChange={e => setJmeno(e.target.value)} aria-invalid={step1Invalid === 'jmeno'} />
             </div>
             <div className="flex flex-col gap-1.5">
               <Label htmlFor="prijmeni">Příjmení *</Label>
-              <Input id="prijmeni" value={prijmeni} onChange={e => setPrijmeni(e.target.value)} required />
+              <Input id="prijmeni" value={prijmeni} onChange={e => setPrijmeni(e.target.value)} aria-invalid={step1Invalid === 'prijmeni'} />
             </div>
           </div>
 
@@ -165,10 +184,10 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
               rows={5}
               placeholder="Napište něco o sobě, své cestě a přístupu ke klientkám… (alespoň 30 znaků)"
               value={bio}
-              onChange={e => { setBio(e.target.value); if (step1Error) setStep1Error(null) }}
-              className={step1Error && bio.trim().length < 30 ? 'border-destructive focus-visible:ring-destructive' : ''}
+              onChange={e => { setBio(e.target.value); if (step1Invalid === 'bio') { setStep1Error(null); setStep1Invalid(null) } }}
+              aria-invalid={step1Invalid === 'bio'}
             />
-            <p className={`text-xs ${bio.trim().length < 30 && step1Error ? 'text-destructive' : 'text-muted-foreground'}`}>
+            <p className={`text-xs ${step1Invalid === 'bio' ? 'text-destructive' : 'text-muted-foreground'}`}>
               {bio.trim().length} / min. 30 znaků
             </p>
           </div>
@@ -187,6 +206,22 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="ico">IČO <span className="text-muted-foreground">(nepovinné)</span></Label>
             <Input id="ico" className="max-w-xs" value={ico} onChange={e => setIco(e.target.value)} />
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="rezervace_url">
+              Hlavní rezervační odkaz <span className="text-muted-foreground">(nepovinný)</span>
+            </Label>
+            <Input
+              id="rezervace_url"
+              type="url"
+              placeholder="https://…"
+              value={rezervaceUrl}
+              onChange={e => setRezervaceUrl(e.target.value)}
+            />
+            <p className="text-xs text-muted-foreground">
+              Pokud ho vyplníš, na profilu se místo poptávkového formuláře zobrazí tlačítko vedoucí rovnou na tvůj rezervační systém.
+            </p>
           </div>
 
           <div className="flex flex-col gap-3">
@@ -289,7 +324,12 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
 
                 <div className="flex flex-col gap-1.5">
                   <Label>Název služby *</Label>
-                  <Input value={svc.nazev} onChange={e => updateService(idx, { nazev: e.target.value })} placeholder="např. Relaxační masáž" />
+                  <Input
+                    value={svc.nazev}
+                    onChange={e => updateService(idx, { nazev: e.target.value })}
+                    placeholder="např. Relaxační masáž"
+                    aria-invalid={serviceInvalid?.idx === idx && serviceInvalid.sub === 'nazev'}
+                  />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
@@ -329,7 +369,12 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
 
                 <div className="flex flex-col gap-2">
                   <Label>Kategorie * <span className="text-muted-foreground text-xs">(alespoň 1)</span></Label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className={cn(
+                    'flex flex-wrap gap-2 rounded-lg border p-2 transition-colors',
+                    serviceInvalid?.idx === idx && serviceInvalid.sub === 'kategorie'
+                      ? 'border-destructive ring-3 ring-destructive/20'
+                      : 'border-transparent'
+                  )}>
                     {kategorie.map(k => (
                       <button key={k.id} type="button"
                         onClick={() => toggleKategorie(idx, k.id)}

@@ -44,6 +44,7 @@ export type MedailonekInput = {
   kontakt_email: string
   telefon: string
   ico: string
+  rezervace_url: string
   mesto_ids: number[]
   metoda_ids: number[]
   nove_metody: string[]
@@ -104,6 +105,7 @@ export async function createMedailonek(data: MedailonekInput) {
       kontakt_email: data.kontakt_email.trim() || null,
       telefon: data.telefon.trim() || null,
       ico: data.ico.trim() || null,
+      rezervace_url: data.rezervace_url.trim() || null,
       foto_url: data.foto_url || null,
       banner_url: data.banner_url || null,
       slug,
@@ -188,6 +190,7 @@ export async function updateMedailonek(data: MedailonekInput) {
       kontakt_email: data.kontakt_email.trim() || null,
       telefon: data.telefon.trim() || null,
       ico: data.ico.trim() || null,
+      rezervace_url: data.rezervace_url.trim() || null,
       foto_url: data.foto_url || null,
       banner_url: data.banner_url || null,
     })

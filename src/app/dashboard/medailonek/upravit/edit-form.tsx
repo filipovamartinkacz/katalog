@@ -10,6 +10,7 @@ import { updateMedailonek, type ServiceInput, type SocialLinkInput } from '@/app
 import { TagInput } from '@/components/ui/tag-input'
 import { MetodaPicker, type SelectedMetoda } from '@/components/ui/metoda-picker'
 import { ImageUpload } from '@/components/ui/image-upload'
+import { cn } from '@/lib/utils'
 
 type Kategorie = { id: number; nazev: string }
 type Metoda = { id: number; nazev: string; ma_ochrannou_znamku?: boolean }
@@ -23,6 +24,7 @@ type MedailonekData = {
   kontakt_email: string | null
   telefon: string | null
   ico: string | null
+  rezervace_url: string | null
   foto_url: string | null
   banner_url: string | null
   social_link: { platform: string; url: string }[]
@@ -57,6 +59,11 @@ const SOCIAL_PLATFORMS = [
   { platform: 'tiktok' as const, label: 'TikTok', placeholder: 'https://tiktok.com/@vase_jmeno' },
 ]
 
+type Invalid =
+  | { field: 'jmeno' | 'prijmeni' | 'bio' }
+  | { field: 'service'; idx: number; sub: 'nazev' | 'kategorie' }
+  | null
+
 const EMPTY_SERVICE: ServiceInput = {
   nazev: '', popis: '', delivery_form: 'osobne',
   booking_url: '', price_level_id: null, kategorie_ids: [], klicova_slova: [],
@@ -69,6 +76,7 @@ function getSocialUrl(links: { platform: string; url: string }[], platform: stri
 export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLevels, userId }: Props) {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [invalid, setInvalid] = useState<Invalid>(null)
 
   // Fotky
   const [fotoUrl, setFotoUrl] = useState<string | null>(medailonek.foto_url ?? null)
@@ -82,6 +90,7 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
   const [email, setEmail] = useState(medailonek.kontakt_email ?? '')
   const [telefon, setTelefon] = useState(medailonek.telefon ?? '')
   const [ico, setIco] = useState(medailonek.ico ?? '')
+  const [rezervaceUrl, setRezervaceUrl] = useState(medailonek.rezervace_url ?? '')
 
   // Sociální sítě
   const [socials, setSocials] = useState<Record<string, string>>(() =>
@@ -137,15 +146,27 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
 
 
   async function handleSubmit() {
-    if (!jmeno.trim() || !prijmeni.trim()) { setError('Jméno a příjmení jsou povinné.'); return }
-    if (bio.trim().length < 30) { setError('Bio musí mít alespoň 30 znaků.'); return }
-    if (!services.every(s => s.nazev.trim() && s.kategorie_ids.length > 0)) {
-      setError('Každá služba musí mít název a alespoň jednu kategorii.')
-      return
+    setError(null)
+    setInvalid(null)
+
+    if (!jmeno.trim()) { setError('Jméno a příjmení jsou povinné.'); setInvalid({ field: 'jmeno' }); return }
+    if (!prijmeni.trim()) { setError('Jméno a příjmení jsou povinné.'); setInvalid({ field: 'prijmeni' }); return }
+    if (bio.trim().length < 30) { setError('Bio musí mít alespoň 30 znaků.'); setInvalid({ field: 'bio' }); return }
+    for (let i = 0; i < services.length; i++) {
+      const s = services[i]
+      if (!s.nazev.trim()) {
+        setError('Každá služba musí mít název a alespoň jednu kategorii.')
+        setInvalid({ field: 'service', idx: i, sub: 'nazev' })
+        return
+      }
+      if (s.kategorie_ids.length === 0) {
+        setError('Každá služba musí mít název a alespoň jednu kategorii.')
+        setInvalid({ field: 'service', idx: i, sub: 'kategorie' })
+        return
+      }
     }
 
     setSaving(true)
-    setError(null)
 
     const socialLinks: SocialLinkInput[] = SOCIAL_PLATFORMS
       .map(p => ({ platform: p.platform, url: socials[p.platform] ?? '' }))
@@ -153,7 +174,7 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
 
     const result = await updateMedailonek({
       jmeno, prijmeni, display_name: displayName,
-      bio, kontakt_email: email, telefon, ico,
+      bio, kontakt_email: email, telefon, ico, rezervace_url: rezervaceUrl,
       mesto_ids: mesta.map(m => m.id),
       metoda_ids: selectedMetody.filter(m => m.type === 'existing').map(m => (m as { type: 'existing'; id: number; nazev: string }).id),
       nove_metody: selectedMetody.filter(m => m.type === 'new').map(m => m.nazev),
@@ -197,11 +218,11 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="jmeno">Jméno *</Label>
-            <Input id="jmeno" value={jmeno} onChange={e => setJmeno(e.target.value)} />
+            <Input id="jmeno" value={jmeno} onChange={e => setJmeno(e.target.value)} aria-invalid={invalid?.field === 'jmeno'} />
           </div>
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="prijmeni">Příjmení *</Label>
-            <Input id="prijmeni" value={prijmeni} onChange={e => setPrijmeni(e.target.value)} />
+            <Input id="prijmeni" value={prijmeni} onChange={e => setPrijmeni(e.target.value)} aria-invalid={invalid?.field === 'prijmeni'} />
           </div>
         </div>
 
@@ -212,7 +233,7 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
 
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="bio">O sobě *</Label>
-          <Textarea id="bio" rows={5} value={bio} onChange={e => setBio(e.target.value)} />
+          <Textarea id="bio" rows={5} value={bio} onChange={e => setBio(e.target.value)} aria-invalid={invalid?.field === 'bio'} />
           <p className="text-xs text-muted-foreground">{bio.trim().length} / min. 30 znaků</p>
         </div>
 
@@ -230,6 +251,22 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="ico">IČO <span className="text-muted-foreground">(nepovinné)</span></Label>
           <Input id="ico" className="max-w-xs" value={ico} onChange={e => setIco(e.target.value)} />
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="rezervace_url">
+            Hlavní rezervační odkaz <span className="text-muted-foreground">(nepovinný)</span>
+          </Label>
+          <Input
+            id="rezervace_url"
+            type="url"
+            placeholder="https://…"
+            value={rezervaceUrl}
+            onChange={e => setRezervaceUrl(e.target.value)}
+          />
+          <p className="text-xs text-muted-foreground">
+            Pokud ho vyplníš, na profilu se místo poptávkového formuláře zobrazí tlačítko vedoucí rovnou na tvůj rezervační systém.
+          </p>
         </div>
 
         <div className="flex flex-col gap-3">
@@ -279,7 +316,11 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
 
               <div className="flex flex-col gap-1.5">
                 <Label>Název služby *</Label>
-                <Input value={svc.nazev} onChange={e => updateService(idx, { nazev: e.target.value })} />
+                <Input
+                  value={svc.nazev}
+                  onChange={e => updateService(idx, { nazev: e.target.value })}
+                  aria-invalid={invalid?.field === 'service' && invalid.idx === idx && invalid.sub === 'nazev'}
+                />
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -319,7 +360,12 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
 
               <div className="flex flex-col gap-2">
                 <Label>Kategorie * <span className="text-muted-foreground text-xs">(alespoň 1)</span></Label>
-                <div className="flex flex-wrap gap-2">
+                <div className={cn(
+                  'flex flex-wrap gap-2 rounded-lg border p-2 transition-colors',
+                  invalid?.field === 'service' && invalid.idx === idx && invalid.sub === 'kategorie'
+                    ? 'border-destructive ring-3 ring-destructive/20'
+                    : 'border-transparent'
+                )}>
                   {kategorie.map(k => (
                     <button key={k.id} type="button"
                       onClick={() => toggleKategorie(idx, k.id)}

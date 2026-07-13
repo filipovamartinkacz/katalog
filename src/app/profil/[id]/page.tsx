@@ -3,9 +3,13 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
+import { MessageCircle } from 'lucide-react'
 import { ApproveButton } from '@/app/admin/medailonky/approve-button'
 import { MetodaApproveButton } from './metoda-approve-button'
 import { ClanekCard, type ClanekCardData } from '@/app/blog/clanek-card'
+import { CtaRezervace } from './cta-rezervace'
+import { TrackedLink } from './tracked-link'
+import { toWhatsAppUrl } from '@/lib/whatsapp'
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -47,7 +51,7 @@ export default async function ProfilPage({ params }: Props) {
     .from('medailonek')
     .select(`
       id, user_id, jmeno, prijmeni, display_name, bio, kontakt_email, telefon, ico,
-      foto_url, banner_url, is_published,
+      foto_url, banner_url, is_published, rezervace_url,
       social_link ( platform, url ),
       medailonek_location ( mesto ( nazev, okres ( nazev, kraj ( nazev ) ) ) ),
       medailonek_metoda ( metoda ( id, nazev, status, ma_ochrannou_znamku ) ),
@@ -176,6 +180,23 @@ export default async function ProfilPage({ params }: Props) {
       {/* Bio */}
       <p className="mt-6 leading-relaxed text-foreground/80">{m.bio}</p>
 
+      {/* Rychlý kontakt */}
+      {isPublished && (
+        <div className="mt-6">
+          <CtaRezervace
+            medailonekId={m.id}
+            rezervaceUrl={(m as unknown as { rezervace_url: string | null }).rezervace_url ?? null}
+            services={(m.service as any[]).map(s => ({ id: s.id as number, nazev: s.nazev as string }))}
+            prefill={{
+              jmeno: (user?.user_metadata?.full_name as string | undefined) ?? (user?.user_metadata?.jmeno as string | undefined) ?? '',
+              email: user?.email ?? '',
+              telefon: (user?.user_metadata?.telefon as string | undefined) ?? '',
+            }}
+            isLoggedIn={!!user}
+          />
+        </div>
+      )}
+
       {/* Kontakt */}
       {(m.kontakt_email || m.telefon || (m.social_link as any[]).length > 0) && (
         <div className="mt-6 rounded-2xl border border-border bg-card p-5">
@@ -187,9 +208,22 @@ export default async function ProfilPage({ params }: Props) {
               </a>
             )}
             {m.telefon && (
-              <a href={`tel:${m.telefon}`} className="text-sm hover:underline">
-                {m.telefon}
-              </a>
+              <div className="flex items-center gap-2">
+                <a href={`tel:${m.telefon}`} className="text-sm hover:underline">
+                  {m.telefon}
+                </a>
+                {toWhatsAppUrl(m.telefon) && (
+                  <a
+                    href={toWhatsAppUrl(m.telefon)!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="WhatsApp"
+                    className="text-muted-foreground hover:text-primary"
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                  </a>
+                )}
+              </div>
             )}
             {(m.social_link as any[]).length > 0 && (
               <div className="mt-1 flex flex-wrap gap-2">
@@ -262,14 +296,14 @@ export default async function ProfilPage({ params }: Props) {
                   )}
 
                   {s.booking_url && (
-                    <a
+                    <TrackedLink
                       href={s.booking_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      medailonekId={m.id}
+                      serviceId={s.id}
                       className="mt-3 inline-block text-xs font-medium text-primary hover:underline"
                     >
                       Rezervovat →
-                    </a>
+                    </TrackedLink>
                   )}
                 </div>
               )
