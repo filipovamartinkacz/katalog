@@ -4,27 +4,23 @@ import { buttonVariants } from '@/components/ui/button'
 export default function AdminPage() {
   return (
     <div>
-      <h1 className="text-2xl font-bold">Admin</h1>
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        <Link href="/admin/medailonky" className={buttonVariants({ variant: 'outline' }) + ' h-auto flex-col items-start gap-1 p-5 text-left'}>
-          <span className="font-semibold">Profily</span>
-          <span className="text-sm text-muted-foreground font-normal">Schvalovat a spravovat medailonky</span>
+      <h1 className="text-2xl font-bold">Administrace</h1>
+      <div className="mt-6 flex flex-wrap gap-4">
+        <Link href="/admin/medailonky" className={buttonVariants({ variant: 'outline-admin' }) + ' h-auto w-fit flex-col items-center gap-0 px-7 py-1.5 text-center'}>
+          <span className="text-lg font-medium">Profily</span>
+          <span className="text-xs font-normal">Schvalovat a spravovat medailonky</span>
         </Link>
-        <Link href="/admin/metody" className={buttonVariants({ variant: 'outline' }) + ' h-auto flex-col items-start gap-1 p-5 text-left'}>
-          <span className="font-semibold">Metody</span>
-          <span className="text-sm text-muted-foreground font-normal">Schvalovat navržené metody z importu</span>
+        <Link href="/admin/metody" className={buttonVariants({ variant: 'outline-admin' }) + ' h-auto w-fit flex-col items-center gap-0 px-7 py-1.5 text-center'}>
+          <span className="text-lg font-medium">Metody</span>
+          <span className="text-xs font-normal">Schvalovat navržené metody</span>
         </Link>
-        <Link href="/admin/import" className={buttonVariants({ variant: 'outline' }) + ' h-auto flex-col items-start gap-1 p-5 text-left'}>
-          <span className="font-semibold">Import medailonku z JSON</span>
-          <span className="text-sm text-muted-foreground font-normal">Nahrát profil sestavený AI asistentem</span>
+        <Link href="/admin/clanky" className={buttonVariants({ variant: 'outline-admin' }) + ' h-auto w-fit flex-col items-center gap-0 px-7 py-1.5 text-center'}>
+          <span className="text-lg font-medium">Blog</span>
+          <span className="text-xs font-normal">Schvalovat, upravovat a zakládat články</span>
         </Link>
-        <Link href="/admin/blazena" className={buttonVariants({ variant: 'outline' }) + ' h-auto flex-col items-start gap-1 p-5 text-left'}>
-          <span className="font-semibold">Průvodkyně Blažena</span>
-          <span className="text-sm text-muted-foreground font-normal">Editovat mapování pocitů a oblastí na kategorie</span>
-        </Link>
-        <Link href="/admin/clanky" className={buttonVariants({ variant: 'outline' }) + ' h-auto flex-col items-start gap-1 p-5 text-left'}>
-          <span className="font-semibold">Blog</span>
-          <span className="text-sm text-muted-foreground font-normal">Schvalovat, upravovat a zakládat články</span>
+        <Link href="/admin/blazena" className={buttonVariants({ variant: 'outline-admin' }) + ' h-auto w-fit flex-col items-center gap-0 px-7 py-1.5 text-center'}>
+          <span className="text-lg font-medium">Průvodkyně Blažená</span>
+          <span className="text-xs font-normal">Editovat mapování pocitů a oblastí na kategorie</span>
         </Link>
       </div>
     </div>

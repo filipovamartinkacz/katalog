@@ -32,14 +32,14 @@ export function MetodaRow({ id, nazev, popis, status, maOchrannaZnamka, pouzitaV
         <input
           value={editNazev}
           onChange={e => setEditNazev(e.target.value)}
-          className="rounded-lg border border-border bg-background px-3 py-1.5 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/40"
+          className="rounded-lg border border-input bg-background px-3 py-1.5 text-sm font-medium outline-none focus:ring-2 focus:ring-primary/40"
         />
         <textarea
           value={editPopis}
           onChange={e => setEditPopis(e.target.value)}
           rows={2}
           placeholder="Popis (nepovinný)"
-          className="rounded-lg border border-border bg-background px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-primary/40 resize-none"
+          className="rounded-lg border border-input bg-background px-3 py-1.5 text-sm outline-none focus:ring-2 focus:ring-primary/40 resize-none"
         />
         <label className="flex items-center gap-2 cursor-pointer text-sm">
           <input
@@ -48,18 +48,18 @@ export function MetodaRow({ id, nazev, popis, status, maOchrannaZnamka, pouzitaV
             onChange={e => setEditOchrannaZnamka(e.target.checked)}
             className="h-4 w-4 rounded border-border accent-primary"
           />
-          Ochranná známka <span className="text-muted-foreground">(za názvem se zobrazí ®)</span>
+          Ochranná známka <span className="text-foreground">(za názvem se zobrazí ®)</span>
         </label>
         <div className="flex gap-2">
           <button
             type="button"
             disabled={loading || !editNazev.trim()}
             onClick={() => handle(() => upravitMetodu(id, editNazev, editPopis || null, editOchrannaZnamka)).then(() => setEditing(false))}
-            className={buttonVariants({ size: 'sm' }) + ' disabled:opacity-50'}
+            className={buttonVariants({ variant: 'admin', size: 'sm' }) + ' disabled:opacity-50'}
           >
             {loading ? '…' : 'Schválit a uložit'}
           </button>
-          <button type="button" onClick={() => setEditing(false)} className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+          <button type="button" onClick={() => setEditing(false)} className={buttonVariants({ variant: 'outline-admin', size: 'sm' })}>
             Zrušit
           </button>
         </div>
@@ -78,8 +78,8 @@ export function MetodaRow({ id, nazev, popis, status, maOchrannaZnamka, pouzitaV
             <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700">Návrh</span>
           )}
         </div>
-        {popis && <p className="mt-0.5 text-sm text-muted-foreground">{popis}</p>}
-        <p className="mt-1 text-xs text-muted-foreground">
+        {popis && <p className="mt-0.5 text-sm text-foreground">{popis}</p>}
+        <p className="mt-1 text-xs text-foreground">
           Použita v {pouzitaV} {pouzitaV === 1 ? 'profilu' : 'profilech'}
         </p>
       </div>
@@ -90,14 +90,14 @@ export function MetodaRow({ id, nazev, popis, status, maOchrannaZnamka, pouzitaV
               type="button"
               disabled={loading}
               onClick={() => handle(() => schvalitMetodu(id))}
-              className={buttonVariants({ size: 'sm' }) + ' disabled:opacity-50'}
+              className={buttonVariants({ variant: 'admin', size: 'sm' }) + ' disabled:opacity-50'}
             >
               {loading ? '…' : 'Schválit'}
             </button>
             <button
               type="button"
               onClick={() => setEditing(true)}
-              className={buttonVariants({ variant: 'outline', size: 'sm' })}
+              className={buttonVariants({ variant: 'outline-admin', size: 'sm' })}
             >
               Upravit
             </button>
@@ -105,7 +105,7 @@ export function MetodaRow({ id, nazev, popis, status, maOchrannaZnamka, pouzitaV
               type="button"
               disabled={loading}
               onClick={() => handle(() => zamitnoutMetodu(id))}
-              className={buttonVariants({ variant: 'outline', size: 'sm' }) + ' disabled:opacity-50 hover:border-destructive hover:text-destructive'}
+              className={buttonVariants({ variant: 'outline-admin', size: 'sm' }) + ' disabled:opacity-50'}
             >
               Zamítnout
             </button>
@@ -115,7 +115,7 @@ export function MetodaRow({ id, nazev, popis, status, maOchrannaZnamka, pouzitaV
           <button
             type="button"
             onClick={() => setEditing(true)}
-            className={buttonVariants({ variant: 'outline', size: 'sm' })}
+            className={buttonVariants({ variant: 'outline-admin', size: 'sm' })}
           >
             Upravit
           </button>

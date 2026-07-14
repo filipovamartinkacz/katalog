@@ -2,6 +2,8 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
+import { buttonVariants } from '@/components/ui/button'
+import { FilterChip } from '@/components/ui/filter-chip'
 
 type Kategorie = { id: number; nazev: string; slug: string }
 type Metoda = { id: number; nazev: string; ma_ochrannou_znamku: boolean }
@@ -63,7 +65,7 @@ export function Filters({ kategorie, metody, activeKats, activeMet, activeForma,
           value={q}
           onChange={e => setQ(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && submitText()}
-          className="h-9 flex-1 rounded-lg border border-border bg-background px-3 text-sm outline-none ring-offset-2 focus:ring-2 focus:ring-primary/40"
+          className="h-9 flex-1 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-2 focus:ring-2 focus:ring-primary/40"
         />
         <div className="flex flex-col gap-0.5">
           <input
@@ -73,7 +75,7 @@ export function Filters({ kategorie, metody, activeKats, activeMet, activeForma,
             onChange={e => setLok(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && submitText()}
             disabled={activeForma === 'online'}
-            className="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm outline-none ring-offset-2 focus:ring-2 focus:ring-primary/40 disabled:opacity-40 sm:w-52"
+            className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-2 focus:ring-2 focus:ring-primary/40 disabled:opacity-40 sm:w-52"
           />
           {activeForma === 'online' && (
             <p className="text-xs text-muted-foreground">Online expertky jsou dostupné odkudkoli</p>
@@ -82,7 +84,7 @@ export function Filters({ kategorie, metody, activeKats, activeMet, activeForma,
         <button
           type="button"
           onClick={submitText}
-          className="h-9 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          className={buttonVariants({ size: 'lg' })}
         >
           Hledat
         </button>
@@ -95,36 +97,18 @@ export function Filters({ kategorie, metody, activeKats, activeMet, activeForma,
           ['osobne', 'Osobně'],
           ['online', 'Online'],
         ] as const).map(([val, label]) => (
-          <button
-            key={label}
-            type="button"
-            onClick={() => router.push(buildUrl({ forma: val }))}
-            className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
-              activeForma === val
-                ? 'border-primary bg-primary text-primary-foreground'
-                : 'border-border hover:border-primary/40'
-            }`}
-          >
+          <FilterChip key={label} selected={activeForma === val} onClick={() => router.push(buildUrl({ forma: val }))}>
             {label}
-          </button>
+          </FilterChip>
         ))}
       </div>
 
       {/* Kategorie — multi-select */}
       <div className="flex flex-wrap gap-2">
         {kategorie.map(k => (
-          <button
-            key={k.id}
-            type="button"
-            onClick={() => toggleKat(k.slug)}
-            className={`rounded-full border px-3 py-1 text-sm transition-colors ${
-              activeKats.includes(k.slug)
-                ? 'border-primary bg-primary text-primary-foreground'
-                : 'border-border hover:border-primary/40'
-            }`}
-          >
+          <FilterChip key={k.id} selected={activeKats.includes(k.slug)} onClick={() => toggleKat(k.slug)}>
             {k.nazev}
-          </button>
+          </FilterChip>
         ))}
       </div>
 
@@ -142,18 +126,9 @@ export function Filters({ kategorie, metody, activeKats, activeMet, activeForma,
         {showMetody && (
           <div className="flex flex-wrap gap-2">
             {metody.map(m => (
-              <button
-                key={m.id}
-                type="button"
-                onClick={() => toggle('met', String(m.id))}
-                className={`rounded-full border px-3 py-1 text-sm transition-colors ${
-                  activeMet === m.id
-                    ? 'border-accent bg-accent/15 text-accent-foreground font-medium'
-                    : 'border-border hover:border-accent/40'
-                }`}
-              >
+              <FilterChip key={m.id} variant="accent" selected={activeMet === m.id} onClick={() => toggle('met', String(m.id))}>
                 {m.nazev}{m.ma_ochrannou_znamku && <sup className="ml-0.5 text-xs">®</sup>}
-              </button>
+              </FilterChip>
             ))}
           </div>
         )}

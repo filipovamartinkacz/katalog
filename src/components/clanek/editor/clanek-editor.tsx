@@ -370,11 +370,11 @@ export function ClanekEditor({
       {saved && !error && <p className="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-800">Uloženo.</p>}
 
       <div className="flex flex-wrap justify-end gap-3 border-t border-border pt-5">
-        <button type="button" disabled={saving} onClick={handleSave} className={buttonVariants({ variant: 'outline' }) + ' disabled:opacity-50'}>
+        <button type="button" disabled={saving} onClick={handleSave} className={buttonVariants({ variant: 'outline-admin' }) + ' disabled:opacity-50'}>
           {saving ? 'Ukládám…' : mode === 'create' && !isAdminMode ? 'Uložit jako rozpracované' : 'Uložit'}
         </button>
         {canPropose && (
-          <button type="button" disabled={saving} onClick={handleSubmitForReview} className={buttonVariants() + ' disabled:opacity-50'}>
+          <button type="button" disabled={saving} onClick={handleSubmitForReview} className={buttonVariants({ variant: 'admin' }) + ' disabled:opacity-50'}>
             Odeslat ke schválení
           </button>
         )}

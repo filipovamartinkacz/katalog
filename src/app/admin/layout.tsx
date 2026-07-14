@@ -13,10 +13,6 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6">
-      <div className="mb-8 flex items-center gap-3">
-        <span className="rounded-md bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary uppercase tracking-wider">Admin</span>
-        <span className="text-sm text-muted-foreground">{user.email}</span>
-      </div>
       {children}
     </div>
   )

@@ -98,7 +98,7 @@ export default async function Home() {
             </span>
             <span className="h-px w-12 bg-accent" />
           </div>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">
+          <p className="mx-auto mt-5 max-w-xl text-lg font-medium text-foreground">
             Síť prověřených podnikatelek nabízejících masáže, terapie,
             koučink, péči v těhotenství a mnoho dalšího.
           </p>

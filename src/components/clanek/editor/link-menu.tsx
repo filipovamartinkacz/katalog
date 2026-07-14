@@ -206,7 +206,7 @@ export function LinkMenu({ editor, onClose }: Props) {
           ) : (
             <p className="text-xs text-muted-foreground">Jako popisek se použije označený text v článku.</p>
           )}
-          <button type="button" onClick={insertExternal} className={buttonVariants({ size: 'sm' }) + ' self-start'}>
+          <button type="button" onClick={insertExternal} className={buttonVariants({ variant: 'admin', size: 'sm' }) + ' self-start'}>
             Vložit
           </button>
         </div>
@@ -218,7 +218,7 @@ export function LinkMenu({ editor, onClose }: Props) {
           Zobrazit jako tlačítko
         </label>
         {hasExistingLink && (
-          <button type="button" onClick={removeLink} className="text-xs font-medium text-destructive hover:underline">
+          <button type="button" onClick={removeLink} className="text-xs font-medium text-foreground hover:underline">
             Odebrat odkaz
           </button>
         )}

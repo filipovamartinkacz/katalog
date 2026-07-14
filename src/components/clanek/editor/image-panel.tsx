@@ -62,11 +62,11 @@ export function ImagePanel({ editor, pos, attrs, onClose }: Props) {
           className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         />
         <div className="flex items-center justify-between gap-2">
-          <button type="button" onClick={saveAlt} className={buttonVariants({ size: 'sm' })}>
+          <button type="button" onClick={saveAlt} className={buttonVariants({ variant: 'admin', size: 'sm' })}>
             Uložit
           </button>
           <div className="flex items-center gap-3">
-            <button type="button" onClick={removeImage} className="text-xs font-medium text-destructive hover:underline">
+            <button type="button" onClick={removeImage} className="text-xs font-medium text-foreground hover:underline">
               Odstranit obrázek
             </button>
             <button type="button" onClick={onClose} className="text-xs text-muted-foreground hover:text-foreground">

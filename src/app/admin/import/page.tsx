@@ -76,7 +76,7 @@ export default function ImportPage() {
     <div className="flex flex-col gap-8">
       <div>
         <h1 className="text-2xl font-bold">Import medailonku z JSON</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <p className="mt-2 text-lg font-medium text-foreground">
           Vlož JSON sestavený AI asistentem. Systém vytvoří profil a pošle podnikatelce pozvánku na email.
         </p>
       </div>
@@ -84,7 +84,7 @@ export default function ImportPage() {
       {/* Prompt pro AI */}
       <details className="rounded-xl border border-border bg-muted/40 p-4">
         <summary className="cursor-pointer text-sm font-medium">Prompt pro AI asistenta (ChatGPT, Claude…)</summary>
-        <div className="mt-3 text-sm text-muted-foreground space-y-2">
+        <div className="mt-3 text-sm text-foreground space-y-2">
           <p>Použij tento prompt na začátku rozhovoru s AI asistentem:</p>
           <pre className="whitespace-pre-wrap rounded-lg bg-background border border-border p-3 text-xs leading-relaxed">{`Budeš sbírat informace o podnikatelce pro katalog služeb a sestavíš strukturovaný JSON profil.
 
@@ -146,17 +146,17 @@ Na konci sestav JSON přesně v tomto formátu:
       {/* Preview */}
       {preview && (
         <div className="rounded-xl border border-border bg-card p-4 text-sm">
-          <p className="font-medium text-muted-foreground mb-2">Náhled</p>
+          <p className="font-medium text-foreground mb-2">Náhled</p>
           <div className="grid grid-cols-2 gap-x-6 gap-y-1">
-            <span className="text-muted-foreground">Jméno</span>
+            <span className="text-foreground">Jméno</span>
             <span className="font-medium">{preview.jmeno} {preview.prijmeni}</span>
-            <span className="text-muted-foreground">Email</span>
+            <span className="text-foreground">Email</span>
             <span>{preview.email}</span>
-            <span className="text-muted-foreground">Města</span>
+            <span className="text-foreground">Města</span>
             <span>{preview.mestoCount}</span>
-            <span className="text-muted-foreground">Metody</span>
+            <span className="text-foreground">Metody</span>
             <span>{preview.metodaCount}</span>
-            <span className="text-muted-foreground">Služby</span>
+            <span className="text-foreground">Služby</span>
             <span>{preview.sluzbaCount}</span>
           </div>
         </div>

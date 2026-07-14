@@ -123,7 +123,7 @@ export default async function AdminClankyPage({ searchParams }: Props) {
       />
 
       {rows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-foreground">
           {activeQ ? 'Žádné články neodpovídají hledání.' : 'V tomto stavu zatím žádné články nejsou.'}
         </p>
       ) : (
@@ -161,8 +161,8 @@ function ClanekRow({ c }: { c: Row }) {
             </span>
           )}
         </div>
-        {autorka && <p className="text-xs text-muted-foreground">{autorka.jmeno} {autorka.prijmeni}</p>}
-        <p className="mt-1 text-xs text-muted-foreground">
+        {autorka && <p className="text-xs text-foreground">{autorka.jmeno} {autorka.prijmeni}</p>}
+        <p className="mt-1 text-xs text-foreground">
           {new Date(c.created_at).toLocaleDateString('cs-CZ')} · {c.view_count} zobrazení · {c.oblibene_count} v oblíbených
         </p>
       </div>

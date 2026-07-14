@@ -27,19 +27,19 @@ export function ApproveButton({ id, isPublished }: { id: string; isPublished: bo
   if (confirming) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-xs text-muted-foreground">Opravdu smazat?</span>
+        <span className="text-xs text-foreground">Opravdu smazat?</span>
         <button
           type="button"
           disabled={loading}
           onClick={handleDelete}
-          className={buttonVariants({ size: 'sm' }) + ' disabled:opacity-50 bg-destructive hover:bg-destructive/90'}
+          className={buttonVariants({ variant: 'outline-admin', size: 'sm' }) + ' disabled:opacity-50'}
         >
           {loading ? '…' : 'Smazat'}
         </button>
         <button
           type="button"
           onClick={() => setConfirming(false)}
-          className={buttonVariants({ variant: 'outline', size: 'sm' })}
+          className={buttonVariants({ variant: 'outline-admin', size: 'sm' })}
         >
           Zrušit
         </button>
@@ -53,14 +53,14 @@ export function ApproveButton({ id, isPublished }: { id: string; isPublished: bo
         type="button"
         disabled={loading}
         onClick={handleApprove}
-        className={buttonVariants({ variant: isPublished ? 'outline' : 'default', size: 'sm' }) + ' disabled:opacity-50'}
+        className={buttonVariants({ variant: isPublished ? 'outline-admin' : 'admin', size: 'sm' }) + ' disabled:opacity-50'}
       >
         {loading ? '…' : isPublished ? 'Skrýt' : 'Schválit'}
       </button>
       <button
         type="button"
         onClick={() => setConfirming(true)}
-        className={buttonVariants({ variant: 'outline', size: 'sm' }) + ' hover:border-destructive hover:text-destructive'}
+        className={buttonVariants({ variant: 'outline-admin', size: 'sm' })}
       >
         Smazat
       </button>

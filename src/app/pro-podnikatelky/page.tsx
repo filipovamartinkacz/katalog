@@ -47,7 +47,7 @@ export default function ProPodnikatelkyPage() {
           <h1 className="mt-6 text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
             Představ se ženám,<br />které tě hledají
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
+          <p className="mx-auto mt-6 max-w-xl text-lg font-medium text-foreground">
             Vytvoř si profil v katalogu žena BlaŽená a oslovuj zákaznice,
             které aktivně hledají právě to, co nabízíš.
           </p>

@@ -2,6 +2,8 @@
 
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
+import { buttonVariants } from '@/components/ui/button'
+import { FilterChip } from '@/components/ui/filter-chip'
 
 const STATUSY = [
   { value: 'ceka_na_schvaleni', label: 'Čeká na schválení' },
@@ -62,40 +64,20 @@ export function AdminClankyFilters({ activeStatus, activeQ, activeGated, activeS
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap gap-2">
         {STATUSY.map(s => (
-          <button
-            key={s.value}
-            type="button"
-            onClick={() => router.push(buildUrl({ status: s.value }))}
-            className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
-              activeStatus === s.value ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary/40'
-            }`}
-          >
+          <FilterChip key={s.value} variant="admin" selected={activeStatus === s.value} onClick={() => router.push(buildUrl({ status: s.value }))}>
             {s.label} ({counts[s.value] ?? 0})
-          </button>
+          </FilterChip>
         ))}
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => router.push(buildUrl({ kat: null }))}
-          className={`rounded-full border px-3 py-1 text-sm transition-colors ${
-            !activeKat ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary/40'
-          }`}
-        >
+        <FilterChip variant="admin" selected={!activeKat} onClick={() => router.push(buildUrl({ kat: null }))}>
           Všechny kategorie
-        </button>
+        </FilterChip>
         {kategorie.map(k => (
-          <button
-            key={k.id}
-            type="button"
-            onClick={() => router.push(buildUrl({ kat: k.slug }))}
-            className={`rounded-full border px-3 py-1 text-sm transition-colors ${
-              activeKat === k.slug ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary/40'
-            }`}
-          >
+          <FilterChip key={k.id} variant="admin" selected={activeKat === k.slug} onClick={() => router.push(buildUrl({ kat: k.slug }))}>
             {k.nazev}
-          </button>
+          </FilterChip>
         ))}
       </div>
 
@@ -106,17 +88,17 @@ export function AdminClankyFilters({ activeStatus, activeQ, activeGated, activeS
           onChange={e => setQ(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && submitSearch()}
           placeholder="Hledat podle názvu…"
-          className="h-9 flex-1 rounded-lg border border-border bg-background px-3 text-sm outline-none ring-offset-2 focus:ring-2 focus:ring-primary/40"
+          className="h-9 flex-1 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-2 focus:ring-2 focus:ring-primary/40"
         />
         <button
           type="button"
           onClick={submitSearch}
-          className="h-9 rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          className={buttonVariants({ variant: 'admin', size: 'lg' })}
         >
           Hledat
         </button>
         {activeQ && (
-          <button type="button" onClick={() => { setQ(''); router.push(buildUrl({ q: null })) }} className="text-sm text-primary hover:underline">
+          <button type="button" onClick={() => { setQ(''); router.push(buildUrl({ q: null })) }} className="text-sm text-foreground hover:underline">
             Zrušit hledání
           </button>
         )}
@@ -132,7 +114,7 @@ export function AdminClankyFilters({ activeStatus, activeQ, activeGated, activeS
           Jen s placenou (paywall) částí
         </label>
 
-        <label className="flex items-center gap-2 text-sm text-muted-foreground">
+        <label className="flex items-center gap-2 text-sm text-foreground">
           Typ:
           <select
             value={activeTyp ?? ''}
@@ -146,7 +128,7 @@ export function AdminClankyFilters({ activeStatus, activeQ, activeGated, activeS
           </select>
         </label>
 
-        <label className="flex items-center gap-2 text-sm text-muted-foreground">
+        <label className="flex items-center gap-2 text-sm text-foreground">
           Řadit:
           <select
             value={activeSort}

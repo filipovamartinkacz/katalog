@@ -397,7 +397,7 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
           ))}
 
           <button type="button" onClick={() => setServices(prev => [...prev, { ...EMPTY_SERVICE }])}
-            className={buttonVariants({ variant: 'outline' }) + ' self-start'}>
+            className={buttonVariants({ variant: 'outline-admin' }) + ' self-start'}>
             + Přidat další službu
           </button>
         </div>
@@ -413,9 +413,9 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
       )}
 
       <div className="flex justify-end gap-3 border-t border-border pt-6">
-        <a href="/dashboard" className={buttonVariants({ variant: 'outline' })}>Zrušit</a>
+        <a href="/dashboard" className={buttonVariants({ variant: 'outline-admin' })}>Zrušit</a>
         <button type="button" disabled={saving} onClick={handleSubmit}
-          className={buttonVariants() + ' disabled:opacity-50'}>
+          className={buttonVariants({ variant: 'admin' }) + ' disabled:opacity-50'}>
           {saving ? 'Ukládám…' : 'Uložit změny'}
         </button>
       </div>

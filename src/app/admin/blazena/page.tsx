@@ -7,8 +7,8 @@ export default async function AdminBlazenaPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold">Průvodkyně Blažena — konfigurace</h1>
-        <p className="mt-2 text-sm text-muted-foreground max-w-prose">
+        <h1 className="text-2xl font-bold">Průvodkyně Blažená — konfigurace</h1>
+        <p className="mt-2 text-lg font-medium text-foreground max-w-prose">
           Mapování pocitů a oblastí na kategorie katalogu. Editujte JSON a uložte —
           změny se projeví okamžitě ve wizardu na stránce <code>/pruvodce</code>.
         </p>

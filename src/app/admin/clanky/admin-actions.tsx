@@ -37,16 +37,16 @@ export function AdminClanekActions({ id, status }: { id: string; status: string 
   if (confirmingDelete) {
     return (
       <div className="flex items-center gap-2">
-        <span className="text-xs text-muted-foreground">Opravdu smazat?</span>
+        <span className="text-xs text-foreground">Opravdu smazat?</span>
         <button
           type="button"
           disabled={loading}
           onClick={handleDelete}
-          className={buttonVariants({ size: 'sm' }) + ' disabled:opacity-50 bg-destructive hover:bg-destructive/90'}
+          className={buttonVariants({ variant: 'outline-admin', size: 'sm' }) + ' disabled:opacity-50'}
         >
           {loading ? '…' : 'Smazat'}
         </button>
-        <button type="button" onClick={() => setConfirmingDelete(false)} className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+        <button type="button" onClick={() => setConfirmingDelete(false)} className={buttonVariants({ variant: 'outline-admin', size: 'sm' })}>
           Zrušit
         </button>
       </div>
@@ -69,11 +69,11 @@ export function AdminClanekActions({ id, status }: { id: string; status: string 
             type="button"
             disabled={loading || !duvod.trim()}
             onClick={handleReject}
-            className={buttonVariants({ size: 'sm' }) + ' disabled:opacity-50 bg-destructive hover:bg-destructive/90'}
+            className={buttonVariants({ variant: 'outline-admin', size: 'sm' }) + ' disabled:opacity-50'}
           >
             {loading ? '…' : 'Odeslat zamítnutí'}
           </button>
-          <button type="button" onClick={() => setRejecting(false)} className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+          <button type="button" onClick={() => setRejecting(false)} className={buttonVariants({ variant: 'outline-admin', size: 'sm' })}>
             Zrušit
           </button>
         </div>
@@ -84,19 +84,19 @@ export function AdminClanekActions({ id, status }: { id: string; status: string 
   return (
     <div className="flex flex-wrap items-center gap-2">
       {status !== 'publikovano' && (
-        <button type="button" disabled={loading} onClick={handleApprove} className={buttonVariants({ size: 'sm' }) + ' disabled:opacity-50'}>
+        <button type="button" disabled={loading} onClick={handleApprove} className={buttonVariants({ variant: 'admin', size: 'sm' }) + ' disabled:opacity-50'}>
           {loading ? '…' : 'Schválit'}
         </button>
       )}
       {status === 'ceka_na_schvaleni' && (
-        <button type="button" onClick={() => setRejecting(true)} className={buttonVariants({ variant: 'outline', size: 'sm' })}>
+        <button type="button" onClick={() => setRejecting(true)} className={buttonVariants({ variant: 'outline-admin', size: 'sm' })}>
           Zamítnout
         </button>
       )}
       <button
         type="button"
         onClick={() => setConfirmingDelete(true)}
-        className={buttonVariants({ variant: 'outline', size: 'sm' }) + ' hover:border-destructive hover:text-destructive'}
+        className={buttonVariants({ variant: 'outline-admin', size: 'sm' })}
       >
         Smazat
       </button>
