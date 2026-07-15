@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { ApproveButton } from './approve-button'
+import { buttonVariants } from '@/components/ui/button'
 
 export default async function AdminMedailonkyPage() {
   const admin = createAdminClient()
@@ -22,7 +23,12 @@ export default async function AdminMedailonkyPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-2xl font-bold">Profily</h1>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h1 className="text-2xl font-bold">Profily</h1>
+        <Link href="/admin/import" className={buttonVariants({ variant: 'admin' })}>
+          Import medailonku z JSON
+        </Link>
+      </div>
 
       {pending.length > 0 && (
         <section className="flex flex-col gap-4">
@@ -64,7 +70,7 @@ export default async function AdminMedailonkyPage() {
       )}
 
       {!rows.length && (
-        <p className="text-muted-foreground text-sm">Zatím žádné profily.</p>
+        <p className="text-foreground text-sm">Zatím žádné profily.</p>
       )}
     </div>
   )
@@ -96,14 +102,14 @@ function MedailonekRow({ m }: { m: Row }) {
     <div className="flex items-start justify-between gap-4 rounded-xl border border-border bg-card p-4">
       <div className="min-w-0 flex-1">
         <p className="font-semibold">{m.jmeno} {m.prijmeni}</p>
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-foreground">
           Účet: {m.ucet_email ?? '—'} {!m.user_confirmed && <span className="text-amber-700">(nepotvrzený)</span>}
         </p>
         {m.kontakt_email && m.kontakt_email !== m.ucet_email && (
-          <p className="text-xs text-muted-foreground">Kontakt: {m.kontakt_email}</p>
+          <p className="text-xs text-foreground">Kontakt: {m.kontakt_email}</p>
         )}
-        <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{m.bio}</p>
-        <p className="mt-1 text-xs text-muted-foreground">
+        <p className="mt-1 text-sm text-foreground line-clamp-2">{m.bio}</p>
+        <p className="mt-1 text-xs text-foreground">
           {new Date(m.created_at).toLocaleDateString('cs-CZ')}
         </p>
       </div>

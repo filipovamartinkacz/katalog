@@ -56,12 +56,13 @@
 :root {
   /* warm off-white background */
   --background: oklch(0.988 0.006 75);
-  --foreground: oklch(0.2 0.01 20);
+  /* navy body text */
+  --foreground: oklch(0.415 0.100 249.3);
 
   --card: oklch(0.995 0.004 75);
-  --card-foreground: oklch(0.2 0.01 20);
+  --card-foreground: oklch(0.415 0.100 249.3);
   --popover: oklch(0.995 0.004 75);
-  --popover-foreground: oklch(0.2 0.01 20);
+  --popover-foreground: oklch(0.415 0.100 249.3);
 
   /* rose-red primary */
   --primary: oklch(0.55 0.175 12);
@@ -82,7 +83,8 @@
   --destructive: oklch(0.577 0.245 27.325);
 
   --border: oklch(0.91 0.018 12);
-  --input: oklch(0.91 0.018 12);
+  /* navy — zvýrazňuje okraj formulářových polí */
+  --input: oklch(0.60 0.09 249.3);
   --ring: oklch(0.55 0.175 12);
 
   --chart-1: oklch(0.55 0.175 12);
@@ -155,6 +157,12 @@
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading;
   }
+  h1, h2 {
+    @apply text-primary;
+  }
+  h3 {
+    @apply text-accent;
+  }
 }
 
 /* ── Blog: obsah článku (Tiptap editor i veřejný render) ────── */
@@ -169,13 +177,13 @@
   margin-top: 1.6em;
   margin-bottom: 0.5em;
   font-size: 1.4em;
-  font-weight: 600;
+  font-weight: 700;
 }
 .clanek-body h3 {
   margin-top: 1.4em;
   margin-bottom: 0.5em;
   font-size: 1.15em;
-  font-weight: 600;
+  font-weight: 700;
 }
 .clanek-body ul, .clanek-body ol {
   margin-top: 1em;

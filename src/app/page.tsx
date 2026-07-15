@@ -3,6 +3,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { TypewriterText } from "@/components/ui/typewriter-text";
 import { createClient } from "@/lib/supabase/server";
 import { ClanekCard, type ClanekCardData } from "@/app/blog/clanek-card";
+import { BookOpen } from "lucide-react";
 
 export default async function Home() {
   const supabase = await createClient();
@@ -85,42 +86,76 @@ export default async function Home() {
         <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-b from-transparent to-background" />
 
         <div className="relative z-10 mx-auto max-w-3xl text-center">
-          <h1 className="text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            Najdi svou
+          <h1 className="text-6xl font-bold leading-tight tracking-tight text-primary sm:text-7xl lg:text-8xl">
+            Najdi si svou
             <br />
             <span className="sr-only">terapeutku, koučku nebo průvodkyni</span>
             <span aria-hidden="true"><TypewriterText /></span>
           </h1>
           <div className="mx-auto mt-5 flex items-center justify-center gap-3">
             <span className="h-px w-12 bg-accent" />
-            <span className="text-sm font-medium tracking-widest text-accent uppercase">
-              Prověřené podnikatelky
+            <span className="text-[11px] font-medium tracking-widest text-accent uppercase whitespace-nowrap sm:text-base">
+              Osobně prověřeny námi i klientkami
             </span>
             <span className="h-px w-12 bg-accent" />
           </div>
-          <p className="mx-auto mt-5 max-w-xl text-lg text-muted-foreground">
-            Síť prověřených podnikatelek nabízejících masáže, terapie,
-            koučink, péči v těhotenství a mnoho dalšího.
+          <p className="mx-auto mt-5 max-w-xl text-lg font-light text-foreground">
+            Síť prověřených žen nabízejících <em>masáže</em>, <em>terapie</em>,{' '}
+            <em>koučink</em>, <em>péči v těhotenství</em> a mnoho dalšího.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link href="/katalog" className={buttonVariants({ size: "lg" })}>
-              Procházet katalog
+              <BookOpen className="mr-1.5 size-4" />
+              Projdi si katalog sama
             </Link>
             <Link
               href="/pruvodce"
               className={buttonVariants({ variant: "outline-primary", size: "lg" })}
             >
-              Nevím, koho hledám — zeptej se Blaženy
+              Průvodce: když nevíš, co hledáš
             </Link>
           </div>
-          <div className="mt-4">
-            <Link
-              href="/pro-podnikatelky"
-              className="inline-flex h-9 items-center justify-center rounded-lg border border-accent bg-accent/10 px-2.5 text-sm font-medium text-accent-foreground transition-colors hover:bg-accent/20"
-            >
-              Jsem podnikatelka
-            </Link>
-          </div>
+        </div>
+      </section>
+
+      {/* Zeptej se Blaženy */}
+      <section className="relative overflow-hidden px-4 py-20 sm:px-6">
+        <div
+          className="pointer-events-none absolute inset-0 bg-[length:170%_auto] bg-no-repeat bg-right-bottom sm:bg-[length:min(640px,65%)_auto]"
+          style={{ backgroundImage: "url('/images/blazena-pozadi.png')" }}
+          aria-hidden="true"
+        />
+        <div className="relative mx-auto max-w-2xl text-center">
+          <img src="/icons/icon-message_2.svg" alt="" className="mx-auto h-20 w-20 sm:h-16 sm:w-16" />
+          <p className="mt-5 text-lg font-semibold text-foreground">
+            Cítíš, že už to takhle dál nejde?!
+          </p>
+          <p className="mt-5 text-lg font-light text-foreground">
+            Někdy přesně víš, co potřebuješ.
+            <br />
+            Ale mnohem častěji ne.
+          </p>
+          <p className="mt-3 text-lg font-light text-foreground">
+            Nemáš komu zavolat.
+            <br />
+            Nevíš, co ti pomůže.
+          </p>
+          <p className="mt-3 text-lg font-semibold text-foreground">
+            Už nemáš sílu zkoušet jednu techniku za druhou.
+          </p>
+          <p className="mt-3 text-lg font-light text-foreground">
+            Hledáš pomoc a nepotřebuješ
+            <br />
+            další slepou uličku.
+          </p>
+          <Link href="/pruvodce" className={buttonVariants({ size: "lg" }) + " mt-8"}>
+            Zeptej se Blažené
+          </Link>
+          <p className="mt-2 text-center text-xs font-medium text-accent">
+            Upřesni jí, co tě trápí.
+            <br />
+            Pomůže ti najít odbornici, která ti bude nejblíž.
+          </p>
         </div>
       </section>
 

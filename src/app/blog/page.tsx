@@ -54,7 +54,7 @@ export default async function BlogPage({ searchParams }: Props) {
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Blog</h1>
-        <p className="mt-2 text-muted-foreground">Články, rozhovory a inspirace od našich expertek</p>
+        <p className="mt-2 text-lg font-medium text-foreground">Články, rozhovory a inspirace od našich expertek</p>
       </div>
 
       <div className="mb-8">

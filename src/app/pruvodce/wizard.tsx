@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import type { BlazenaConfig, PocitItem, OblastItem } from '@/lib/blazena'
 import { resolveKatSlugy } from '@/lib/blazena'
+import { buttonVariants } from '@/components/ui/button'
 
 const STEP_COUNT = 3
 
@@ -95,7 +96,7 @@ export function PruvodceWizard({ config }: { config: BlazenaConfig }) {
               type="button"
               onClick={() => setStep(2)}
               disabled={pocity.length === 0}
-              className="rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-40"
+              className={buttonVariants({ size: 'lg' }) + ' disabled:opacity-40'}
             >
               Pokračovat →
             </button>
@@ -140,7 +141,7 @@ export function PruvodceWizard({ config }: { config: BlazenaConfig }) {
               <button
                 type="button"
                 onClick={() => setStep(3)}
-                className="rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+                className={buttonVariants({ size: 'lg' })}
               >
                 Pokračovat →
               </button>
@@ -167,7 +168,7 @@ export function PruvodceWizard({ config }: { config: BlazenaConfig }) {
             value={lok}
             onChange={e => setLok(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-            className="h-11 rounded-lg border border-border bg-background px-4 text-sm outline-none ring-offset-2 focus:ring-2 focus:ring-primary/40"
+            className="h-11 rounded-lg border border-input bg-background px-4 text-sm outline-none ring-offset-2 focus:ring-2 focus:ring-primary/40"
           />
           <div className="flex items-center justify-between pt-2">
             <button
@@ -180,7 +181,7 @@ export function PruvodceWizard({ config }: { config: BlazenaConfig }) {
             <button
               type="button"
               onClick={handleSubmit}
-              className="rounded-lg bg-primary px-6 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+              className={buttonVariants({ size: 'lg' })}
             >
               Zobrazit průvodkyně →
             </button>

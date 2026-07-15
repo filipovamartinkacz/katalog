@@ -1,6 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
+import { FilterChip } from '@/components/ui/filter-chip'
 
 type Kategorie = { id: number; nazev: string; slug: string }
 
@@ -24,26 +25,13 @@ export function BlogFilters({ kategorie, activeKat }: Props) {
 
   return (
     <div className="flex flex-wrap gap-2">
-      <button
-        type="button"
-        onClick={() => router.push('/blog')}
-        className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
-          !activeKat ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary/40'
-        }`}
-      >
+      <FilterChip selected={!activeKat} onClick={() => router.push('/blog')}>
         Vše
-      </button>
+      </FilterChip>
       {kategorie.map(k => (
-        <button
-          key={k.id}
-          type="button"
-          onClick={() => toggle(k.slug)}
-          className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
-            activeKat === k.slug ? 'border-primary bg-primary text-primary-foreground' : 'border-border hover:border-primary/40'
-          }`}
-        >
+        <FilterChip key={k.id} selected={activeKat === k.slug} onClick={() => toggle(k.slug)}>
           {k.nazev}
-        </button>
+        </FilterChip>
       ))}
     </div>
   )

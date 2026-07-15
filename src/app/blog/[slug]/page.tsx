@@ -8,12 +8,16 @@ import { createAdminClient } from '@/lib/supabase/admin'
 import { renderClanekHtml } from '@/lib/clanek/render'
 import { resolveInternalLinks } from '@/lib/clanek/resolve-links'
 import { truncateContentByWords, countTotalWords } from '@/lib/clanek/gate'
+import { buttonVariants } from '@/components/ui/button'
 import { FavoriteButton } from '@/components/clanek/favorite-button'
+import { Breadcrumb } from '@/components/layout/breadcrumb'
 import { ViewTracker } from '@/components/clanek/view-tracker'
+import { Rss, Mic, Video } from 'lucide-react'
 
 const GATE_WORD_LIMIT = Number(process.env.GATE_WORD_LIMIT ?? 300)
 
 const TYP_LABEL: Record<string, string> = { blog: 'Článek', podcast: 'Podcast', video: 'Video' }
+const TYP_ICON = { blog: Rss, podcast: Mic, video: Video }
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -25,7 +29,7 @@ const getClanekBySlug = cache(async (slug: string) => {
       id, nadpis, slug, typ, obsah, cover_url, cover_alt, zdroj_url, je_gated,
       seo_title, seo_description, status, published_at, view_count,
       medailonek:medailonek_id ( id, user_id, jmeno, prijmeni, slug, bio, foto_url ),
-      kategorie:kategorie_id ( nazev ),
+      kategorie:kategorie_id ( nazev, slug ),
       clanek_metoda ( metoda ( id, nazev, ma_ochrannou_znamku ) ),
       clanek_klicove_slovo ( klicove_slovo ( slovo ) )
     `)
@@ -129,17 +133,25 @@ export default async function ClanekPage({ params }: Props) {
         </div>
       )}
 
-      <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
-        ← Zpět na blog
-      </Link>
+      <Breadcrumb items={[
+        { label: 'Domů', href: '/' },
+        { label: 'Blog', href: '/blog' },
+        kategorie ? { label: kategorie.nazev, href: `/blog?kat=${kategorie.slug}` } : { label: clanek.nadpis },
+      ]} />
 
       <div className="relative mt-4 h-56 w-full overflow-hidden rounded-2xl bg-muted sm:h-72">
         <Image src={clanek.cover_url} alt={clanek.cover_alt} fill className="object-cover" sizes="(max-width: 768px) 100vw, 768px" priority />
+        {(() => {
+          const Icon = TYP_ICON[clanek.typ as keyof typeof TYP_ICON]
+          return (
+            <span className="absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-background/90 px-2.5 py-1 text-xs font-medium">
+              {Icon && <Icon className="h-3.5 w-3.5" />} {TYP_LABEL[clanek.typ] ?? clanek.typ}
+            </span>
+          )
+        })()}
       </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-2 text-xs">
-        <span className="rounded-full bg-secondary px-2.5 py-0.5 font-medium text-secondary-foreground">{TYP_LABEL[clanek.typ] ?? clanek.typ}</span>
-        {kategorie && <span className="rounded-full bg-primary/8 px-2.5 py-0.5 font-medium text-primary">{kategorie.nazev}</span>}
         {metody.map(m => (
           <span key={m.id} className="rounded-full bg-muted px-2.5 py-0.5 text-muted-foreground">
             {m.nazev}{m.ma_ochrannou_znamku && <sup>®</sup>}
@@ -149,7 +161,7 @@ export default async function ClanekPage({ params }: Props) {
 
       <h1 className="mt-3 text-3xl font-bold">{clanek.nadpis}</h1>
 
-      <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-5 text-sm text-muted-foreground">
+      <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-b border-border pb-5 text-sm text-foreground">
         <div className="flex flex-wrap items-center gap-2">
           {autorka && (
             <Link href={`/profil/${autorka.slug ?? autorka.id}`} className="font-medium text-foreground hover:underline">
@@ -164,7 +176,7 @@ export default async function ClanekPage({ params }: Props) {
       </div>
 
       {clanek.zdroj_url && (
-        <p className="mt-4 text-xs text-muted-foreground">
+        <p className="mt-4 text-xs text-foreground">
           Zdroj:{' '}
           <a href={clanek.zdroj_url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
             {clanek.zdroj_url}
@@ -179,7 +191,7 @@ export default async function ClanekPage({ params }: Props) {
           <p className="font-medium">Zbytek článku je jen pro přihlášené čtenářky.</p>
           <Link
             href={`/prihlaseni?redirect=${encodeURIComponent(`/blog/${clanek.slug}`)}`}
-            className="mt-3 inline-block rounded-lg bg-primary px-5 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            className={buttonVariants() + ' mt-3'}
           >
             Přihlásit se a číst dál
           </Link>
@@ -202,7 +214,7 @@ export default async function ClanekPage({ params }: Props) {
             <Link href={`/profil/${autorka.slug ?? autorka.id}`} className="font-semibold hover:underline">
               {autorka.jmeno} {autorka.prijmeni}
             </Link>
-            {autorka.bio && <p className="mt-1.5 line-clamp-3 text-sm text-muted-foreground">{autorka.bio}</p>}
+            {autorka.bio && <p className="mt-1.5 line-clamp-3 text-sm text-foreground">{autorka.bio}</p>}
             <Link href={`/profil/${autorka.slug ?? autorka.id}`} className="mt-2 inline-block text-xs font-medium text-primary hover:underline">
               Zobrazit profil →
             </Link>

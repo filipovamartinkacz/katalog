@@ -270,7 +270,7 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
             <button
               type="button"
               onClick={tryAdvanceStep1}
-              className={buttonVariants()}
+              className={buttonVariants({ variant: 'admin' })}
             >
               Pokračovat →
             </button>
@@ -291,10 +291,10 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
           <CityPicker value={mesta} onChange={setMesta} />
 
           <div className="mt-2 flex justify-between">
-            <button type="button" onClick={() => setStep(0)} className={buttonVariants({ variant: 'outline' })}>
+            <button type="button" onClick={() => setStep(0)} className={buttonVariants({ variant: 'outline-admin' })}>
               ← Zpět
             </button>
-            <button type="button" onClick={() => setStep(2)} className={buttonVariants()}>
+            <button type="button" onClick={() => setStep(2)} className={buttonVariants({ variant: 'admin' })}>
               Pokračovat →
             </button>
           </div>
@@ -406,7 +406,7 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
             ))}
 
             <button type="button" onClick={() => setServices(prev => [...prev, { ...EMPTY_SERVICE }])}
-              className={buttonVariants({ variant: 'outline' }) + ' self-start'}>
+              className={buttonVariants({ variant: 'outline-admin' }) + ' self-start'}>
               + Přidat další službu
             </button>
           </div>
@@ -423,11 +423,11 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
           )}
 
           <div className="flex justify-between">
-            <button type="button" onClick={() => setStep(1)} className={buttonVariants({ variant: 'outline' })}>
+            <button type="button" onClick={() => setStep(1)} className={buttonVariants({ variant: 'outline-admin' })}>
               ← Zpět
             </button>
             <button type="button" disabled={saving || !canAdvanceStep3()} onClick={handleSubmit}
-              className={buttonVariants() + ' disabled:opacity-50'}>
+              className={buttonVariants({ variant: 'admin' }) + ' disabled:opacity-50'}>
               {saving ? 'Ukládám…' : 'Dokončit a odeslat ke schválení'}
             </button>
           </div>

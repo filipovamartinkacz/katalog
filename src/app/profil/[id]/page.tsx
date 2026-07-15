@@ -10,6 +10,7 @@ import { ClanekCard, type ClanekCardData } from '@/app/blog/clanek-card'
 import { CtaRezervace } from './cta-rezervace'
 import { TrackedLink } from './tracked-link'
 import { toWhatsAppUrl } from '@/lib/whatsapp'
+import { Breadcrumb } from '@/components/layout/breadcrumb'
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -140,12 +141,16 @@ export default async function ProfilPage({ params }: Props) {
       )}
 
       <div className="px-4 pt-4 sm:px-6">
-        <Link
-          href={isAdmin && !isVisible ? '/admin/medailonky' : isOwner && !isVisible ? '/dashboard' : '/katalog'}
-          className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
-        >
-          ← {isAdmin && !isVisible ? 'Zpět na admin' : isOwner && !isVisible ? 'Zpět na dashboard' : 'Zpět do katalogu'}
-        </Link>
+        {!isVisible && (isAdmin || isOwner) ? (
+          <Link
+            href={isAdmin ? '/admin/medailonky' : '/dashboard'}
+            className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          >
+            ← {isAdmin ? 'Zpět na admin' : 'Zpět na dashboard'}
+          </Link>
+        ) : (
+          <Breadcrumb items={[{ label: 'Domů', href: '/' }, { label: 'Katalog', href: '/katalog' }, { label: name }]} />
+        )}
       </div>
 
       {/* Banner + avatar */}
@@ -173,11 +178,11 @@ export default async function ProfilPage({ params }: Props) {
         <div className="mt-14">
           <h1 className="text-2xl font-bold">{name}</h1>
           {mesta.length > 0 ? (
-            <p className="mt-1 text-sm text-muted-foreground">
+            <p className="mt-1 text-sm text-foreground">
               {mesta.map(m => m.nazev).join(' · ')}
             </p>
           ) : (
-            <p className="mt-1 text-sm text-muted-foreground">Celá ČR / online</p>
+            <p className="mt-1 text-sm text-foreground">Celá ČR / online</p>
           )}
         </div>
 
@@ -274,7 +279,7 @@ export default async function ProfilPage({ params }: Props) {
                     </div>
                   </div>
 
-                  {s.popis && <p className="mt-1.5 text-sm text-muted-foreground">{s.popis}</p>}
+                  {s.popis && <p className="mt-1.5 text-sm text-foreground">{s.popis}</p>}
 
                   {kategorie.length > 0 && (
                     <div className="mt-2.5 flex flex-wrap gap-1.5">

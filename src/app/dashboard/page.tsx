@@ -20,10 +20,13 @@ export default async function DashboardPage({
 
   const { updated } = await searchParams
 
+  const jmeno = medailonek?.jmeno
+    ?? (user.user_metadata?.jmeno as string | undefined)
+    ?? (user.user_metadata?.full_name as string | undefined)?.split(' ')[0]
+
   return (
     <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
-      <h1 className="text-2xl font-bold">Moje žena BlaŽená</h1>
-      <p className="mt-1 text-sm text-muted-foreground">{user.email}</p>
+      <h1 className="text-2xl font-bold">{jmeno ? `Ahoj, ${jmeno}` : 'Vítej'}</h1>
 
       {updated && (
         <p className="mt-4 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">

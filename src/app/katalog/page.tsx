@@ -157,7 +157,7 @@ export default async function KatalogPage({ searchParams }: Props) {
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold">Podnikatelky pro tebe</h1>
-        <p className="mt-2 text-muted-foreground">Najdi odbornici přesně pro tebe</p>
+        <p className="mt-2 text-lg font-medium text-foreground">Najdi odbornici přesně pro tebe</p>
       </div>
 
       <div className="mb-8">
@@ -234,16 +234,16 @@ function MedailonekCard({ m }: { m: any }) {
         <div className="min-w-0">
           <p className="font-semibold leading-tight">{name}</p>
           {mesta.length > 0 ? (
-            <p className="mt-0.5 text-xs text-muted-foreground">
+            <p className="mt-0.5 text-xs text-foreground">
               {mesta.join(' · ')}{m.medailonek_location.length > 3 ? ' · …' : ''}
             </p>
           ) : (
-            <p className="mt-0.5 text-xs text-muted-foreground">Celá ČR / online</p>
+            <p className="mt-0.5 text-xs text-foreground">Celá ČR / online</p>
           )}
         </div>
       </div>
 
-      <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">{m.bio}</p>
+      <p className="mt-3 line-clamp-3 text-sm text-foreground">{m.bio}</p>
 
       {kategorie.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1.5">

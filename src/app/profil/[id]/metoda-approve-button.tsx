@@ -20,7 +20,7 @@ export function MetodaApproveButton({ id }: { id: number }) {
       type="button"
       disabled={loading}
       onClick={handleApprove}
-      className="ml-2 rounded-full border border-amber-400 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 hover:bg-amber-100 transition-colors disabled:opacity-50"
+      className="ml-2 rounded-full border border-foreground bg-background px-2 py-0.5 text-xs font-medium text-foreground hover:bg-foreground/5 transition-colors disabled:opacity-50"
     >
       {loading ? '…' : 'Schválit'}
     </button>

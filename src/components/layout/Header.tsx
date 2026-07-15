@@ -3,6 +3,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/server'
 import { SignOutButton } from './sign-out-button'
 import { Logo } from '@/components/ui/logo'
+import { NavLinks } from './nav-links'
 
 export async function Header() {
   const supabase = await createClient()
@@ -29,23 +30,13 @@ export async function Header() {
           <Logo className="h-[22px] w-auto" />
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm sm:flex">
-          <Link href="/katalog" className="text-foreground/70 transition-colors hover:text-foreground">
-            Hledat
-          </Link>
-          <Link href="/blog" className="text-foreground/70 transition-colors hover:text-foreground">
-            Blog
-          </Link>
-          <Link href="/pro-podnikatelky" className="text-foreground/70 transition-colors hover:text-foreground">
-            Pro podnikatelky
-          </Link>
-        </nav>
+        <NavLinks />
 
         <div className="flex items-center gap-3">
           {user ? (
             <>
               {isAdmin && (
-                <Link href="/admin" className="rounded-md bg-primary/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-primary hover:bg-primary/20 transition-colors">
+                <Link href="/admin" className="rounded-md bg-accent/10 px-2.5 py-1 text-xs font-semibold uppercase tracking-wider text-accent hover:bg-accent/20 transition-colors">
                   Admin
                 </Link>
               )}

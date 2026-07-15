@@ -28,7 +28,7 @@ export function TagInput({ value, onChange, placeholder = 'Přidat klíčové sl
   }
 
   return (
-    <div className="flex min-h-9 flex-wrap gap-1.5 rounded-lg border border-border bg-background px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-primary/40 focus-within:ring-offset-2">
+    <div className="flex min-h-9 flex-wrap gap-1.5 rounded-lg border border-input bg-background px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-primary/40 focus-within:ring-offset-2">
       {value.map(tag => (
         <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-foreground">
           {tag}

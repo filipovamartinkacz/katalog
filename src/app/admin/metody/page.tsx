@@ -23,7 +23,7 @@ export default async function AdminMetodyPage() {
           <h2 className="text-base font-semibold text-amber-700">
             Čekají na schválení ({navrzene.length})
           </h2>
-          <p className="text-sm text-muted-foreground -mt-2">
+          <p className="text-sm text-foreground -mt-2">
             Tyto metody byly navrženy při importu. Schválením se zpřístupní ve veřejném katalogu
             a zobrazí v medailoncích, kde byly použity.
           </p>
@@ -63,7 +63,7 @@ export default async function AdminMetodyPage() {
       </section>
 
       {!metody?.length && (
-        <p className="text-muted-foreground text-sm">Zatím žádné metody.</p>
+        <p className="text-foreground text-sm">Zatím žádné metody.</p>
       )}
     </div>
   )

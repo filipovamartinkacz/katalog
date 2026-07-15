@@ -31,9 +31,7 @@ export function FavoriteButton({ clanekId, initialOblibeno, loggedIn }: Props) {
       type="button"
       onClick={handleClick}
       disabled={loading}
-      className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors disabled:opacity-50 ${
-        oblibeno ? 'border-primary bg-primary/10 text-primary' : 'border-border hover:border-primary/40'
-      }`}
+      className="inline-flex items-center gap-1.5 rounded-full border border-accent bg-background px-3 py-1.5 text-sm font-medium text-accent transition-colors hover:bg-accent/5 disabled:opacity-50"
     >
       <Heart className="h-4 w-4" fill={oblibeno ? 'currentColor' : 'none'} />
       {oblibeno ? 'V oblíbených' : 'Uložit'}

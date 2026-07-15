@@ -40,8 +40,8 @@ export function ClanekCard({ clanek }: { clanek: ClanekCardData }) {
         {clanek.kategorie && (
           <span className="text-xs font-medium text-primary">{clanek.kategorie.nazev}</span>
         )}
-        <h3 className="font-semibold leading-snug">{clanek.nadpis}</h3>
-        <div className="mt-auto flex items-center justify-between pt-2 text-xs text-muted-foreground">
+        <h3 className="font-bold leading-snug">{clanek.nadpis}</h3>
+        <div className="mt-auto flex items-center justify-between pt-2 text-xs text-foreground">
           {clanek.autorka && <span>{clanek.autorka.jmeno} {clanek.autorka.prijmeni}</span>}
           {clanek.published_at && <span>{new Date(clanek.published_at).toLocaleDateString('cs-CZ')}</span>}
         </div>

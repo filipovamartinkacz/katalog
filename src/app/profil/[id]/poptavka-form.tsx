@@ -146,7 +146,7 @@ export function PoptavkaForm({ medailonekId, services, prefill, isLoggedIn, onCa
           <span>{loading ? 'Odesílám…' : 'Odeslat poptávku'}</span>
           {!loading && <span className="text-[11px] font-normal opacity-80">Ozvu se zpět co nejdříve</span>}
         </button>
-        <button type="button" onClick={onCancel} className="text-sm text-muted-foreground hover:text-foreground">
+        <button type="button" onClick={onCancel} className={buttonVariants({ variant: 'outline-primary', size: 'sm' })}>
           Zrušit
         </button>
       </div>
