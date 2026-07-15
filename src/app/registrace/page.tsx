@@ -73,18 +73,14 @@ function RegistrationForm() {
   return (
     <div className="mx-auto w-full max-w-sm">
       <div className="mb-8 text-center">
-        <Link href="/">
-          <Logo className="h-7 w-auto" />
-        </Link>
-        <h1 className="mt-6 text-xl font-semibold text-foreground">Vytvořit účet</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Pro podnikatelky — zdarma</p>
+        <h1 className="text-xl font-semibold text-primary">Vytvořit účet na portále jsem Blažená</h1>
       </div>
 
       <OAuthButtons />
 
       <div className="my-6 flex items-center gap-3">
         <span className="h-px flex-1 bg-border" />
-        <span className="text-xs text-muted-foreground">nebo e-mailem</span>
+        <span className="text-xs text-foreground">nebo e-mailem</span>
         <span className="h-px flex-1 bg-border" />
       </div>
 
@@ -118,7 +114,7 @@ function RegistrationForm() {
             value={password}
             onChange={e => setPassword(e.target.value)}
           />
-          <p className="text-xs text-muted-foreground">Alespoň 8 znaků</p>
+          <p className="text-xs text-foreground">Alespoň 8 znaků</p>
         </div>
 
         <button
@@ -130,7 +126,7 @@ function RegistrationForm() {
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-muted-foreground">
+      <p className="mt-6 text-center text-sm text-foreground">
         Už máš účet?{' '}
         <Link href="/prihlaseni" className="font-medium text-primary hover:underline">
           Přihlásit se

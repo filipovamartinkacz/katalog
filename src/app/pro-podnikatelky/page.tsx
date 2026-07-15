@@ -48,7 +48,7 @@ export default function ProPodnikatelkyPage() {
             Představ se ženám,<br />které tě hledají
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-lg font-medium text-foreground">
-            Vytvoř si profil v katalogu žena BlaŽená a oslovuj zákaznice,
+            Vytvoř si profil v katalogu jsem Blažená a oslovuj zákaznice,
             které aktivně hledají právě to, co nabízíš.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">

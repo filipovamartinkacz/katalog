@@ -3,7 +3,7 @@ export function Logo({ className }: { className?: string }) {
     <svg
       viewBox="0 0 200 28"
       height="22"
-      aria-label="žena Blažená"
+      aria-label="jsem Blažená"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       style={{ overflow: 'visible' }}
@@ -27,7 +27,7 @@ export function Logo({ className }: { className?: string }) {
         fill="var(--color-primary)"
         style={{ fontFamily: "var(--font-heading, 'Playfair Display', serif)" }}
       >
-        žena Blažen<tspan fill="url(#zb-a-grad)">á</tspan>
+        jsem Blažen<tspan fill="url(#zb-a-grad)">á</tspan>
       </text>
     </svg>
   )

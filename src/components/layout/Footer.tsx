@@ -27,7 +27,7 @@ export function Footer() {
         </div>
 
         <p className="mt-8 text-xs text-background">
-          © {new Date().getFullYear()} žena BlaŽená. Všechna práva vyhrazena.
+          © {new Date().getFullYear()} jsem Blažená. Všechna práva vyhrazena.
         </p>
       </div>
     </footer>

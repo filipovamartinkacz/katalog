@@ -21,13 +21,13 @@ export async function sendProfilSchvalen({
   await resend.emails.send({
     from: FROM,
     to,
-    subject: 'Tvůj profil byl schválen — žena Blažená',
+    subject: 'Tvůj profil byl schválen — jsem Blažená',
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a;">
         <h2 style="color: #8B1D3F;">Tvůj profil byl schválen! 🎉</h2>
         <p>Ahoj ${jmeno},</p>
         <p>
-          Tvůj profil na <strong>žena Blažená</strong> byl schválen a je nyní živý v katalogu.
+          Tvůj profil na <strong>jsem Blažená</strong> byl schválen a je nyní živý v katalogu.
           Zákaznice tě teď mohou najít a kontaktovat.
         </p>
         <p style="margin-top: 24px;">
@@ -41,7 +41,7 @@ export async function sendProfilSchvalen({
           <a href="${APP_URL}/dashboard">${APP_URL}/dashboard</a>.
         </p>
         <hr style="margin-top:32px;border:none;border-top:1px solid #eee;" />
-        <p style="font-size:12px;color:#999;">žena Blažená — síť prověřených podnikatelek</p>
+        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených podnikatelek</p>
       </div>
     `,
   })
@@ -61,7 +61,7 @@ export async function sendClanekKSchvaleni({
   await resend.emails.send({
     from: FROM,
     to,
-    subject: 'Nový článek čeká na schválení — žena Blažená',
+    subject: 'Nový článek čeká na schválení — jsem Blažená',
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a;">
         <h2 style="color: #8B1D3F;">Nový článek čeká na schválení</h2>
@@ -76,7 +76,7 @@ export async function sendClanekKSchvaleni({
           </a>
         </p>
         <hr style="margin-top:32px;border:none;border-top:1px solid #eee;" />
-        <p style="font-size:12px;color:#999;">žena Blažená — síť prověřených podnikatelek</p>
+        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených podnikatelek</p>
       </div>
     `,
   })
@@ -98,14 +98,14 @@ export async function sendClanekSchvalen({
   await resend.emails.send({
     from: FROM,
     to,
-    subject: 'Tvůj článek byl schválen — žena Blažená',
+    subject: 'Tvůj článek byl schválen — jsem Blažená',
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a;">
         <h2 style="color: #8B1D3F;">Tvůj článek byl schválen! 🎉</h2>
         <p>Ahoj ${jmeno},</p>
         <p>
           Tvůj článek <strong>„${nadpis}“</strong> byl schválen a je teď vidět na blogu
-          <strong>žena Blažená</strong>.
+          <strong>jsem Blažená</strong>.
         </p>
         <p style="margin-top: 24px;">
           <a href="${APP_URL}/blog/${slug}"
@@ -114,7 +114,7 @@ export async function sendClanekSchvalen({
           </a>
         </p>
         <hr style="margin-top:32px;border:none;border-top:1px solid #eee;" />
-        <p style="font-size:12px;color:#999;">žena Blažená — síť prověřených podnikatelek</p>
+        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených podnikatelek</p>
       </div>
     `,
   })
@@ -136,7 +136,7 @@ export async function sendClanekZamitnut({
   await resend.emails.send({
     from: FROM,
     to,
-    subject: 'Tvůj článek potřebuje úpravu — žena Blažená',
+    subject: 'Tvůj článek potřebuje úpravu — jsem Blažená',
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a;">
         <h2 style="color: #8B1D3F;">Tvůj článek potřebuje ještě úpravu</h2>
@@ -155,7 +155,7 @@ export async function sendClanekZamitnut({
           </a>
         </p>
         <hr style="margin-top:32px;border:none;border-top:1px solid #eee;" />
-        <p style="font-size:12px;color:#999;">žena Blažená — síť prověřených podnikatelek</p>
+        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených podnikatelek</p>
       </div>
     `,
   })
@@ -184,11 +184,11 @@ export async function sendNovaPoptavka({
     from: FROM,
     to,
     replyTo: email,
-    subject: 'Nová poptávka — žena Blažená',
+    subject: 'Nová poptávka — jsem Blažená',
     html: `
       <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; color: #1a1a1a;">
         <h2 style="color: #8B1D3F;">Nová poptávka</h2>
-        <p>Někdo přes tvůj profil na <strong>žena Blažená</strong> poptává tvoje služby:</p>
+        <p>Někdo přes tvůj profil na <strong>jsem Blažená</strong> poptává tvoje služby:</p>
         <p style="margin:16px 0;padding:12px 16px;background:#f7f2f0;border-left:3px solid #8B1D3F;border-radius:4px;">
           <strong>Jméno:</strong> ${jmeno}<br />
           <strong>E-mail:</strong> ${email}<br />
@@ -204,7 +204,7 @@ export async function sendNovaPoptavka({
           </a>
         </p>
         <hr style="margin-top:32px;border:none;border-top:1px solid #eee;" />
-        <p style="font-size:12px;color:#999;">žena Blažená — síť prověřených podnikatelek</p>
+        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených podnikatelek</p>
       </div>
     `,
   })

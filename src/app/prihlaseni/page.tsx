@@ -9,7 +9,6 @@ import { Label } from '@/components/ui/label'
 import { buttonVariants } from '@/components/ui/button'
 import { OAuthButtons } from '@/components/auth/oauth-buttons'
 import { Suspense } from 'react'
-import { Logo } from '@/components/ui/logo'
 
 function LoginForm() {
   const router = useRouter()
@@ -48,10 +47,7 @@ function LoginForm() {
   return (
     <div className="mx-auto w-full max-w-sm">
       <div className="mb-8 text-center">
-        <Link href="/">
-          <Logo className="h-7 w-auto" />
-        </Link>
-        <h1 className="mt-6 text-xl font-semibold text-foreground">Přihlásit se</h1>
+        <h1 className="text-xl font-semibold text-primary">Přihlásit se na portál jsem Blažená</h1>
       </div>
 
       {confirmed && (
@@ -64,7 +60,7 @@ function LoginForm() {
 
       <div className="my-6 flex items-center gap-3">
         <span className="h-px flex-1 bg-border" />
-        <span className="text-xs text-muted-foreground">nebo e-mailem</span>
+        <span className="text-xs text-foreground">nebo e-mailem</span>
         <span className="h-px flex-1 bg-border" />
       </div>
 
@@ -108,13 +104,13 @@ function LoginForm() {
         </button>
 
         <div className="text-right">
-          <Link href="/zapomenute-heslo" className="text-xs text-muted-foreground hover:text-foreground">
+          <Link href="/zapomenute-heslo" className="text-xs text-foreground hover:underline">
             Zapomenuté heslo?
           </Link>
         </div>
       </form>
 
-      <p className="mt-6 text-center text-sm text-muted-foreground">
+      <p className="mt-6 text-center text-sm text-foreground">
         Nemáš účet?{' '}
         <Link href="/registrace" className="font-medium text-primary hover:underline">
           Zaregistruj se

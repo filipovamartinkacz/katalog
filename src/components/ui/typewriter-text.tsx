@@ -37,9 +37,9 @@ export function TypewriterText() {
   }, [charIndex, phase, wordIndex])
 
   return (
-    <span className="text-primary">
+    <span className="text-foreground">
       {WORDS[wordIndex].slice(0, charIndex)}
-      <span className="ml-0.5 inline-block w-[3px] h-[0.8em] translate-y-[0.1em] rounded-sm bg-primary align-middle animate-[blink_1s_step-end_infinite]" />
+      <span className="ml-0.5 inline-block w-[3px] h-[0.8em] translate-y-[0.1em] rounded-sm bg-foreground align-middle animate-[blink_1s_step-end_infinite]" />
     </span>
   )
 }
