@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import { Input } from '@/components/ui/input'
 
 type Metoda = { id: number; nazev: string; ma_ochrannou_znamku?: boolean }
 
@@ -68,18 +69,14 @@ export function MetodaPicker({ metody, value, onChange }: Props) {
           {value.map((m, idx) => (
             <span
               key={idx}
-              className={`inline-flex items-center gap-1 rounded-full border px-3 py-0.5 text-sm font-medium ${
-                m.type === 'new'
-                  ? 'border-amber-300 bg-amber-50 text-amber-800'
-                  : 'border-accent/40 bg-accent/10 text-accent-foreground'
-              }`}
+              className="inline-flex items-center gap-1 rounded-full bg-tag px-2.5 py-0.5 text-sm font-medium text-tag-foreground"
             >
-              {m.type === 'new' && <span className="text-xs opacity-70">nový·</span>}
-              {m.nazev}{m.type === 'existing' && m.ma_ochrannou_znamku && <sup className="ml-0.5 text-xs">®</sup>}
+              {m.type === 'new' && <span className="opacity-70">nový·</span>}
+              {m.nazev}{m.type === 'existing' && m.ma_ochrannou_znamku && <sup className="ml-0.5">®</sup>}
               <button
                 type="button"
                 onClick={() => remove(idx)}
-                className="ml-0.5 text-muted-foreground hover:text-foreground leading-none"
+                className="leading-none"
                 aria-label={`Odebrat ${m.nazev}`}
               >
                 ×
@@ -91,7 +88,7 @@ export function MetodaPicker({ metody, value, onChange }: Props) {
 
       {/* Vyhledávací pole */}
       <div className="relative">
-        <input
+        <Input
           type="text"
           value={query}
           onChange={e => { setQuery(e.target.value); setOpen(true) }}
@@ -105,7 +102,6 @@ export function MetodaPicker({ metody, value, onChange }: Props) {
             }
           }}
           placeholder="Začněte psát název metody…"
-          className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         />
 
         {open && (existingSuggestions.length > 0 || showNewOption) && (
@@ -136,7 +132,7 @@ export function MetodaPicker({ metody, value, onChange }: Props) {
         )}
       </div>
       {value.some(m => m.type === 'new') && (
-        <p className="text-xs text-amber-700">Amber položky jsou nové návrhy — admin je schválí před zveřejněním.</p>
+        <p className="text-sm md:text-xs font-medium text-accent">Položky značené „nový·" jsou nové návrhy — admin je schválí před zveřejněním.</p>
       )}
     </div>
   )

@@ -54,7 +54,7 @@ export function MetodaMultiSelect({ metody, value, onChange }: Props) {
               <button
                 type="button"
                 onClick={() => remove(m.id)}
-                className="ml-0.5 text-muted-foreground hover:text-foreground leading-none"
+                className="ml-0.5 text-foreground hover:text-destructive leading-none"
                 aria-label={`Odebrat ${m.nazev}`}
               >
                 ×
@@ -71,7 +71,7 @@ export function MetodaMultiSelect({ metody, value, onChange }: Props) {
           onChange={e => { setQuery(e.target.value); setOpen(true) }}
           onFocus={() => setOpen(true)}
           placeholder="Začněte psát název metody…"
-          className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
         />
         {open && suggestions.length > 0 && (
           <ul className="absolute z-10 mt-1 w-full rounded-lg border border-border bg-background shadow-md overflow-hidden">

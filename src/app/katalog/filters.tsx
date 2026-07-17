@@ -104,12 +104,15 @@ export function Filters({ kategorie, metody, activeKats, activeMet, activeForma,
       </div>
 
       {/* Kategorie — multi-select */}
-      <div className="flex flex-wrap gap-2">
-        {kategorie.map(k => (
-          <FilterChip key={k.id} selected={activeKats.includes(k.slug)} onClick={() => toggleKat(k.slug)}>
-            {k.nazev}
-          </FilterChip>
-        ))}
+      <div className="flex flex-col gap-2">
+        <span className="w-fit text-sm font-medium text-foreground">Kategorie</span>
+        <div className="flex flex-wrap gap-2">
+          {kategorie.map(k => (
+            <FilterChip key={k.id} selected={activeKats.includes(k.slug)} onClick={() => toggleKat(k.slug)}>
+              {k.nazev}
+            </FilterChip>
+          ))}
+        </div>
       </div>
 
       {/* Metody (collapsible) */}
@@ -117,7 +120,7 @@ export function Filters({ kategorie, metody, activeKats, activeMet, activeForma,
         <button
           type="button"
           onClick={() => setShowMetody(v => !v)}
-          className="flex w-fit items-center gap-1 text-sm font-medium text-muted-foreground hover:text-foreground"
+          className="flex w-fit items-center gap-1 text-sm font-medium text-foreground"
         >
           Metody
           <span className="text-xs">{showMetody ? '▲' : '▼'}</span>
@@ -126,7 +129,7 @@ export function Filters({ kategorie, metody, activeKats, activeMet, activeForma,
         {showMetody && (
           <div className="flex flex-wrap gap-2">
             {metody.map(m => (
-              <FilterChip key={m.id} variant="accent" selected={activeMet === m.id} onClick={() => toggle('met', String(m.id))}>
+              <FilterChip key={m.id} selected={activeMet === m.id} onClick={() => toggle('met', String(m.id))}>
                 {m.nazev}{m.ma_ochrannou_znamku && <sup className="ml-0.5 text-xs">®</sup>}
               </FilterChip>
             ))}
@@ -135,7 +138,7 @@ export function Filters({ kategorie, metody, activeKats, activeMet, activeForma,
       </div>
 
       {/* Výsledky + reset */}
-      <div className="flex items-center justify-between text-sm text-muted-foreground">
+      <div className="flex items-center justify-between text-sm text-foreground">
         <span>
           {total === 0 ? 'Žádné výsledky' : `${total} ${total === 1 ? 'profil' : total < 5 ? 'profily' : 'profilů'}`}
         </span>

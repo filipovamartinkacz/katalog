@@ -33,6 +33,8 @@
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
   --color-secondary: var(--secondary);
+  --color-tag-foreground: var(--tag-foreground);
+  --color-tag: var(--tag);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary: var(--primary);
   --color-popover-foreground: var(--popover-foreground);
@@ -72,6 +74,10 @@
   --secondary: oklch(0.96 0.025 12);
   --secondary-foreground: oklch(0.35 0.06 12);
 
+  /* vybrané hodnoty ve výběrových polích (lokalita, klíčová slova, metody) */
+  --tag: #FEDFE1;
+  --tag-foreground: #B8474F;
+
   /* very light pink muted */
   --muted: oklch(0.965 0.018 12);
   --muted-foreground: oklch(0.52 0.03 12);
@@ -83,8 +89,8 @@
   --destructive: oklch(0.577 0.245 27.325);
 
   --border: oklch(0.91 0.018 12);
-  /* navy — zvýrazňuje okraj formulářových polí */
-  --input: oklch(0.60 0.09 249.3);
+  /* zlatá — zvýrazňuje okraj formulářových polí, navy splývala s labely/textem */
+  --input: var(--accent);
   --ring: oklch(0.55 0.175 12);
 
   --chart-1: oklch(0.55 0.175 12);
@@ -116,6 +122,8 @@
   --primary-foreground: oklch(0.16 0.01 20);
   --secondary: oklch(0.28 0.03 12);
   --secondary-foreground: oklch(0.96 0.005 20);
+  --tag: oklch(0.30 0.05 12);
+  --tag-foreground: oklch(0.85 0.07 12);
   --muted: oklch(0.26 0.02 12);
   --muted-foreground: oklch(0.65 0.03 12);
   --accent: oklch(0.70 0.13 78);

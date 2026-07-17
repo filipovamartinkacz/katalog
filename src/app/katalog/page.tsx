@@ -174,7 +174,7 @@ export default async function KatalogPage({ searchParams }: Props) {
       </div>
 
       {totalCount === 0 ? (
-        <div className="py-20 text-center text-muted-foreground">
+        <div className="py-20 text-center text-foreground">
           <p className="text-lg">Žádné profily neodpovídají zvoleným filtrům.</p>
           <Link href="/katalog" className="mt-4 inline-block text-primary hover:underline">
             Zobrazit vše

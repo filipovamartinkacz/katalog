@@ -10,7 +10,9 @@ import { updateMedailonek, type ServiceInput, type SocialLinkInput } from '@/app
 import { TagInput } from '@/components/ui/tag-input'
 import { MetodaPicker, type SelectedMetoda } from '@/components/ui/metoda-picker'
 import { ImageUpload } from '@/components/ui/image-upload'
+import { FilterChip } from '@/components/ui/filter-chip'
 import { cn } from '@/lib/utils'
+import { Coins } from 'lucide-react'
 
 type Kategorie = { id: number; nazev: string }
 type Metoda = { id: number; nazev: string; ma_ochrannou_znamku?: boolean }
@@ -68,6 +70,9 @@ const EMPTY_SERVICE: ServiceInput = {
   nazev: '', popis: '', delivery_form: 'osobne',
   booking_url: '', price_level_id: null, kategorie_ids: [], klicova_slova: [],
 }
+
+// Počet mincí podle délky uloženého labelu ('€'..'€€€€' = 1-4 úrovně)
+const PRICE_LEVEL_HINTS = ['řádově stokoruny', 'řádově tisíce korun', 'řádově desetitisíce korun', 'řádově statisíce korun']
 
 function getSocialUrl(links: { platform: string; url: string }[], platform: string) {
   return links.find(l => l.platform === platform)?.url ?? ''
@@ -192,7 +197,7 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
 
       {/* Fotky */}
       <section className="flex flex-col gap-5">
-        <h2 className="text-lg font-semibold border-b border-border pb-2">Fotky <span className="text-sm font-normal text-muted-foreground">(nepovinné)</span></h2>
+        <h2 className="text-lg font-sans font-semibold border-b border-border pb-2">Fotky</h2>
         <ImageUpload
           value={bannerUrl}
           onChange={setBannerUrl}
@@ -213,7 +218,7 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
 
       {/* O mně */}
       <section className="flex flex-col gap-5">
-        <h2 className="text-lg font-semibold border-b border-border pb-2">O mně</h2>
+        <h2 className="text-lg font-sans font-semibold border-b border-border pb-2">O mně</h2>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
@@ -227,36 +232,36 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="display_name">Značka / název firmy <span className="text-muted-foreground">(nepovinné)</span></Label>
+          <Label htmlFor="display_name">Značka / název firmy</Label>
           <Input id="display_name" placeholder="např. Mgr. Jana Nováková nebo Wellness Jana" value={displayName} onChange={e => setDisplayName(e.target.value)} />
         </div>
 
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="bio">O sobě *</Label>
-          <Textarea id="bio" rows={5} value={bio} onChange={e => setBio(e.target.value)} aria-invalid={invalid?.field === 'bio'} />
-          <p className="text-xs text-muted-foreground">{bio.trim().length} / min. 30 znaků</p>
+          <Textarea id="bio" className="leading-snug" rows={5} value={bio} onChange={e => setBio(e.target.value)} aria-invalid={invalid?.field === 'bio'} />
+          <p className="text-sm md:text-xs font-medium text-accent">{bio.trim().length} / min. 30 znaků</p>
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="email">Kontaktní e-mail <span className="text-muted-foreground">(nepovinný)</span></Label>
+            <Label htmlFor="email">Kontaktní e-mail</Label>
             <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
           </div>
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="telefon">Telefon <span className="text-muted-foreground">(nepovinný)</span></Label>
+            <Label htmlFor="telefon">Telefon</Label>
             <Input id="telefon" type="tel" value={telefon} onChange={e => setTelefon(e.target.value)} />
           </div>
         </div>
 
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="ico">IČO <span className="text-muted-foreground">(nepovinné)</span></Label>
-          <Input id="ico" className="max-w-xs" value={ico} onChange={e => setIco(e.target.value)} />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="ico">IČO</Label>
+            <Input id="ico" value={ico} onChange={e => setIco(e.target.value)} />
+          </div>
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="rezervace_url">
-            Hlavní rezervační odkaz <span className="text-muted-foreground">(nepovinný)</span>
-          </Label>
+          <Label htmlFor="rezervace_url">Hlavní rezervační odkaz</Label>
           <Input
             id="rezervace_url"
             type="url"
@@ -264,17 +269,17 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
             value={rezervaceUrl}
             onChange={e => setRezervaceUrl(e.target.value)}
           />
-          <p className="text-xs text-muted-foreground">
+          <p className="text-sm md:text-xs font-medium text-accent">
             Pokud ho vyplníš, na profilu se místo poptávkového formuláře zobrazí tlačítko vedoucí rovnou na tvůj rezervační systém.
           </p>
         </div>
 
         <div className="flex flex-col gap-3">
-          <Label>Online přítomnost <span className="text-muted-foreground">(nepovinné)</span></Label>
+          <Label>Online přítomnost</Label>
           <div className="flex flex-col gap-2">
             {SOCIAL_PLATFORMS.map(({ platform, label, placeholder }) => (
               <div key={platform} className="flex items-center gap-3">
-                <span className="w-20 shrink-0 text-sm text-muted-foreground">{label}</span>
+                <span className="w-20 shrink-0 text-base md:text-sm text-foreground">{label}</span>
                 <Input
                   type="url"
                   placeholder={placeholder}
@@ -289,8 +294,8 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
 
       {/* Kde působím */}
       <section className="flex flex-col gap-4">
-        <h2 className="text-lg font-semibold border-b border-border pb-2">Kde působím</h2>
-        <p className="text-sm text-muted-foreground">
+        <h2 className="text-lg font-sans font-semibold border-b border-border pb-2">Kde působím</h2>
+        <p className="text-sm md:text-xs font-medium text-accent">
           Pokud nepřidáš žádnou lokaci, bude profil zobrazený jako <strong>celá ČR / pouze online</strong>.
         </p>
         <CityPicker value={mesta} onChange={setMesta} />
@@ -298,17 +303,17 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
 
       {/* Co nabízím */}
       <section className="flex flex-col gap-6">
-        <h2 className="text-lg font-semibold border-b border-border pb-2">Co nabízím</h2>
+        <h2 className="text-lg font-sans font-semibold border-b border-border pb-2">Co nabízím</h2>
 
         <div className="flex flex-col gap-4">
-          <h3 className="font-medium">Služby</h3>
+          <h3 className="font-sans font-semibold">Služby</h3>
           {services.map((svc, idx) => (
             <div key={idx} className="rounded-xl border border-border bg-card p-5 flex flex-col gap-4">
               <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-muted-foreground">Služba {idx + 1}</span>
+                <span className="text-sm font-medium text-foreground">Služba {idx + 1}</span>
                 {services.length > 1 && (
                   <button type="button" onClick={() => setServices(prev => prev.filter((_, i) => i !== idx))}
-                    className="text-xs text-muted-foreground hover:text-destructive">
+                    className="text-xs text-foreground hover:text-destructive">
                     Odebrat
                   </button>
                 )}
@@ -324,42 +329,43 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <Label>Popis <span className="text-muted-foreground">(nepovinný)</span></Label>
-                <Textarea rows={3} value={svc.popis} onChange={e => updateService(idx, { popis: e.target.value })} />
+                <Label>Popis</Label>
+                <Textarea className="leading-snug" rows={3} value={svc.popis} onChange={e => updateService(idx, { popis: e.target.value })} />
               </div>
 
               <div className="flex flex-col gap-1.5">
                 <Label>Forma</Label>
-                <div className="flex gap-4 flex-wrap">
+                <div className="flex gap-2 flex-wrap">
                   {([['osobne', 'Osobně'], ['online', 'Online'], ['oboji', 'Osobně i online']] as const).map(([val, label]) => (
-                    <label key={val} className="flex items-center gap-2 cursor-pointer">
-                      <input type="radio" name={`delivery-${idx}`} value={val} checked={svc.delivery_form === val}
-                        onChange={() => updateService(idx, { delivery_form: val })} />
-                      <span className="text-sm">{label}</span>
-                    </label>
+                    <FilterChip key={val} selected={svc.delivery_form === val} onClick={() => updateService(idx, { delivery_form: val })}>
+                      {label}
+                    </FilterChip>
                   ))}
                 </div>
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <Label>Cenová hladina <span className="text-muted-foreground">(nepovinná)</span></Label>
+                <Label>Cenová hladina</Label>
                 <div className="flex gap-2 flex-wrap">
                   {priceLevels.map(pl => (
-                    <button key={pl.id} type="button"
+                    <FilterChip
+                      key={pl.id}
+                      selected={svc.price_level_id === pl.id}
                       onClick={() => updateService(idx, { price_level_id: svc.price_level_id === pl.id ? null : pl.id })}
-                      className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
-                        svc.price_level_id === pl.id
-                          ? 'border-primary bg-primary/10 text-primary'
-                          : 'border-border hover:border-primary/40'
-                      }`}>
-                      {pl.label}
-                    </button>
+                    >
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="inline-flex gap-0.5" aria-hidden="true">
+                          {Array.from({ length: pl.label.length }, (_, i) => <Coins key={i} className="size-3.5" />)}
+                        </span>
+                        {PRICE_LEVEL_HINTS[pl.label.length - 1] ?? pl.label}
+                      </span>
+                    </FilterChip>
                   ))}
                 </div>
               </div>
 
               <div className="flex flex-col gap-2">
-                <Label>Kategorie * <span className="text-muted-foreground text-xs">(alespoň 1)</span></Label>
+                <Label>Kategorie * <span className="text-sm md:text-xs font-medium text-accent">(alespoň 1)</span></Label>
                 <div className={cn(
                   'flex flex-wrap gap-2 rounded-lg border p-2 transition-colors',
                   invalid?.field === 'service' && invalid.idx === idx && invalid.sub === 'kategorie'
@@ -367,21 +373,15 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
                     : 'border-transparent'
                 )}>
                   {kategorie.map(k => (
-                    <button key={k.id} type="button"
-                      onClick={() => toggleKategorie(idx, k.id)}
-                      className={`rounded-full border px-3 py-1 text-sm transition-colors ${
-                        svc.kategorie_ids.includes(k.id)
-                          ? 'border-primary bg-primary text-primary-foreground'
-                          : 'border-border hover:border-primary/40'
-                      }`}>
+                    <FilterChip key={k.id} selected={svc.kategorie_ids.includes(k.id)} onClick={() => toggleKategorie(idx, k.id)}>
                       {k.nazev}
-                    </button>
+                    </FilterChip>
                   ))}
                 </div>
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <Label>Klíčová slova <span className="text-muted-foreground text-xs">(nepovinná — oddělte Enterem nebo čárkou)</span></Label>
+                <Label>Klíčová slova <span className="text-sm md:text-xs font-medium text-accent">(oddělte Enterem nebo čárkou)</span></Label>
                 <TagInput
                   value={svc.klicova_slova}
                   onChange={tags => updateService(idx, { klicova_slova: tags })}
@@ -390,20 +390,20 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <Label>Odkaz na rezervaci <span className="text-muted-foreground">(nepovinný)</span></Label>
+                <Label>Odkaz na rezervaci</Label>
                 <Input type="url" value={svc.booking_url} onChange={e => updateService(idx, { booking_url: e.target.value })} placeholder="https://" />
               </div>
             </div>
           ))}
 
           <button type="button" onClick={() => setServices(prev => [...prev, { ...EMPTY_SERVICE }])}
-            className={buttonVariants({ variant: 'outline-admin' }) + ' self-start'}>
+            className={buttonVariants({ variant: 'admin' }) + ' self-start'}>
             + Přidat další službu
           </button>
         </div>
 
         <div className="flex flex-col gap-3">
-          <h3 className="font-medium">Metody <span className="text-sm text-muted-foreground font-normal">(nepovinné)</span></h3>
+          <h3 className="font-sans font-semibold border-b border-border pb-2">Metody</h3>
           <MetodaPicker metody={metody} value={selectedMetody} onChange={setSelectedMetody} />
         </div>
       </section>
@@ -412,7 +412,7 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
         <p className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">{error}</p>
       )}
 
-      <div className="flex justify-end gap-3 border-t border-border pt-6">
+      <div className="flex justify-end gap-3 pt-6">
         <a href="/dashboard" className={buttonVariants({ variant: 'outline-admin' })}>Zrušit</a>
         <button type="button" disabled={saving} onClick={handleSubmit}
           className={buttonVariants({ variant: 'admin' }) + ' disabled:opacity-50'}>

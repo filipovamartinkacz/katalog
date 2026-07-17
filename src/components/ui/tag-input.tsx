@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, KeyboardEvent } from 'react'
+import { Input } from '@/components/ui/input'
 
 type Props = {
   value: string[]
@@ -28,26 +29,30 @@ export function TagInput({ value, onChange, placeholder = 'Přidat klíčové sl
   }
 
   return (
-    <div className="flex min-h-9 flex-wrap gap-1.5 rounded-lg border border-input bg-background px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-primary/40 focus-within:ring-offset-2">
-      {value.map(tag => (
-        <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-foreground">
-          {tag}
-          <button
-            type="button"
-            onClick={() => onChange(value.filter(t => t !== tag))}
-            className="ml-0.5 text-muted-foreground hover:text-foreground leading-none"
-          >
-            ×
-          </button>
-        </span>
-      ))}
-      <input
+    <div className="flex flex-col gap-2">
+      {value.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {value.map(tag => (
+            <span key={tag} className="inline-flex items-center gap-1 rounded-full bg-tag px-2.5 py-0.5 text-sm font-medium text-tag-foreground">
+              {tag}
+              <button
+                type="button"
+                onClick={() => onChange(value.filter(t => t !== tag))}
+                className="leading-none"
+                aria-label={`Odebrat ${tag}`}
+              >
+                ×
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+      <Input
         value={input}
         onChange={e => setInput(e.target.value)}
         onKeyDown={handleKey}
         onBlur={add}
-        placeholder={value.length === 0 ? placeholder : ''}
-        className="min-w-32 flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+        placeholder={placeholder}
       />
     </div>
   )

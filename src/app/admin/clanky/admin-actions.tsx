@@ -61,7 +61,7 @@ export function AdminClanekActions({ id, status }: { id: string; status: string 
           onChange={e => setDuvod(e.target.value)}
           placeholder="Důvod zamítnutí (uvidí ho autorka)…"
           rows={2}
-          className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
         />
         {error && <p className="text-xs text-destructive">{error}</p>}
         <div className="flex gap-2">

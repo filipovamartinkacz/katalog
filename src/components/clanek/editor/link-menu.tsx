@@ -157,7 +157,7 @@ export function LinkMenu({ editor, onClose }: Props) {
             value={query}
             onChange={e => setQuery(e.target.value)}
             placeholder="Hledat článek nebo stránku katalogu…"
-            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
           {(filteredStranky.length > 0 || results.length > 0) && (
             <ul className="max-h-48 overflow-y-auto rounded-lg border border-border bg-background">
@@ -193,7 +193,7 @@ export function LinkMenu({ editor, onClose }: Props) {
             value={externalUrl}
             onChange={e => setExternalUrl(e.target.value)}
             placeholder="https://…"
-            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
           />
           {showLabelInput ? (
             <input
@@ -201,7 +201,7 @@ export function LinkMenu({ editor, onClose }: Props) {
               value={externalLabel}
               onChange={e => setExternalLabel(e.target.value)}
               placeholder="Popisek odkazu (nepovinné, jinak se použije URL)…"
-              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
             />
           ) : (
             <p className="text-xs text-muted-foreground">Jako popisek se použije označený text v článku.</p>

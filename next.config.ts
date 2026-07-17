@@ -18,6 +18,9 @@ const cspHeader = `
 `.replace(/\s{2,}/g, " ").trim();
 
 const nextConfig: NextConfig = {
+  // Umožní testovat lokální dev server z telefonu/jiného zařízení ve stejné Wi-Fi.
+  // Platí jen pro `next dev`, produkci to neovlivní.
+  allowedDevOrigins: ['192.168.0.100'],
   images: {
     remotePatterns: [
       {
