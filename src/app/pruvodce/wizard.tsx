@@ -33,7 +33,7 @@ export function PruvodceWizard({ config }: { config: BlazenaConfig }) {
     const params = new URLSearchParams()
     if (slugs.length > 0) params.set('kat', slugs.join(','))
     if (lok.trim()) params.set('lok', lok.trim())
-    router.push(`/katalog${params.size > 0 ? `?${params.toString()}` : ''}`)
+    router.push(`/katalog${params.size > 0 ? `?${params.toString()}` : ''}#vysledky`)
   }
 
   return (

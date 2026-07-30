@@ -156,7 +156,7 @@ export default async function KatalogPage({ searchParams }: Props) {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Podnikatelky pro tebe</h1>
+        <h1 className="text-3xl font-bold">Odbornice pro tebe</h1>
         <p className="mt-2 text-lg font-medium text-foreground">Najdi odbornici přesně pro tebe</p>
       </div>
 
@@ -173,27 +173,29 @@ export default async function KatalogPage({ searchParams }: Props) {
         />
       </div>
 
-      {totalCount === 0 ? (
-        <div className="py-20 text-center text-foreground">
-          <p className="text-lg">Žádné profily neodpovídají zvoleným filtrům.</p>
-          <Link href="/katalog" className="mt-4 inline-block text-primary hover:underline">
-            Zobrazit vše
-          </Link>
-        </div>
-      ) : (
-        <>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {pageResults.map(m => (
-              <MedailonekCard key={m.id} m={m} />
-            ))}
+      <div>
+        {totalCount === 0 ? (
+          <div className="py-20 text-center text-foreground">
+            <p className="text-lg">Žádné profily neodpovídají zvoleným filtrům.</p>
+            <Link href="/katalog" className="mt-4 inline-block text-primary hover:underline">
+              Zobrazit vše
+            </Link>
           </div>
-          {totalPages > 1 && (
-            <div className="mt-12">
-              <Pagination page={currentPage} totalPages={totalPages} searchParams={sp} />
+        ) : (
+          <>
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {pageResults.map(m => (
+                <MedailonekCard key={m.id} m={m} />
+              ))}
             </div>
-          )}
-        </>
-      )}
+            {totalPages > 1 && (
+              <div className="mt-12">
+                <Pagination page={currentPage} totalPages={totalPages} searchParams={sp} />
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   )
 }

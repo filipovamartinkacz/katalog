@@ -26,7 +26,7 @@ export async function approveMedailonek(id: string) {
 
   if (error) return { error: error.message }
 
-  // E-mail notifikace podnikatelce
+  // E-mail notifikace odbornici
   const { data: authUser } = await admin.auth.admin.getUserById(med.user_id)
   if (authUser.user?.email) {
     await sendProfilSchvalen({

@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { buttonVariants } from '@/components/ui/button'
 import { FilterChip } from '@/components/ui/filter-chip'
+import { Input } from '@/components/ui/input'
 
 type Kategorie = { id: number; nazev: string; slug: string }
 type Metoda = { id: number; nazev: string; ma_ochrannou_znamku: boolean }
@@ -59,23 +60,23 @@ export function Filters({ kategorie, metody, activeKats, activeMet, activeForma,
     <div className="flex flex-col gap-4">
       {/* Textové vyhledávání + lokace */}
       <div className="flex flex-col gap-2 sm:flex-row">
-        <input
+        <Input
           type="search"
           placeholder="Hledat (jméno, bio, služba, metoda…)"
           value={q}
           onChange={e => setQ(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && submitText()}
-          className="h-9 flex-1 rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-2 focus:ring-2 focus:ring-primary/40"
+          className="flex-1"
         />
         <div className="flex flex-col gap-0.5">
-          <input
+          <Input
             type="search"
             placeholder="Lokalita (město, okres, kraj)"
             value={lok}
             onChange={e => setLok(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && submitText()}
             disabled={activeForma === 'online'}
-            className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm outline-none ring-offset-2 focus:ring-2 focus:ring-primary/40 disabled:opacity-40 sm:w-52"
+            className="sm:w-52"
           />
           {activeForma === 'online' && (
             <p className="text-xs text-muted-foreground">Online expertky jsou dostupné odkudkoli</p>
@@ -138,7 +139,7 @@ export function Filters({ kategorie, metody, activeKats, activeMet, activeForma,
       </div>
 
       {/* Výsledky + reset */}
-      <div className="flex items-center justify-between text-sm text-foreground">
+      <div id="vysledky" className="flex items-center justify-between text-sm text-foreground scroll-mt-20">
         <span>
           {total === 0 ? 'Žádné výsledky' : `${total} ${total === 1 ? 'profil' : total < 5 ? 'profily' : 'profilů'}`}
         </span>

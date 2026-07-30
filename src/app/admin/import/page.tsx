@@ -77,7 +77,7 @@ export default function ImportPage() {
       <div>
         <h1 className="text-2xl font-bold">Import medailonku z JSON</h1>
         <p className="mt-2 text-lg font-medium text-foreground">
-          Vlož JSON sestavený AI asistentem. Systém vytvoří profil a pošle podnikatelce pozvánku na email.
+          Vlož JSON sestavený AI asistentem. Systém vytvoří profil a pošle odbornici pozvánku na email.
         </p>
       </div>
 
@@ -86,7 +86,7 @@ export default function ImportPage() {
         <summary className="cursor-pointer text-sm font-medium">Prompt pro AI asistenta (ChatGPT, Claude…)</summary>
         <div className="mt-3 text-sm text-foreground space-y-2">
           <p>Použij tento prompt na začátku rozhovoru s AI asistentem:</p>
-          <pre className="whitespace-pre-wrap rounded-lg bg-background border border-border p-3 text-xs leading-relaxed">{`Budeš sbírat informace o podnikatelce pro katalog služeb a sestavíš strukturovaný JSON profil.
+          <pre className="whitespace-pre-wrap rounded-lg bg-background border border-border p-3 text-xs leading-relaxed">{`Budeš sbírat informace o odbornici pro katalog služeb a sestavíš strukturovaný JSON profil.
 
 Zeptej se na:
 1. Jméno, příjmení a jak ji mají oslovovat zákaznice

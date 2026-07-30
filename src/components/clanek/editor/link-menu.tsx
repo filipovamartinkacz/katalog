@@ -12,7 +12,7 @@ const KATALOG_STRANKY = [
   { label: 'Domů', href: '/' },
   { label: 'Katalog', href: '/katalog' },
   { label: 'Průvodce', href: '/pruvodce' },
-  { label: 'Pro podnikatelky', href: '/pro-podnikatelky' },
+  { label: 'Pro odbornice', href: '/pro-odbornice' },
 ]
 
 type Props = {

@@ -41,7 +41,7 @@ export async function sendProfilSchvalen({
           <a href="${APP_URL}/dashboard">${APP_URL}/dashboard</a>.
         </p>
         <hr style="margin-top:32px;border:none;border-top:1px solid #eee;" />
-        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených podnikatelek</p>
+        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených odbornic</p>
       </div>
     `,
   })
@@ -76,7 +76,7 @@ export async function sendClanekKSchvaleni({
           </a>
         </p>
         <hr style="margin-top:32px;border:none;border-top:1px solid #eee;" />
-        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených podnikatelek</p>
+        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených odbornic</p>
       </div>
     `,
   })
@@ -114,7 +114,7 @@ export async function sendClanekSchvalen({
           </a>
         </p>
         <hr style="margin-top:32px;border:none;border-top:1px solid #eee;" />
-        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených podnikatelek</p>
+        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených odbornic</p>
       </div>
     `,
   })
@@ -155,7 +155,7 @@ export async function sendClanekZamitnut({
           </a>
         </p>
         <hr style="margin-top:32px;border:none;border-top:1px solid #eee;" />
-        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených podnikatelek</p>
+        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených odbornic</p>
       </div>
     `,
   })
@@ -204,7 +204,7 @@ export async function sendNovaPoptavka({
           </a>
         </p>
         <hr style="margin-top:32px;border:none;border-top:1px solid #eee;" />
-        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených podnikatelek</p>
+        <p style="font-size:12px;color:#999;">jsem Blažená — síť prověřených odbornic</p>
       </div>
     `,
   })

@@ -46,7 +46,7 @@ export default async function DashboardClankyPage() {
 
       {medailonek && !medailonek.is_published && (
         <p className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-          Články může psát jen podnikatelka se schváleným medailonkem. Až bude tvůj profil
+          Články může psát jen odbornice se schváleným medailonkem. Až bude tvůj profil
           zveřejněný, budeš si tu moct založit první článek.
         </p>
       )}
