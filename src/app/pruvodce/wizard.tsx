@@ -5,32 +5,9 @@ import { useRouter } from 'next/navigation'
 import type { BlazenaConfig, PocitItem, OblastItem } from '@/lib/blazena'
 import { resolveKatSlugy } from '@/lib/blazena'
 import { buttonVariants } from '@/components/ui/button'
+import { FilterChip } from '@/components/ui/filter-chip'
 
 const STEP_COUNT = 3
-
-function ChipButton({
-  selected,
-  onClick,
-  children,
-}: {
-  selected: boolean
-  onClick: () => void
-  children: React.ReactNode
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors ${
-        selected
-          ? 'border-primary bg-primary text-primary-foreground'
-          : 'border-border hover:border-primary/50 hover:bg-primary/5'
-      }`}
-    >
-      {children}
-    </button>
-  )
-}
 
 export function PruvodceWizard({ config }: { config: BlazenaConfig }) {
   const router = useRouter()
@@ -56,12 +33,15 @@ export function PruvodceWizard({ config }: { config: BlazenaConfig }) {
     const params = new URLSearchParams()
     if (slugs.length > 0) params.set('kat', slugs.join(','))
     if (lok.trim()) params.set('lok', lok.trim())
-    router.push(`/katalog${params.size > 0 ? `?${params.toString()}` : ''}`)
+    router.push(`/katalog${params.size > 0 ? `?${params.toString()}` : ''}#vysledky`)
   }
 
   return (
     <div className="mx-auto max-w-2xl">
       {/* Progress */}
+      <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-foreground">
+        Krok {step} ze {STEP_COUNT}
+      </p>
       <div className="mb-8 flex items-center gap-2">
         {Array.from({ length: STEP_COUNT }, (_, i) => (
           <div
@@ -77,19 +57,19 @@ export function PruvodceWizard({ config }: { config: BlazenaConfig }) {
       {step === 1 && (
         <div className="flex flex-col gap-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-              Krok 1 ze 3
-            </p>
-            <h2 className="mt-2 text-2xl font-bold">Co tě přivádí?</h2>
-            <p className="mt-1 text-muted-foreground">Vyber vše, co na tebe sedí.</p>
+            <h2 className="text-2xl font-bold">Co tě přivádí?</h2>
+            <p className="mt-1 text-foreground">Vyber vše, co na tebe sedí.</p>
           </div>
           <div className="flex flex-wrap gap-2.5">
-            {config.pocity.map((p: PocitItem) => (
-              <ChipButton key={p.id} selected={pocity.includes(p.id)} onClick={() => togglePocit(p.id)}>
-                {p.emoji && <span>{p.emoji}</span>}
-                {p.label}
-              </ChipButton>
-            ))}
+            {config.pocity.map((p: PocitItem) => {
+              const sel = pocity.includes(p.id)
+              return (
+                <FilterChip key={p.id} selected={sel} onClick={() => togglePocit(p.id)}>
+                  {!sel && p.emoji && <span className="mr-1.5">{p.emoji}</span>}
+                  {p.label}
+                </FilterChip>
+              )
+            })}
           </div>
           <div className="flex justify-end pt-2">
             <button
@@ -108,25 +88,25 @@ export function PruvodceWizard({ config }: { config: BlazenaConfig }) {
       {step === 2 && (
         <div className="flex flex-col gap-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-              Krok 2 ze 3
-            </p>
-            <h2 className="mt-2 text-2xl font-bold">Které oblasti se to týká?</h2>
-            <p className="mt-1 text-muted-foreground">Upřesni, nebo přeskoč dál.</p>
+            <h2 className="text-2xl font-bold">Které oblasti se to týká?</h2>
+            <p className="mt-1 text-foreground">Upřesni, nebo přeskoč dál.</p>
           </div>
           <div className="flex flex-wrap gap-2.5">
-            {config.oblasti.map((o: OblastItem) => (
-              <ChipButton key={o.id} selected={oblasti.includes(o.id)} onClick={() => toggleOblast(o.id)}>
-                {o.emoji && <span>{o.emoji}</span>}
-                {o.label}
-              </ChipButton>
-            ))}
+            {config.oblasti.map((o: OblastItem) => {
+              const sel = oblasti.includes(o.id)
+              return (
+                <FilterChip key={o.id} selected={sel} onClick={() => toggleOblast(o.id)}>
+                  {!sel && o.emoji && <span className="mr-1.5">{o.emoji}</span>}
+                  {o.label}
+                </FilterChip>
+              )
+            })}
           </div>
           <div className="flex items-center justify-between pt-2">
             <button
               type="button"
               onClick={() => setStep(1)}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-sm text-foreground"
             >
               ← Zpět
             </button>
@@ -134,7 +114,7 @@ export function PruvodceWizard({ config }: { config: BlazenaConfig }) {
               <button
                 type="button"
                 onClick={() => setStep(3)}
-                className="text-sm text-muted-foreground hover:text-foreground"
+                className="text-sm text-foreground"
               >
                 Přeskočit
               </button>
@@ -154,11 +134,8 @@ export function PruvodceWizard({ config }: { config: BlazenaConfig }) {
       {step === 3 && (
         <div className="flex flex-col gap-6">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-              Krok 3 ze 3
-            </p>
-            <h2 className="mt-2 text-2xl font-bold">Kde hledáš?</h2>
-            <p className="mt-1 text-muted-foreground">
+            <h2 className="text-2xl font-bold">Kde hledáš?</h2>
+            <p className="mt-1 text-foreground">
               Zadej město, okres nebo kraj — nebo nech prázdné pro celou ČR a online.
             </p>
           </div>
@@ -174,7 +151,7 @@ export function PruvodceWizard({ config }: { config: BlazenaConfig }) {
             <button
               type="button"
               onClick={() => setStep(2)}
-              className="text-sm text-muted-foreground hover:text-foreground"
+              className="text-sm text-foreground"
             >
               ← Zpět
             </button>

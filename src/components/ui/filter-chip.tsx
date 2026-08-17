@@ -7,7 +7,7 @@ type Props = {
   selected: boolean
   onClick: () => void
   children: React.ReactNode
-  variant?: 'primary' | 'admin' | 'accent'
+  variant?: 'primary' | 'admin'
   className?: string
 }
 
@@ -16,16 +16,12 @@ type Props = {
 // wouldn't be picked up by the JIT scanner.
 const COLORS = {
   primary: {
-    selected: 'border-transparent bg-primary/10 text-primary',
-    idle: 'border-border bg-card text-foreground hover:bg-primary/5',
+    selected: 'border-accent/40 bg-accent/25 text-primary',
+    idle: 'border-accent/20 bg-card text-foreground hover:bg-accent/10',
   },
   admin: {
     selected: 'border-transparent bg-foreground/10 text-foreground',
     idle: 'border-border bg-card text-foreground hover:bg-foreground/5',
-  },
-  accent: {
-    selected: 'border-transparent bg-accent/15 text-accent-foreground',
-    idle: 'border-border bg-card text-foreground hover:bg-accent/5',
   },
 }
 
@@ -38,8 +34,10 @@ export function FilterChip({ selected, onClick, children, variant = 'primary', c
       onClick={onClick}
       aria-pressed={selected}
       className={cn(
-        'inline-flex h-9 items-center rounded-[14px] border pl-3 pr-4 text-sm font-medium transition-colors duration-200',
-        selected ? colors.selected : colors.idle,
+        'inline-flex h-8 items-center rounded-tl-[20px] rounded-tr-[33px] rounded-br-[20px] rounded-bl-[40px] border-l-0 border-t border-r-2 border-b-2 pl-3 pr-4 text-sm font-medium shadow-[inset_0_-2px_6px_oklch(0.70_0.13_78_/_25%)] outline-offset-2 focus-visible:outline-accent transition-[background-color,color,border-color,box-shadow] duration-200',
+        selected
+          ? cn(colors.selected, 'shadow-[inset_0_-2px_7px_oklch(0.70_0.13_78_/_45%)]')
+          : cn(colors.idle, 'hover:shadow-[inset_0_-2px_7px_oklch(0.70_0.13_78_/_35%)]'),
         className
       )}
     >

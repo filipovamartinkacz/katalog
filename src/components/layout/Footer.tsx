@@ -9,7 +9,7 @@ export function Footer() {
           <div>
             <Logo className="h-[18px] w-auto" />
             <p className="mt-1 text-sm text-background">
-              Síť prověřených podnikatelek ve službách.
+              Síť prověřených odbornic ve službách.
             </p>
           </div>
 
@@ -17,8 +17,8 @@ export function Footer() {
             <Link href="/katalog" className="hover:underline transition-colors">
               Hledat
             </Link>
-            <Link href="/pro-podnikatelky" className="hover:underline transition-colors">
-              Pro podnikatelky
+            <Link href="/pro-odbornice" className="hover:underline transition-colors">
+              Pro odbornice
             </Link>
             <Link href="/registrace" className="hover:underline transition-colors">
               Registrace

@@ -72,7 +72,7 @@ export async function createClanekDraft(data: ClanekInput) {
     .maybeSingle()
 
   if (!medailonek) return { error: 'Nejdřív si vytvoř medailonek.' }
-  if (!medailonek.is_published) return { error: 'Články může psát jen podnikatelka se schváleným medailonkem.' }
+  if (!medailonek.is_published) return { error: 'Články může psát jen odbornice se schváleným medailonkem.' }
 
   const slug = await generateUniqueSlug(data.nadpis.trim())
   const obsah = validateClanekContent(data.obsah)

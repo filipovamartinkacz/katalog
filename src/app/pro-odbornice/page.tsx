@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { buttonVariants } from '@/components/ui/button'
 
-export default function ProPodnikatelkyPage() {
+export default function ProOdbornicePage() {
   return (
     <div className="flex flex-col">
 
@@ -145,8 +145,8 @@ const BENEFITS = [
   },
   {
     emoji: '🌿',
-    title: 'Komunita ověřených podnikatelek',
-    desc: 'Každý profil prochází schválením. Zákaznice vědí, že katalog sdružuje skutečné a prověřené podnikatelky.',
+    title: 'Komunita ověřených odbornic',
+    desc: 'Každý profil prochází schválením. Zákaznice vědí, že katalog sdružuje skutečné a prověřené odbornice.',
   },
   {
     emoji: '📍',
@@ -161,7 +161,7 @@ const BENEFITS = [
   {
     emoji: '🎁',
     title: 'Zdarma',
-    desc: 'Základní profil je a zůstane zdarma. Chceme podpořit podnikatelky, ne je zatěžovat dalšími poplatky.',
+    desc: 'Základní profil je a zůstane zdarma. Chceme podpořit odbornice, ne je zatěžovat dalšími poplatky.',
   },
 ]
 

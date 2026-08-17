@@ -59,7 +59,7 @@ export function ImagePanel({ editor, pos, attrs, onClose }: Props) {
           value={alt}
           onChange={e => setAlt(e.target.value)}
           placeholder="Alt text obrázku…"
-          className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
         />
         <div className="flex items-center justify-between gap-2">
           <button type="button" onClick={saveAlt} className={buttonVariants({ variant: 'admin', size: 'sm' })}>

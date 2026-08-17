@@ -1,7 +1,7 @@
 -- ============================================================
 -- 023_ucet_potvrzeni.sql
 -- Medailonek smí admin schválit (is_published = true), ale veřejně
--- viditelný (a použitelný pro poptávku) je až když si podnikatelka
+-- viditelný (a použitelný pro poptávku) je až když si odbornice
 -- skutečně vytvořila a potvrdila účet — jinak by poptávka neměla
 -- komu chodit a profil by patřil nikomu neověřenému.
 --
@@ -38,7 +38,7 @@ CREATE TRIGGER medailonek_set_user_confirmed
   BEFORE INSERT ON public.medailonek
   FOR EACH ROW EXECUTE FUNCTION public.set_user_confirmed_on_insert();
 
--- Když si podnikatelka účet dodatečně potvrdí (pozvánka → nastavení hesla),
+-- Když si odbornice účet dodatečně potvrdí (pozvánka → nastavení hesla),
 -- dosynchronizuj její medailonek.
 CREATE OR REPLACE FUNCTION public.sync_user_confirmed()
 RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER AS $$

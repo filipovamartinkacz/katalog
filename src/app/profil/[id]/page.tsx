@@ -121,7 +121,7 @@ export default async function ProfilPage({ params }: Props) {
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span>
                 {isPublished && !userConfirmed
-                  ? 'Náhled — profil je schválený, ale zveřejní se, až si podnikatelka potvrdí účet.'
+                  ? 'Náhled — profil je schválený, ale zveřejní se, až si odbornice potvrdí účet.'
                   : 'Náhled — profil ještě není zveřejněn.'}{' '}
                 {isAdmin && (
                   <Link href="/admin/medailonky" className="font-semibold underline hover:no-underline">

@@ -61,10 +61,9 @@ export function CityPicker({ value, onChange }: Props) {
       {value.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {value.map(m => (
-            <span key={m.id} className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1 text-sm font-medium text-secondary-foreground">
-              {m.nazev}
-              <span className="text-muted-foreground text-xs">({m.okres})</span>
-              <button type="button" onClick={() => remove(m.id)} className="ml-1 text-muted-foreground hover:text-foreground leading-none">×</button>
+            <span key={m.id} className="inline-flex items-center gap-1 rounded-full bg-tag px-2.5 py-0.5 text-sm font-medium text-tag-foreground">
+              {m.nazev} ({m.okres})
+              <button type="button" onClick={() => remove(m.id)} className="leading-none" aria-label={`Odebrat ${m.nazev}`}>×</button>
             </span>
           ))}
         </div>

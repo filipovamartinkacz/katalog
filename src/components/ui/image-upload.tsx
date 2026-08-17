@@ -4,6 +4,7 @@ import { useRef, useState } from 'react'
 import Image from 'next/image'
 import { createClient } from '@/lib/supabase/client'
 import { convertImageToWebp } from '@/lib/image-convert'
+import { buttonVariants } from '@/components/ui/button'
 
 type Props = {
   value: string | null
@@ -99,7 +100,7 @@ export function ImageUpload({ value, onChange, userId, fileKey, aspect, label, b
             type="button"
             disabled={uploading}
             onClick={() => inputRef.current?.click()}
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:border-primary/50 disabled:opacity-50"
+            className={buttonVariants({ variant: 'admin', size: 'sm' })}
           >
             {value ? 'Změnit' : 'Nahrát'}
           </button>
@@ -108,7 +109,7 @@ export function ImageUpload({ value, onChange, userId, fileKey, aspect, label, b
               type="button"
               disabled={uploading}
               onClick={() => onChange(null)}
-              className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground hover:border-destructive/50 hover:text-destructive disabled:opacity-50"
+              className={buttonVariants({ variant: 'outline-admin', size: 'sm' })}
             >
               Odebrat
             </button>

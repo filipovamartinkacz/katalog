@@ -33,7 +33,7 @@ const thasadith = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://katalog-woad.vercel.app"),
   title: "jsem Blažená",
-  description: "Síť prověřených podnikatelek ve službách — masáže, terapie, koučink, péče v těhotenství a další.",
+  description: "Síť prověřených odbornic ve službách — masáže, terapie, koučink, péče v těhotenství a další.",
 };
 
 export default function RootLayout({
