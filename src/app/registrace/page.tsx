@@ -14,12 +14,14 @@ function RegistrationForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [alreadyRegistered, setAlreadyRegistered] = useState(false)
   const [done, setDone] = useState(false)
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError(null)
+    setAlreadyRegistered(false)
     setLoading(true)
 
     if (password.length < 8) {
@@ -39,7 +41,9 @@ function RegistrationForm() {
     })
 
     if (error) {
-      setError(error.message === 'User already registered'
+      const exists = error.message === 'User already registered'
+      setAlreadyRegistered(exists)
+      setError(exists
         ? 'Tento e-mail je již zaregistrovaný.'
         : 'Registraci se nepodařilo dokončit. Zkus to znovu.')
       setLoading(false)
@@ -88,6 +92,12 @@ function RegistrationForm() {
         {error && (
           <p className="rounded-lg bg-destructive/10 px-4 py-3 text-sm text-destructive">
             {error}
+            {alreadyRegistered && (
+              <>
+                {' '}Pokud sis ještě nenastavila heslo (např. po pozvání adminem), použij{' '}
+                <Link href="/zapomenute-heslo" className="font-medium underline">obnovu hesla</Link>.
+              </>
+            )}
           </p>
         )}
 
