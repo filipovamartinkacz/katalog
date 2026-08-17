@@ -232,8 +232,11 @@ export function EditForm({ medailonek, kategorie, metody, linkedMetody, priceLev
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="display_name">Značka / název firmy</Label>
-          <Input id="display_name" placeholder="např. Mgr. Jana Nováková nebo Wellness Jana" value={displayName} onChange={e => setDisplayName(e.target.value)} />
+          <Label htmlFor="display_name">Název v katalogu (nepovinné)</Label>
+          <Input id="display_name" placeholder="necháš prázdné → použije se jméno a příjmení" value={displayName} onChange={e => setDisplayName(e.target.value)} />
+          <p className="text-sm md:text-xs font-medium text-accent">
+            V katalogu se bude tvůj medailonek zobrazovat jako: <span className="text-foreground">{displayName.trim() || `${jmeno} ${prijmeni}`.trim() || '…'}</span>
+          </p>
         </div>
 
         <div className="flex flex-col gap-1.5">
