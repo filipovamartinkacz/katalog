@@ -11,6 +11,7 @@ import { CtaRezervace } from './cta-rezervace'
 import { TrackedLink } from './tracked-link'
 import { toWhatsAppUrl } from '@/lib/whatsapp'
 import { Breadcrumb } from '@/components/layout/breadcrumb'
+import { getMedailonekNazev } from '@/lib/medailonek-nazev'
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -77,7 +78,7 @@ export default async function ProfilPage({ params }: Props) {
   // Neviditelný profil (nezveřejněný nebo s nepotvrzeným účtem) vidí jen admin nebo vlastník
   if (!isVisible && !isAdmin && !isOwner) notFound()
 
-  const name = m.display_name || `${m.jmeno} ${m.prijmeni}`
+  const name = getMedailonekNazev(m.jmeno, m.prijmeni, m.display_name)
   const initials = `${m.jmeno[0] ?? ''}${m.prijmeni[0] ?? ''}`.toUpperCase()
 
   const mesta = (m.medailonek_location as any[]).flatMap((l: any) => {
