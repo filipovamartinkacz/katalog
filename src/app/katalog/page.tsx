@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Filters } from './filters'
 import { Pagination } from './pagination'
+import { getMedailonekNazev } from '@/lib/medailonek-nazev'
 
 const PAGE_SIZE = 12
 
@@ -201,7 +202,7 @@ export default async function KatalogPage({ searchParams }: Props) {
 }
 
 function MedailonekCard({ m }: { m: any }) {
-  const name = m.display_name || `${m.jmeno} ${m.prijmeni}`
+  const name = getMedailonekNazev(m.jmeno, m.prijmeni, m.display_name)
   const initials = `${m.jmeno[0] ?? ''}${m.prijmeni[0] ?? ''}`.toUpperCase()
 
   const kategorie: string[] = []

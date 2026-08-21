@@ -11,6 +11,7 @@ import { TagInput } from '@/components/ui/tag-input'
 import { MetodaPicker, type SelectedMetoda } from '@/components/ui/metoda-picker'
 import { ImageUpload } from '@/components/ui/image-upload'
 import { FilterChip } from '@/components/ui/filter-chip'
+import { getMedailonekNazev } from '@/lib/medailonek-nazev'
 import { cn } from '@/lib/utils'
 import { Coins } from 'lucide-react'
 
@@ -178,10 +179,10 @@ export function MedailonekWizard({ kategorie, metody, priceLevels, userId }: Pro
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="display_name">Název v katalogu (nepovinné)</Label>
-            <Input id="display_name" placeholder="necháš prázdné → použije se jméno a příjmení" value={displayName} onChange={e => setDisplayName(e.target.value)} />
+            <Label htmlFor="display_name">Značka / název firmy</Label>
+            <Input id="display_name" placeholder="např. Wellness Jana" value={displayName} onChange={e => setDisplayName(e.target.value)} />
             <p className="text-sm md:text-xs font-medium text-accent">
-              V katalogu se bude tvůj medailonek zobrazovat jako: <span className="text-foreground">{displayName.trim() || `${jmeno} ${prijmeni}`.trim() || '…'}</span>
+              V katalogu se bude tvůj medailonek zobrazovat jako: <span className="text-foreground">{getMedailonekNazev(jmeno, prijmeni, displayName) || '…'}</span>
             </p>
           </div>
 
